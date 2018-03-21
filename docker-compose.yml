@@ -30,6 +30,7 @@ services:
       - data-volume:/var/lib/postgresql
     ports:
       - "5432:5432"
+    env_file: .db_env
 
 volumes:
   data-volume:

@@ -1,0 +1,4 @@
+web/migrations/*
+*.pyc
+.env
+.db_env
