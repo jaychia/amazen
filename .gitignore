@@ -2,3 +2,4 @@ web/migrations/*
 *.pyc
 .env
 .db_env
+.DS_Store
