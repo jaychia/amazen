@@ -32,5 +32,11 @@ services:
       - "5432:5432"
     env_file: .db_env
 
+  gulper:
+    restart: always
+    build: ./gulper
+    volumes:
+      - ./web:/runtime/src
+
 volumes:
   data-volume:

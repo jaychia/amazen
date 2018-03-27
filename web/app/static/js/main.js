@@ -1,5 +1,17 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import Search from './Search.jsx';
+'use strict';
 
-ReactDOM.render(<Search name={name} netid={netid} />, document.getElementById('root'));
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactDom = require('react-dom');
+
+var _reactDom2 = _interopRequireDefault(_reactDom);
+
+var _Search = require('./Search.jsx');
+
+var _Search2 = _interopRequireDefault(_Search);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+_reactDom2.default.render(_react2.default.createElement(_Search2.default, { name: name, netid: netid }), document.getElementById('root'));

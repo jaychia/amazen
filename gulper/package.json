@@ -1,0 +1,23 @@
+{
+  "name": "cs4300",
+  "version": "1.0.0",
+  "description": "Amazen",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^8.0.31",
+    "babelify": "^6.4.0",
+    "babel-preset-es2015": "latest",
+    "babel-preset-react": "latest",
+    "bower": "^1.8.2",
+    "del": "^2.2.0",
+    "gulp": "^3.9.1",
+    "gulp-browser": "^2.1.9",
+    "gulp-size": "^2.1.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
