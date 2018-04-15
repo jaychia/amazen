@@ -21,8 +21,7 @@ from app import socketio
 from app.irsystem.models import product
 
 # IMPORT THE BLUEPRINT APP OBJECT 
-from app.irsystem import irsystem 
-
+from app.irsystem import irsystem
 
 # Import module models
 from app.accounts.models.user import *

@@ -3,6 +3,7 @@ from app.irsystem.models.helpers import *
 from app.irsystem.models.helpers import NumpyEncoder as NumpyEncoder
 from app.irsystem.models.product import products_with_pids
 from flask import jsonify
+from flask import current_app
 
 project_name = "Amazen"
 net_id = "Joo Ho Yeo (jy396) | Amritansh Kwatra (ak2244) | Alex Yoo (ay244) | Jay Chia (jc2375) | Charles Bai (cb674)"
@@ -54,6 +55,7 @@ def search_page():
 
 @irsystem.route('search', methods=['GET'])
 def product_search():
+	current_app.logger.debug('HERE!')
 	query = request.args.get('query')
 	descriptors = request.args.get('descriptors', [])
 	if not query:
