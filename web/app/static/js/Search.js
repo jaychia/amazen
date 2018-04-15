@@ -29,68 +29,60 @@ var Search = function (_React$Component) {
 
   _createClass(Search, [{
     key: "render",
+
+    // constructor() {
+    //   super(...arguments);
+    //   this.state = {descriptors: []};
+    // }
+    //
+    // buttonOnClick = () => {
+    //   this.setState({descriptors = this.state.descriptors.add(this.refs.New_descriptor.value)});
+    // };
+
     value: function render() {
       return _react2.default.createElement(
         "div",
         null,
-        _react2.default.createElement("link", { rel: "stylesheet", href: "/static/bootstrap.min.css" }),
+        _react2.default.createElement("link", { rel: "stylesheet", href: "/static/css/bootstrap.min.css" }),
+        _react2.default.createElement("link", { rel: "stylesheet", href: "/static/css/bootstrap-grid.min.css" }),
+        _react2.default.createElement("link", { rel: "stylesheet", href: "/static/css/bootstrap-reboot.min.min.css" }),
         _react2.default.createElement("link", { rel: "stylesheet", href: "/static/main.css" }),
         _react2.default.createElement(
           "div",
-          { className: "topcorner" },
-          _react2.default.createElement(
-            "p",
-            null,
-            "Project Name: ",
-            this.props.name
-          ),
-          _react2.default.createElement(
-            "p",
-            null,
-            "Student Name: ",
-            this.props.netid
-          )
+          { className: "text-center" },
+          _react2.default.createElement("img", { src: "/static/img/logo.png", width: "400" })
         ),
         _react2.default.createElement(
           "form",
           { className: "form-inline global-search" },
           _react2.default.createElement(
-            "h1",
-            { style: { fontSize: 55, fontFamily: 'Futura', color: '#4285F4' } },
-            "C",
+            "div",
+            { className: "search-bar" },
+            _react2.default.createElement("input", { id: "search_btn", type: "text", className: "input-lg", placeholder: "What are you looking for today?" }),
             _react2.default.createElement(
-              "font",
-              { color: "#EA4335" },
-              "S"
-            ),
-            _react2.default.createElement(
-              "font",
-              { color: "#FBBC05" },
-              "4"
-            ),
-            "3",
-            _react2.default.createElement(
-              "font",
-              { color: "#34A853" },
-              "0"
-            ),
-            _react2.default.createElement(
-              "font",
-              { color: "#EA4335" },
-              "0"
+              "div",
+              { className: "input-group-btn" },
+              _react2.default.createElement(
+                "button",
+                { className: "btn btn-lg", type: "button" },
+                _react2.default.createElement("span", { className: "glyphicon glyphicon-search" })
+              )
             )
           ),
           _react2.default.createElement("br", null),
-          _react2.default.createElement("br", null),
           _react2.default.createElement(
             "div",
-            { className: "form-group" },
-            _react2.default.createElement("input", { id: "input", type: "text", name: "search", className: "form-control", placeholder: "Your Input" })
-          ),
-          _react2.default.createElement(
-            "button",
-            { type: "submit", className: "btn btn-info" },
-            " Go! "
+            { className: "search-bar descriptor-bar" },
+            _react2.default.createElement("input", { type: "text", className: "input-lg", placeholder: "Descriptors", ref: "New_descriptor" }),
+            _react2.default.createElement(
+              "div",
+              { className: "input-group-btn" },
+              _react2.default.createElement(
+                "button",
+                { className: "btn btn-lg", type: "button" },
+                _react2.default.createElement("span", { className: "glyphicon glyphicon-search" })
+              )
+            )
           )
         )
       );
