@@ -6,14 +6,17 @@ export default class Search extends React.Component {
     super(...arguments);
     this.state = {descriptors: []};
     this.addButtonOnClick = this.addButtonOnClick.bind(this);
+    this.searchButtonOnClick = this.searchButtonOnClick.bind(this);
   }
 
   searchButtonOnClick() {
-    axios.get(`http://www.reddit.com/r/${this.props.subreddit}.json`)
-      .then(res => {
-        const posts = res.data.data.children.map(obj => obj.data);
-        this.setState({ posts });
-      });
+    var descriptors_str = this.state.descriptors.join(",");
+    window.location.href = "search_page?query=" + this.refs.New_search.value + "&descriptors=" + descriptors_str;
+    // axios.get("search_page?query=" + {this.refs.New_search.value} + "&descriptors=" + descriptors_str)
+    //   .then(res => {
+    //     const posts = res.data.data.children.map(obj => obj.data);
+    //     this.setState({ posts });
+    //   });
   }
 
   addButtonOnClick() {
@@ -42,7 +45,7 @@ export default class Search extends React.Component {
         </div>
         <form className="form-inline global-search search-wrapper">
           <div className="search-bar">
-            <input className="search-bar-input input-lg" id="search_bar" type="text" placeholder="What are you looking for today?" />
+            <input className="search-bar-input input-lg" type="text" placeholder="What are you looking for today?" ref="New_search"/>
             <div className="input-group-btn">
               <button className="btn btn-lg search-bar-button" type="button" onClick={this.searchButtonOnClick}>
                 <span className="glyphicon glyphicon-search"></span>

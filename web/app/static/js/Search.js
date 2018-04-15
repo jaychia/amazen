@@ -34,20 +34,20 @@ var Search = function (_React$Component) {
 
     _this.state = { descriptors: [] };
     _this.addButtonOnClick = _this.addButtonOnClick.bind(_this);
+    _this.searchButtonOnClick = _this.searchButtonOnClick.bind(_this);
     return _this;
   }
 
   _createClass(Search, [{
     key: 'searchButtonOnClick',
     value: function searchButtonOnClick() {
-      var _this2 = this;
-
-      _axios2.default.get('http://www.reddit.com/r/' + this.props.subreddit + '.json').then(function (res) {
-        var posts = res.data.data.children.map(function (obj) {
-          return obj.data;
-        });
-        _this2.setState({ posts: posts });
-      });
+      var descriptors_str = this.state.descriptors.join(",");
+      window.location.href = "search_page?query=" + this.refs.New_search.value + "&descriptors=" + descriptors_str;
+      // axios.get("search_page?query=" + {this.refs.New_search.value} + "&descriptors=" + descriptors_str)
+      //   .then(res => {
+      //     const posts = res.data.data.children.map(obj => obj.data);
+      //     this.setState({ posts });
+      //   });
     }
   }, {
     key: 'addButtonOnClick',
@@ -71,7 +71,7 @@ var Search = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      var _this3 = this;
+      var _this2 = this;
 
       return _react2.default.createElement(
         'div',
@@ -89,7 +89,7 @@ var Search = function (_React$Component) {
           _react2.default.createElement(
             'div',
             { className: 'search-bar' },
-            _react2.default.createElement('input', { className: 'search-bar-input input-lg', id: 'search_bar', type: 'text', placeholder: 'What are you looking for today?' }),
+            _react2.default.createElement('input', { className: 'search-bar-input input-lg', type: 'text', placeholder: 'What are you looking for today?', ref: 'New_search' }),
             _react2.default.createElement(
               'div',
               { className: 'input-group-btn' },
@@ -119,7 +119,7 @@ var Search = function (_React$Component) {
                     _react2.default.createElement(
                       'button',
                       { className: 'btn descriptor-tag-button', type: 'button', onClick: function onClick() {
-                          return _this3.deleteButtonOnClick(d);
+                          return _this2.deleteButtonOnClick(d);
                         } },
                       _react2.default.createElement('span', { className: 'glyphicon glyphicon-remove' })
                     )
