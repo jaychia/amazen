@@ -14,6 +14,9 @@ net_id = "Joo Ho Yeo (jy396) | Amritansh Kwatra (ak2244) | Alex Yoo (ay244) | Ja
 def classify_query(q):
 	return "electronics"
 
+def get_top_products(q,descs,cats,k2,k3):
+	return top_k_pids(q, descs, cats, k2, k3)
+
 def filter_category_by_query(q, cat):
 	return ["1234", "123", "12"]
 
