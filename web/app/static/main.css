@@ -57,6 +57,7 @@
   box-shadow: none;
   border: 0;
   color: #777777;
+  margin-top: -8px;
   padding: 0 6px 0 6px;
   border-left: solid 1px #777777;
 }
@@ -65,9 +66,9 @@
   background: none;
 }
 
-.search-bar .glyphicon-search{
-  font-size: 28px;
-  margin-top: -2px;
+.search-bar .glyphicon {
+  font-size: 22px;
+  margin-top: 2px;
 }
 
 .step-links a {

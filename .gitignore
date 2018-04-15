@@ -3,3 +3,4 @@ web/migrations/*
 .env
 .db_env
 .DS_Store
+web/app/static/js/bundled/main.js
