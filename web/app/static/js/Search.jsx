@@ -4,11 +4,15 @@ export default class Search extends React.Component {
   constructor() {
     super(...arguments);
     this.state = {descriptors: []};
+    this.buttonOnClick = this.buttonOnClick.bind(this);
   }
-  //
-  // buttonOnClick = () => {
-  //   this.setState({descriptors = this.state.descriptors.add(this.refs.New_descriptor.value)});
-  // };
+
+  buttonOnClick() {
+    if(this.refs.New_descriptor.value != "")
+      this.setState((prevState, props) => ({
+        descriptors: [...prevState.descriptors, this.refs.New_descriptor.value]
+      }));
+  };
 
   render() {
     return (
@@ -33,12 +37,15 @@ export default class Search extends React.Component {
           <div className="search-bar descriptor-bar">
             <input type="text" className="input-lg" placeholder="Descriptors" ref="New_descriptor"/>
             <div className="input-group-btn">
-              <button className="btn btn-lg" type="button">
+              <button className="btn btn-lg" type="button" onClick={this.buttonOnClick}>
                 <span className="glyphicon glyphicon-plus"></span>
               </button>
             </div>
           </div>
         </form>
+        <ul>
+          {this.state.descriptors.map((message) => <li key={message}>{message}</li>)}
+        </ul>
       </div>
     );
   }

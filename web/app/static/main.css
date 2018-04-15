@@ -71,6 +71,10 @@
   margin-top: 2px;
 }
 
+.search-bar .glyphicon:focus {
+  outline: none;
+}
+
 .step-links a {
   color: #4285F4;
 }
