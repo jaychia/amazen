@@ -36,6 +36,17 @@ def products_with_pids(pid_list):
   pmap = {p.id: p for p in products}
   return [pmap[id] for id in pid_list if id in pmap]
 
+def new_products(tuplist):
+  """
+  Creates new product in database
+  tuplist must be list of named tuples
+  ProductTuple(name, price, img_url, azn_product_id, seller_name)
+  """
+  for tup in tuplist:
+    p = Product(tup.name, tup.price, tup.img_url, tup.azn_product_id, tup.seller_name)
+    db.session.add(p)
+  db.session.commit()
+
 class ProductSchema(ModelSchema):
   class Meta:
     model = Product
