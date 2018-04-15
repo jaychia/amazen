@@ -1,4 +1,5 @@
 from . import *
+from flask import current_app
 
 class Product(Base):
   __tablename__ = 'products'
@@ -32,7 +33,8 @@ class Product(Base):
 
 def products_with_pids(pid_list):
   products = Product.query.filter(Product.azn_product_id.in_(pid_list)).all()
-  return [next(s for s in products if s.azn_product_id == id) for id in pid_list]
+  pmap = {p.id: p for p in products}
+  return [pmap[id] for id in pid_list if id in pmap]
 
 class ProductSchema(ModelSchema):
   class Meta:
