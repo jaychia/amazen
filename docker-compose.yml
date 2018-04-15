@@ -22,7 +22,7 @@ services:
     restart: always
     image: postgres:latest
     volumes:
-      - data-volume:/var/lib/postgresql
+      - data-volume:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     env_file: .db_env
