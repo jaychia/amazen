@@ -19333,7 +19333,7 @@ var Search = function (_React$Component) {
               _react2.default.createElement(
                 "button",
                 { className: "btn btn-lg", type: "button" },
-                _react2.default.createElement("span", { className: "glyphicon glyphicon-plus" })
+                _react2.default.createElement("span", { className: "glyphicon glyphicon-search" })
               )
             )
           )
