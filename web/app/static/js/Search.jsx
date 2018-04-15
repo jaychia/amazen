@@ -1,34 +1,75 @@
 import React from 'react';
+import axios from 'axios';
 
 export default class Search extends React.Component {
-  props: {
-    name: string,
-    netid: string,
+  constructor() {
+    super(...arguments);
+    this.state = {descriptors: []};
+    this.addButtonOnClick = this.addButtonOnClick.bind(this);
+  }
+
+  searchButtonOnClick() {
+    axios.get(`http://www.reddit.com/r/${this.props.subreddit}.json`)
+      .then(res => {
+        const posts = res.data.data.children.map(obj => obj.data);
+        this.setState({ posts });
+      });
+  }
+
+  addButtonOnClick() {
+    var new_d = this.refs.New_descriptor.value;
+    this.refs.New_descriptor.value = "";
+    if(new_d != "" && this.state.descriptors.indexOf(new_d) == -1)
+      this.setState((prevState, props) => ({
+        descriptors: [...prevState.descriptors, new_d]
+      }));
+  };
+
+  deleteButtonOnClick(deletedName) {
+    var arr = this.state.descriptors;
+    var i = arr.indexOf(deletedName);
+    arr.splice(i, 1);
+    this.setState({descriptors: arr});
   };
 
   render() {
     return (
       <div>
-        <link rel="stylesheet" href="/static/bootstrap.min.css" />
+        <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
         <link rel="stylesheet" href="/static/main.css" />
-        <div className="topcorner">
-          <p>Project Name: {this.props.name}</p>
-          <p>Student Name: {this.props.netid}</p>
+        <div className="text-center">
+          <img src="/static/img/logo.png" width="400" />
         </div>
-        <form className="form-inline global-search">
-          <h1 style={{fontSize: 55, fontFamily: 'Futura', color: '#4285F4'}}>
-            C
-            <font color="#EA4335">S</font>
-            <font color="#FBBC05">4</font>
-            3
-            <font color="#34A853">0</font>
-            <font color="#EA4335">0</font>
-          </h1>
-          <br /><br />
-          <div className="form-group">
-            <input id="input" type="text" name="search" className="form-control" placeholder="Your Input" />
+        <form className="form-inline global-search search-wrapper">
+          <div className="search-bar">
+            <input className="search-bar-input input-lg" id="search_bar" type="text" placeholder="What are you looking for today?" />
+            <div className="input-group-btn">
+              <button className="btn btn-lg search-bar-button" type="button" onClick={this.searchButtonOnClick}>
+                <span className="glyphicon glyphicon-search"></span>
+              </button>
+            </div>
           </div>
-          <button type="submit" className="btn btn-info"> Go! </button>
+          <br />
+          <div className="search-bar descriptor-bar">
+            <div className="descriptor-wrapper">
+              <input type="text" className="input-lg descriptor-bar-input" placeholder="Descriptors" ref="New_descriptor"/>
+              {this.state.descriptors.map((d) =>
+                <div key={d} className="descriptor-tag-wrapper">
+                    <span className="badge badge-default descriptor-tag">
+                      {d}
+                      <button className="btn descriptor-tag-button" type="button" onClick={() => this.deleteButtonOnClick(d)}>
+                        <span className="glyphicon glyphicon-remove"></span>
+                      </button>
+                    </span>
+                </div>
+              )}
+            </div>
+            <div className="input-group-btn">
+              <button className="btn btn-lg search-bar-button" type="button" onClick={this.addButtonOnClick}>
+                <span className="glyphicon glyphicon-plus"></span>
+              </button>
+            </div>
+          </div>
         </form>
       </div>
     );

@@ -16,7 +16,7 @@ gulp.task('transform', function() {
         .pipe(gulp.dest('./src/app/static/js'));
 })
 
-gulp.task('js', ['transform'], function() {
+gulp.task('js1', ['transform'], function() {
     // Assumes a file has been transformed from
     // ./app/src/main.jsx to ./app/dist/main.js
     return browserify('./src/app/static/js/main.js')
@@ -28,6 +28,18 @@ gulp.task('js', ['transform'], function() {
         .pipe(gulp.dest('./src/app/static/js/bundled'))
 });
 
-gulp.task('default', ['js'], function() {
-    gulp.watch('./src/app/static/js/*.jsx', ['js']);
+gulp.task('js2', ['transform'], function () {
+    // Assumes a file has been transformed from
+    // ./app/src/main_search_page.jsx to ./app/dist/main_search_page.js
+    return browserify('./src/app/static/js/main_search_result.js')
+        .transform("babelify", { presets: ["es2015", "react", "stage-3"] })
+        .bundle()
+        .on('error', gutil.log)
+        .pipe(source('main_search_result.js'))
+        .pipe(buffer())
+        .pipe(gulp.dest('./src/app/static/js/bundled'))
+});
+
+gulp.task('default', ['js1', 'js2'], function() {
+    gulp.watch('./src/app/static/js/*.jsx', ['js1','js2']);
 });

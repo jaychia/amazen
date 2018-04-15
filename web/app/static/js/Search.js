@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -6,11 +6,17 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = require("react");
+var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _axios = require('axios');
+
+var _axios2 = _interopRequireDefault(_axios);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -24,73 +30,112 @@ var Search = function (_React$Component) {
   function Search() {
     _classCallCheck(this, Search);
 
-    return _possibleConstructorReturn(this, (Search.__proto__ || Object.getPrototypeOf(Search)).apply(this, arguments));
+    var _this = _possibleConstructorReturn(this, (Search.__proto__ || Object.getPrototypeOf(Search)).apply(this, arguments));
+
+    _this.state = { descriptors: [] };
+    _this.addButtonOnClick = _this.addButtonOnClick.bind(_this);
+    return _this;
   }
 
   _createClass(Search, [{
-    key: "render",
+    key: 'searchButtonOnClick',
+    value: function searchButtonOnClick() {
+      var _this2 = this;
+
+      _axios2.default.get('http://www.reddit.com/r/' + this.props.subreddit + '.json').then(function (res) {
+        var posts = res.data.data.children.map(function (obj) {
+          return obj.data;
+        });
+        _this2.setState({ posts: posts });
+      });
+    }
+  }, {
+    key: 'addButtonOnClick',
+    value: function addButtonOnClick() {
+      var new_d = this.refs.New_descriptor.value;
+      this.refs.New_descriptor.value = "";
+      if (new_d != "" && this.state.descriptors.indexOf(new_d) == -1) this.setState(function (prevState, props) {
+        return {
+          descriptors: [].concat(_toConsumableArray(prevState.descriptors), [new_d])
+        };
+      });
+    }
+  }, {
+    key: 'deleteButtonOnClick',
+    value: function deleteButtonOnClick(deletedName) {
+      var arr = this.state.descriptors;
+      var i = arr.indexOf(deletedName);
+      arr.splice(i, 1);
+      this.setState({ descriptors: arr });
+    }
+  }, {
+    key: 'render',
     value: function render() {
+      var _this3 = this;
+
       return _react2.default.createElement(
-        "div",
+        'div',
         null,
-        _react2.default.createElement("link", { rel: "stylesheet", href: "/static/bootstrap.min.css" }),
-        _react2.default.createElement("link", { rel: "stylesheet", href: "/static/main.css" }),
+        _react2.default.createElement('link', { rel: 'stylesheet', href: '/static/css/bootstrap.min.css' }),
+        _react2.default.createElement('link', { rel: 'stylesheet', href: '/static/main.css' }),
         _react2.default.createElement(
-          "div",
-          { className: "topcorner" },
-          _react2.default.createElement(
-            "p",
-            null,
-            "Project Name: ",
-            this.props.name
-          ),
-          _react2.default.createElement(
-            "p",
-            null,
-            "Student Name: ",
-            this.props.netid
-          )
+          'div',
+          { className: 'text-center' },
+          _react2.default.createElement('img', { src: '/static/img/logo.png', width: '400' })
         ),
         _react2.default.createElement(
-          "form",
-          { className: "form-inline global-search" },
+          'form',
+          { className: 'form-inline global-search search-wrapper' },
           _react2.default.createElement(
-            "h1",
-            { style: { fontSize: 55, fontFamily: 'Futura', color: '#4285F4' } },
-            "C",
+            'div',
+            { className: 'search-bar' },
+            _react2.default.createElement('input', { className: 'search-bar-input input-lg', id: 'search_bar', type: 'text', placeholder: 'What are you looking for today?' }),
             _react2.default.createElement(
-              "font",
-              { color: "#EA4335" },
-              "S"
-            ),
-            _react2.default.createElement(
-              "font",
-              { color: "#FBBC05" },
-              "4"
-            ),
-            "3",
-            _react2.default.createElement(
-              "font",
-              { color: "#34A853" },
-              "0"
-            ),
-            _react2.default.createElement(
-              "font",
-              { color: "#EA4335" },
-              "0"
+              'div',
+              { className: 'input-group-btn' },
+              _react2.default.createElement(
+                'button',
+                { className: 'btn btn-lg search-bar-button', type: 'button', onClick: this.searchButtonOnClick },
+                _react2.default.createElement('span', { className: 'glyphicon glyphicon-search' })
+              )
             )
           ),
-          _react2.default.createElement("br", null),
-          _react2.default.createElement("br", null),
+          _react2.default.createElement('br', null),
           _react2.default.createElement(
-            "div",
-            { className: "form-group" },
-            _react2.default.createElement("input", { id: "input", type: "text", name: "search", className: "form-control", placeholder: "Your Input" })
-          ),
-          _react2.default.createElement(
-            "button",
-            { type: "submit", className: "btn btn-info" },
-            " Go! "
+            'div',
+            { className: 'search-bar descriptor-bar' },
+            _react2.default.createElement(
+              'div',
+              { className: 'descriptor-wrapper' },
+              _react2.default.createElement('input', { type: 'text', className: 'input-lg descriptor-bar-input', placeholder: 'Descriptors', ref: 'New_descriptor' }),
+              this.state.descriptors.map(function (d) {
+                return _react2.default.createElement(
+                  'div',
+                  { key: d, className: 'descriptor-tag-wrapper' },
+                  _react2.default.createElement(
+                    'span',
+                    { className: 'badge badge-default descriptor-tag' },
+                    d,
+                    _react2.default.createElement(
+                      'button',
+                      { className: 'btn descriptor-tag-button', type: 'button', onClick: function onClick() {
+                          return _this3.deleteButtonOnClick(d);
+                        } },
+                      _react2.default.createElement('span', { className: 'glyphicon glyphicon-remove' })
+                    )
+                  )
+                );
+              })
+            ),
+            _react2.default.createElement(
+              'div',
+              { className: 'input-group-btn' },
+              _react2.default.createElement(
+                'button',
+                { className: 'btn btn-lg search-bar-button', type: 'button', onClick: this.addButtonOnClick },
+                _react2.default.createElement('span', { className: 'glyphicon glyphicon-plus' })
+              )
+            )
           )
         )
       );

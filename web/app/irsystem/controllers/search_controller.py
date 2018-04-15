@@ -54,7 +54,7 @@ def search_page():
 	initial_descriptors = request.args.get('descriptors', [])
 	if initial_query is None:
 		return render_template('search.html')
-	return render_template('search_page.html', query=initial_query, descriptors=initial_descriptors)
+	return render_template('search_results.html', query=initial_query, descriptors=initial_descriptors)
 
 @irsystem.route('search', methods=['GET'])
 def product_search():
@@ -66,7 +66,7 @@ def product_search():
 			'error_message': 'empty query provided'
 		}
 		return jsonify(d)
-	
+
 	category = classify_query(query.strip().lower())
 	pids = filter_category_by_query(query, category)
 	if len(descriptors) > 0:
