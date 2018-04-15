@@ -9,7 +9,7 @@ from functools import wraps
 from werkzeug import check_password_hash, generate_password_hash 
 
 # Import the db object from main app module
-from app import db 
+from app import db
 
 # Marshmallow 
 from marshmallow import ValidationError
@@ -18,7 +18,7 @@ from marshmallow import ValidationError
 from app import socketio
 
 # Import module models 
-# from app.irsystem import search
+from app.irsystem.models import product
 
 # IMPORT THE BLUEPRINT APP OBJECT 
 from app.irsystem import irsystem 
