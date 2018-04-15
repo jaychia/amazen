@@ -24,21 +24,18 @@ var Search = function (_React$Component) {
   function Search() {
     _classCallCheck(this, Search);
 
-    return _possibleConstructorReturn(this, (Search.__proto__ || Object.getPrototypeOf(Search)).apply(this, arguments));
+    var _this = _possibleConstructorReturn(this, (Search.__proto__ || Object.getPrototypeOf(Search)).apply(this, arguments));
+
+    _this.state = { descriptors: [] };
+    return _this;
   }
+  //
+  // buttonOnClick = () => {
+  //   this.setState({descriptors = this.state.descriptors.add(this.refs.New_descriptor.value)});
+  // };
 
   _createClass(Search, [{
     key: "render",
-
-    // constructor() {
-    //   super(...arguments);
-    //   this.state = {descriptors: []};
-    // }
-    //
-    // buttonOnClick = () => {
-    //   this.setState({descriptors = this.state.descriptors.add(this.refs.New_descriptor.value)});
-    // };
-
     value: function render() {
       return _react2.default.createElement(
         "div",

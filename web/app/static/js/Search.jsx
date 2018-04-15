@@ -1,10 +1,10 @@
 import React from 'react';
 
 export default class Search extends React.Component {
-  // constructor() {
-  //   super(...arguments);
-  //   this.state = {descriptors: []};
-  // }
+  constructor() {
+    super(...arguments);
+    this.state = {descriptors: []};
+  }
   //
   // buttonOnClick = () => {
   //   this.setState({descriptors = this.state.descriptors.add(this.refs.New_descriptor.value)});
