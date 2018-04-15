@@ -19274,78 +19274,33 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Search = function (_React$Component) {
-  _inherits(Search, _React$Component);
+var ProductListing = function (_React$Component) {
+  _inherits(ProductListing, _React$Component);
 
-  function Search() {
-    _classCallCheck(this, Search);
+  function ProductListing() {
+    _classCallCheck(this, ProductListing);
 
-    var _this = _possibleConstructorReturn(this, (Search.__proto__ || Object.getPrototypeOf(Search)).apply(this, arguments));
-
-    _this.state = { descriptors: [] };
-    return _this;
+    return _possibleConstructorReturn(this, (ProductListing.__proto__ || Object.getPrototypeOf(ProductListing)).apply(this, arguments));
   }
-  //
-  // buttonOnClick = () => {
-  //   this.setState({descriptors = this.state.descriptors.add(this.refs.New_descriptor.value)});
-  // };
 
-  _createClass(Search, [{
+  _createClass(ProductListing, [{
     key: "render",
     value: function render() {
       return _react2.default.createElement(
         "div",
-        null,
-        _react2.default.createElement("link", { rel: "stylesheet", href: "/static/css/bootstrap.min.css" }),
-        _react2.default.createElement("link", { rel: "stylesheet", href: "/static/css/bootstrap-grid.min.css" }),
-        _react2.default.createElement("link", { rel: "stylesheet", href: "/static/css/bootstrap-reboot.min.css" }),
-        _react2.default.createElement("link", { rel: "stylesheet", href: "/static/main.css" }),
-        _react2.default.createElement(
-          "div",
-          { className: "text-center" },
-          _react2.default.createElement("img", { src: "/static/img/logo.png", width: "400" })
-        ),
-        _react2.default.createElement(
-          "form",
-          { className: "form-inline global-search" },
-          _react2.default.createElement(
-            "div",
-            { className: "search-bar" },
-            _react2.default.createElement("input", { id: "search_btn", type: "text", className: "input-lg", placeholder: "What are you looking for today?" }),
-            _react2.default.createElement(
-              "div",
-              { className: "input-group-btn" },
-              _react2.default.createElement(
-                "button",
-                { className: "btn btn-lg", type: "button" },
-                _react2.default.createElement("span", { className: "glyphicon glyphicon-search" })
-              )
-            )
-          ),
-          _react2.default.createElement("br", null),
-          _react2.default.createElement(
-            "div",
-            { className: "search-bar descriptor-bar" },
-            _react2.default.createElement("input", { type: "text", className: "input-lg", placeholder: "Descriptors", ref: "New_descriptor" }),
-            _react2.default.createElement(
-              "div",
-              { className: "input-group-btn" },
-              _react2.default.createElement(
-                "button",
-                { className: "btn btn-lg", type: "button" },
-                _react2.default.createElement("span", { className: "glyphicon glyphicon-search" })
-              )
-            )
-          )
-        )
+        { className: "productlisting" },
+        "PRODUCTLISTING ",
+        query,
+        " ",
+        descriptors
       );
     }
   }]);
 
-  return Search;
+  return ProductListing;
 }(_react2.default.Component);
 
-exports.default = Search;
+exports.default = ProductListing;
 
 },{"react":24}],26:[function(require,module,exports){
 'use strict';
@@ -19358,14 +19313,14 @@ var _reactDom = require('react-dom');
 
 var _reactDom2 = _interopRequireDefault(_reactDom);
 
-var _Search = require('./Search.jsx');
+var _ProductListing = require('./ProductListing.jsx');
 
-var _Search2 = _interopRequireDefault(_Search);
+var _ProductListing2 = _interopRequireDefault(_ProductListing);
 
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : { default: obj };
 }
 
-_reactDom2.default.render(_react2.default.createElement(_Search2.default, { name: name, netid: netid }), document.getElementById('root'));
+_reactDom2.default.render(_react2.default.createElement(_ProductListing2.default, null), document.getElementById('root'));
 
-},{"./Search.jsx":25,"react":24,"react-dom":21}]},{},[26]);
+},{"./ProductListing.jsx":25,"react":24,"react-dom":21}]},{},[26]);

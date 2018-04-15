@@ -1,5 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Search from './Search.jsx';
+import ProductListing from './ProductListing.jsx';
 
-ReactDOM.render(<Search name={name} netid={netid} />, document.getElementById('root'));
+ReactDOM.render(<ProductListing />, document.getElementById('root'));

@@ -8,10 +8,10 @@ var _reactDom = require('react-dom');
 
 var _reactDom2 = _interopRequireDefault(_reactDom);
 
-var _Search = require('./Search.jsx');
+var _ProductListing = require('./ProductListing.jsx');
 
-var _Search2 = _interopRequireDefault(_Search);
+var _ProductListing2 = _interopRequireDefault(_ProductListing);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-_reactDom2.default.render(_react2.default.createElement(_Search2.default, { name: name, netid: netid }), document.getElementById('root'));
+_reactDom2.default.render(_react2.default.createElement(_ProductListing2.default, null), document.getElementById('root'));
