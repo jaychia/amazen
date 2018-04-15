@@ -31,11 +31,11 @@ gulp.task('js1', ['transform'], function() {
 gulp.task('js2', ['transform'], function () {
     // Assumes a file has been transformed from
     // ./app/src/main_search_page.jsx to ./app/dist/main_search_page.js
-    return browserify('./src/app/static/js/main_search_page.js')
+    return browserify('./src/app/static/js/main_search_result.js')
         .transform("babelify", { presets: ["es2015", "react", "stage-3"] })
         .bundle()
         .on('error', gutil.log)
-        .pipe(source('main_search_page.js'))
+        .pipe(source('main_search_result.js'))
         .pipe(buffer())
         .pipe(gulp.dest('./src/app/static/js/bundled'))
 });
