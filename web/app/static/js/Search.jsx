@@ -34,7 +34,7 @@ export default class Search extends React.Component {
             <input type="text" className="input-lg" placeholder="Descriptors" ref="New_descriptor"/>
             <div className="input-group-btn">
               <button className="btn btn-lg" type="button">
-                <span className="glyphicon glyphicon-search"></span>
+                <span className="glyphicon glyphicon-plus"></span>
               </button>
             </div>
           </div>
