@@ -19198,7 +19198,7 @@ var Search = function (_React$Component) {
         null,
         _react2.default.createElement("link", { rel: "stylesheet", href: "/static/css/bootstrap.min.css" }),
         _react2.default.createElement("link", { rel: "stylesheet", href: "/static/css/bootstrap-grid.min.css" }),
-        _react2.default.createElement("link", { rel: "stylesheet", href: "/static/css/bootstrap-reboot.min.min.css" }),
+        _react2.default.createElement("link", { rel: "stylesheet", href: "/static/css/bootstrap-reboot.min.css" }),
         _react2.default.createElement("link", { rel: "stylesheet", href: "/static/main.css" }),
         _react2.default.createElement(
           "div",

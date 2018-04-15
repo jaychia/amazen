@@ -15,7 +15,7 @@ export default class Search extends React.Component {
       <div>
         <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
         <link rel="stylesheet" href="/static/css/bootstrap-grid.min.css" />
-        <link rel="stylesheet" href="/static/css/bootstrap-reboot.min.min.css" />
+        <link rel="stylesheet" href="/static/css/bootstrap-reboot.min.css" />
         <link rel="stylesheet" href="/static/main.css" />
         <div className="text-center">
           <img src="/static/img/logo.png" width="400" />
