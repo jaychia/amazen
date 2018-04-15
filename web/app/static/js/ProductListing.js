@@ -34,17 +34,75 @@ var ProductListing = function (_React$Component) {
   _createClass(ProductListing, [{
     key: 'render',
     value: function render() {
+      console.log("GLOBAL: query=" + query + "\n desc=" + descriptors);
+      var superscript_number = this.props.price % 1 < 10 ? (this.props.price % 1).toString() + "0" : this.props.price % 1;
+      var desc_split = this.props.desc.split("\n").map(function (s) {
+        return _react2.default.createElement(
+          'span',
+          null,
+          s,
+          _react2.default.createElement('br', null)
+        );
+      });
       return _react2.default.createElement(
         'div',
-        { className: 'productlisting' },
-        'PRODUCTLISTING ',
-        query,
-        ' ',
-        descriptors,
-        ' ',
-        this.props.productTitle,
-        ' ',
-        this.props.price
+        { className: 'product-listing-container' },
+        _react2.default.createElement(
+          'div',
+          { className: 'product-listing' },
+          _react2.default.createElement(
+            'div',
+            { className: 'product-img-container' },
+            _react2.default.createElement('img', { className: 'product-img', src: this.props.imgUrl })
+          ),
+          _react2.default.createElement(
+            'div',
+            { className: 'product-main' },
+            _react2.default.createElement(
+              'div',
+              null,
+              _react2.default.createElement(
+                'div',
+                { className: 'product-title' },
+                this.props.productTitle
+              ),
+              _react2.default.createElement(
+                'div',
+                { className: 'product-seller' },
+                this.props.seller
+              )
+            ),
+            _react2.default.createElement(
+              'div',
+              { className: 'product-listing-body' },
+              _react2.default.createElement(
+                'div',
+                { className: 'product-body-left' },
+                _react2.default.createElement(
+                  'div',
+                  { className: 'product-price' },
+                  _react2.default.createElement(
+                    'span',
+                    { className: 'product-price-big' },
+                    "$" + Math.floor(this.props.price).toString()
+                  ),
+                  _react2.default.createElement(
+                    'span',
+                    { className: 'product-price-superscript' },
+                    superscript_number
+                  )
+                ),
+                _react2.default.createElement(
+                  'div',
+                  { className: 'product-desc' },
+                  desc_split
+                )
+              ),
+              _react2.default.createElement('div', { className: 'product-keyword-dashboard' })
+            )
+          )
+        ),
+        _react2.default.createElement('div', { className: 'product-divider' })
       );
     }
   }]);
@@ -57,5 +115,11 @@ exports.default = ProductListing;
 
 ProductListing.propTypes = {
   productTitle: _propTypes2.default.string.isRequired,
-  price: _propTypes2.default.number.isRequired
+  price: _propTypes2.default.number.isRequired,
+  seller: _propTypes2.default.string.isRequired,
+  desc: _propTypes2.default.string,
+  keywords: _propTypes2.default.arrayOf(_propTypes2.default.string).isRequired,
+  keywordscores: _propTypes2.default.arrayOf(_propTypes2.default.number).isRequired,
+  rating: _propTypes2.default.number,
+  imgUrl: _propTypes2.default.string
 };
