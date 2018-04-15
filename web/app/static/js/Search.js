@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -6,9 +6,13 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = require("react");
+var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
+
+var _axios = require('axios');
+
+var _axios2 = _interopRequireDefault(_axios);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -29,79 +33,110 @@ var Search = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (Search.__proto__ || Object.getPrototypeOf(Search)).apply(this, arguments));
 
     _this.state = { descriptors: [] };
-    _this.buttonOnClick = _this.buttonOnClick.bind(_this);
+    _this.addButtonOnClick = _this.addButtonOnClick.bind(_this);
+    _this.searchButtonOnClick = _this.searchButtonOnClick.bind(_this);
     return _this;
   }
 
   _createClass(Search, [{
-    key: "buttonOnClick",
-    value: function buttonOnClick() {
-      var _this2 = this;
-
-      if (this.refs.New_descriptor.value != "") this.setState(function (prevState, props) {
+    key: 'searchButtonOnClick',
+    value: function searchButtonOnClick() {
+      var descriptors_str = this.state.descriptors.join(",");
+      window.location.href = "search_page?query=" + this.refs.New_search.value + "&descriptors=" + descriptors_str;
+      // axios.get("search_page?query=" + {this.refs.New_search.value} + "&descriptors=" + descriptors_str)
+      //   .then(res => {
+      //     const posts = res.data.data.children.map(obj => obj.data);
+      //     this.setState({ posts });
+      //   });
+    }
+  }, {
+    key: 'addButtonOnClick',
+    value: function addButtonOnClick() {
+      var new_d = this.refs.New_descriptor.value;
+      this.refs.New_descriptor.value = "";
+      if (new_d != "" && this.state.descriptors.indexOf(new_d) == -1) this.setState(function (prevState, props) {
         return {
-          descriptors: [].concat(_toConsumableArray(prevState.descriptors), [_this2.refs.New_descriptor.value])
+          descriptors: [].concat(_toConsumableArray(prevState.descriptors), [new_d])
         };
       });
     }
   }, {
-    key: "render",
+    key: 'deleteButtonOnClick',
+    value: function deleteButtonOnClick(deletedName) {
+      var arr = this.state.descriptors;
+      var i = arr.indexOf(deletedName);
+      arr.splice(i, 1);
+      this.setState({ descriptors: arr });
+    }
+  }, {
+    key: 'render',
     value: function render() {
+      var _this2 = this;
+
       return _react2.default.createElement(
-        "div",
+        'div',
         null,
-        _react2.default.createElement("link", { rel: "stylesheet", href: "/static/css/bootstrap.min.css" }),
-        _react2.default.createElement("link", { rel: "stylesheet", href: "/static/css/bootstrap-grid.min.css" }),
-        _react2.default.createElement("link", { rel: "stylesheet", href: "/static/css/bootstrap-reboot.min.css" }),
-        _react2.default.createElement("link", { rel: "stylesheet", href: "/static/main.css" }),
+        _react2.default.createElement('link', { rel: 'stylesheet', href: '/static/css/bootstrap.min.css' }),
+        _react2.default.createElement('link', { rel: 'stylesheet', href: '/static/main.css' }),
         _react2.default.createElement(
-          "div",
-          { className: "text-center" },
-          _react2.default.createElement("img", { src: "/static/img/logo.png", width: "400" })
+          'div',
+          { className: 'text-center' },
+          _react2.default.createElement('img', { src: '/static/img/logo.png', width: '400' })
         ),
         _react2.default.createElement(
-          "form",
-          { className: "form-inline global-search" },
+          'form',
+          { className: 'form-inline global-search search-wrapper' },
           _react2.default.createElement(
-            "div",
-            { className: "search-bar" },
-            _react2.default.createElement("input", { id: "search_btn", type: "text", className: "input-lg", placeholder: "What are you looking for today?" }),
+            'div',
+            { className: 'search-bar' },
+            _react2.default.createElement('input', { className: 'search-bar-input input-lg', type: 'text', placeholder: 'What are you looking for today?', ref: 'New_search' }),
             _react2.default.createElement(
-              "div",
-              { className: "input-group-btn" },
+              'div',
+              { className: 'input-group-btn' },
               _react2.default.createElement(
-                "button",
-                { className: "btn btn-lg", type: "button" },
-                _react2.default.createElement("span", { className: "glyphicon glyphicon-search" })
+                'button',
+                { className: 'btn btn-lg search-bar-button', type: 'button', onClick: this.searchButtonOnClick },
+                _react2.default.createElement('span', { className: 'glyphicon glyphicon-search' })
               )
             )
           ),
-          _react2.default.createElement("br", null),
+          _react2.default.createElement('br', null),
           _react2.default.createElement(
-            "div",
-            { className: "search-bar descriptor-bar" },
-            _react2.default.createElement("input", { type: "text", className: "input-lg", placeholder: "Descriptors", ref: "New_descriptor" }),
+            'div',
+            { className: 'search-bar descriptor-bar' },
             _react2.default.createElement(
-              "div",
-              { className: "input-group-btn" },
+              'div',
+              { className: 'descriptor-wrapper' },
+              this.state.descriptors.map(function (d) {
+                return _react2.default.createElement(
+                  'div',
+                  { key: d, className: 'descriptor-tag-wrapper' },
+                  _react2.default.createElement(
+                    'span',
+                    { className: 'badge badge-default descriptor-tag' },
+                    d,
+                    _react2.default.createElement(
+                      'button',
+                      { className: 'btn descriptor-tag-button', type: 'button', onClick: function onClick() {
+                          return _this2.deleteButtonOnClick(d);
+                        } },
+                      _react2.default.createElement('span', { className: 'glyphicon glyphicon-remove' })
+                    )
+                  )
+                );
+              }),
+              _react2.default.createElement('input', { type: 'text', className: 'input-lg descriptor-bar-input', placeholder: 'Descriptors', ref: 'New_descriptor' })
+            ),
+            _react2.default.createElement(
+              'div',
+              { className: 'input-group-btn' },
               _react2.default.createElement(
-                "button",
-                { className: "btn btn-lg", type: "button", onClick: this.buttonOnClick },
-                _react2.default.createElement("span", { className: "glyphicon glyphicon-plus" })
+                'button',
+                { className: 'btn btn-lg search-bar-button', type: 'button', onClick: this.addButtonOnClick },
+                _react2.default.createElement('span', { className: 'glyphicon glyphicon-plus' })
               )
             )
           )
-        ),
-        _react2.default.createElement(
-          "ul",
-          null,
-          this.state.descriptors.map(function (message) {
-            return _react2.default.createElement(
-              "li",
-              { key: message },
-              message
-            );
-          })
         )
       );
     }
