@@ -1,13 +1,22 @@
 import React from 'react';
+import axios from 'axios';
 
 export default class Search extends React.Component {
   constructor() {
     super(...arguments);
     this.state = {descriptors: []};
-    this.buttonOnClick = this.buttonOnClick.bind(this);
+    this.addButtonOnClick = this.addButtonOnClick.bind(this);
   }
 
-  buttonOnClick() {
+  searchButtonOnClick() {
+    axios.get(`http://www.reddit.com/r/${this.props.subreddit}.json`)
+      .then(res => {
+        const posts = res.data.data.children.map(obj => obj.data);
+        this.setState({ posts });
+      });
+  }
+
+  addButtonOnClick() {
     var new_d = this.refs.New_descriptor.value;
     this.refs.New_descriptor.value = "";
     if(new_d != "" && this.state.descriptors.indexOf(new_d) == -1)
@@ -35,7 +44,7 @@ export default class Search extends React.Component {
           <div className="search-bar">
             <input className="search-bar-input input-lg" id="search_bar" type="text" placeholder="What are you looking for today?" />
             <div className="input-group-btn">
-              <button className="btn btn-lg search-bar-button" type="button">
+              <button className="btn btn-lg search-bar-button" type="button" onClick={this.searchButtonOnClick}>
                 <span className="glyphicon glyphicon-search"></span>
               </button>
             </div>
@@ -56,7 +65,7 @@ export default class Search extends React.Component {
               )}
             </div>
             <div className="input-group-btn">
-              <button className="btn btn-lg search-bar-button" type="button" onClick={this.buttonOnClick}>
+              <button className="btn btn-lg search-bar-button" type="button" onClick={this.addButtonOnClick}>
                 <span className="glyphicon glyphicon-plus"></span>
               </button>
             </div>

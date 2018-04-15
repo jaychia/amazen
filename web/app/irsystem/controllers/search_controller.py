@@ -63,7 +63,7 @@ def product_search():
 			'error_message': 'empty query provided'
 		}
 		return jsonify(d)
-	
+
 	category = classify_query(query.strip().lower())
 	pids = filter_category_by_query(query, category)
 	if len(descriptors) > 0:
