@@ -12,11 +12,6 @@ export default class Search extends React.Component {
   searchButtonOnClick() {
     var descriptors_str = this.state.descriptors.join(",");
     window.location.href = "search_page?query=" + this.refs.New_search.value + "&descriptors=" + descriptors_str;
-    // axios.get("search_page?query=" + {this.refs.New_search.value} + "&descriptors=" + descriptors_str)
-    //   .then(res => {
-    //     const posts = res.data.data.children.map(obj => obj.data);
-    //     this.setState({ posts });
-    //   });
   }
 
   addButtonOnClick() {
@@ -38,8 +33,6 @@ export default class Search extends React.Component {
   render() {
     return (
       <div>
-        <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="/static/main.css" />
         <div className="text-center">
           <img src="/static/img/logo.png" width="400" />
         </div>

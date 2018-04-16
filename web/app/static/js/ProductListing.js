@@ -40,8 +40,6 @@ var ProductListing = function (_React$Component) {
     value: function render() {
       var _this2 = this;
 
-      console.log("GLOBAL: query=" + query + "\n desc=" + descriptors);
-
       // Render price
       var superscript_number = this.props.price % 1 < 10 ? (this.props.price % 1).toString() + "0" : this.props.price % 1;
 
@@ -64,7 +62,7 @@ var ProductListing = function (_React$Component) {
       }
       stars.push(_react2.default.createElement(
         'span',
-        { className: 'num-ratings' },
+        { key: this.props.numRatings, className: 'num-ratings' },
         this.props.numRatings
       ));
 
@@ -75,10 +73,10 @@ var ProductListing = function (_React$Component) {
       var k2_to_div = function k2_to_div(k2) {
         var rgb = keyword_colors[Math.floor(k2[1] / div)];
         var rgb_str = 'rgb(' + rgb[0].toString() + "," + rgb[1].toString() + "," + rgb[2].toString() + ", 1" + ')';
-        var colorStyle = { 'background-color': rgb_str };
+        var colorStyle = { 'backgroundColor': rgb_str };
         return _react2.default.createElement(
           'div',
-          { 'class': 'keyword', style: colorStyle },
+          { className: 'keyword', style: colorStyle },
           k2[0]
         );
       };

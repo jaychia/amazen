@@ -1,7 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 
-let keyword_colors = [[251, 147, 44], [203, 152, 48], [164, 157, 52], [133, 162, 57], [107, 167, 63], [87, 172, 68], [70, 177, 75], [57, 183, 81], [46, 189, 89]];
+const keyword_colors = [[251, 147, 44], [203, 152, 48], [164, 157, 52], [133, 162, 57], [107, 167, 63], [87, 172, 68], [70, 177, 75], [57, 183, 81], [46, 189, 89]];
 
 export default class ProductListing extends React.Component {
   constructor() {
@@ -9,8 +9,6 @@ export default class ProductListing extends React.Component {
   }
   
   render() {
-    console.log("GLOBAL: query=" + query + "\n desc=" + descriptors);
-
     // Render price
     let superscript_number = (this.props.price % 1 < 10) ? 
       (this.props.price % 1).toString() + "0" : this.props.price % 1;
@@ -22,15 +20,15 @@ export default class ProductListing extends React.Component {
     let rounded = (Math.round(this.props.rating * 2) / 2);
     let stars = [...Array(Math.floor(rounded)).keys()].map((x) => <img src="/static/img/fullstar.png" className="full-star" />);
     if (rounded % 1 != 0) { stars.push(<img src="/static/img/halfstar.png" className="half-star" />);}
-    stars.push(<span className="num-ratings">{this.props.numRatings}</span>)
+    stars.push(<span key={this.props.numRatings} className="num-ratings">{this.props.numRatings}</span>)
 
     let keywords = this.props.keywords.map((e, i) => [e, this.props.keywordscores[i]]);
     let div = 5.0 / 8;
     let k2_to_div = (k2) => {
       let rgb = keyword_colors[Math.floor(k2[1] / div)];
       let rgb_str = 'rgb(' + rgb[0].toString() + "," + rgb[1].toString() + "," + rgb[2].toString() + ", 1" + ')';
-      let colorStyle = {'background-color': rgb_str};
-      return <div class="keyword" style={colorStyle}>{k2[0]}</div>
+      let colorStyle = {'backgroundColor': rgb_str};
+      return <div className="keyword" style={colorStyle}>{k2[0]}</div>
     }
     let keyword_divs = keywords.map(k2_to_div);
 

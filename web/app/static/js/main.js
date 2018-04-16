@@ -14,4 +14,4 @@ var _Search2 = _interopRequireDefault(_Search);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-_reactDom2.default.render(_react2.default.createElement(_Search2.default, { name: name, netid: netid }), document.getElementById('root'));
+_reactDom2.default.render(_react2.default.createElement(_Search2.default, null), document.getElementById('root'));

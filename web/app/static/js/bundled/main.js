@@ -20744,11 +20744,6 @@ var Search = function (_React$Component) {
     value: function searchButtonOnClick() {
       var descriptors_str = this.state.descriptors.join(",");
       window.location.href = "search_page?query=" + this.refs.New_search.value + "&descriptors=" + descriptors_str;
-      // axios.get("search_page?query=" + {this.refs.New_search.value} + "&descriptors=" + descriptors_str)
-      //   .then(res => {
-      //     const posts = res.data.data.children.map(obj => obj.data);
-      //     this.setState({ posts });
-      //   });
     }
   }, {
     key: 'addButtonOnClick',
@@ -20777,8 +20772,6 @@ var Search = function (_React$Component) {
       return _react2.default.createElement(
         'div',
         null,
-        _react2.default.createElement('link', { rel: 'stylesheet', href: '/static/css/bootstrap.min.css' }),
-        _react2.default.createElement('link', { rel: 'stylesheet', href: '/static/main.css' }),
         _react2.default.createElement(
           'div',
           { className: 'text-center' },
@@ -20867,6 +20860,6 @@ function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : { default: obj };
 }
 
-_reactDom2.default.render(_react2.default.createElement(_Search2.default, { name: name, netid: netid }), document.getElementById('root'));
+_reactDom2.default.render(_react2.default.createElement(_Search2.default, null), document.getElementById('root'));
 
 },{"./Search.jsx":51,"react":50,"react-dom":47}]},{},[52]);
