@@ -7,7 +7,7 @@ export default class ProductListing extends React.Component {
   constructor() {
     super(...arguments);
   }
-  
+
   render() {
     // Render price
     let superscript_number = (this.props.price % 1 < 10) ? 

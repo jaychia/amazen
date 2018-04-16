@@ -18,6 +18,10 @@ var _ProductListing = require('./ProductListing.jsx');
 
 var _ProductListing2 = _interopRequireDefault(_ProductListing);
 
+var _axios = require('axios');
+
+var _axios2 = _interopRequireDefault(_axios);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -39,6 +43,12 @@ var ResultPage = function (_React$Component) {
         _this.state = { descriptors: _this.props.descriptors.split(',') };
         _this.addButtonOnClick = _this.addButtonOnClick.bind(_this);
         _this.searchButtonOnClick = _this.searchButtonOnClick.bind(_this);
+        console.log("/search?query=" + _this.props.query + "&descriptors=" + _this.props.descriptors);
+        _axios2.default.get("/search?query=" + _this.props.query + "&descriptors=" + _this.props.descriptors).then(function (res) {
+            var products = res.data;
+            console.log(products);
+            _this.state = { products: products };
+        });
         return _this;
     }
 
@@ -135,18 +145,17 @@ var ResultPage = function (_React$Component) {
                         )
                     )
                 ),
-                Array.from(Array(this.props.productTitle.length).keys()).map(function (i) {
+                this.state.products.map(function (p) {
                     return _react2.default.createElement(_ProductListing2.default, {
-                        key: i,
-                        productTitle: _this2.props.productTitle[i],
-                        price: _this2.props.price[i],
-                        seller: _this2.props.seller[i],
-                        desc: _this2.props.desc[i],
-                        keywords: _this2.props.keywords[i],
-                        keywordscores: _this2.props.keywordscores[i],
-                        rating: _this2.props.rating[i],
-                        imgUrl: _this2.props.imgUrl[i],
-                        numRatings: _this2.props.numRatings[i] });
+                        productTitle: p.productTitle,
+                        price: p.price,
+                        seller: p.seller,
+                        desc: p.desc,
+                        keywords: p.keywords,
+                        keywordscores: p.keywordscores,
+                        rating: p.rating,
+                        imgUrl: p.imgUrl,
+                        numRatings: p.numRatings });
                 })
             );
         }
