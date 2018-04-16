@@ -12,10 +12,10 @@ class Product(Base):
   desc = db.Column(db.Text(), nullable=True)
   average_stars = db.Column(db.Float(), nullable=False)
   num_ratings = db.Column(db.Integer, nullable=False)
-  #keywords = db.Column(db.String(), nullable=True)
-  #keywordscores = db.Column(db.String(), nullable=True)
+  keywords = db.Column(db.String(), nullable=True)
+  keywordscores = db.Column(db.String(), nullable=True)
 
-  def __init__(self, name, price, img_url, azn_product_id, seller_name, desc, average_stars, num_ratings):
+  def __init__(self, name, price, img_url, azn_product_id, seller_name, desc, average_stars, num_ratings, keywords=None, keywordscores=None):
     """
     Initialize a product SQLAlchemy Model Object
     Requires: 
@@ -31,8 +31,8 @@ class Product(Base):
     self.desc = desc
     self.average_stars = average_stars
     self.num_ratings = num_ratings
-    #self.keywords = keywords
-    #self.keywordscores = keywordscores
+    self.keywords = keywords
+    self.keywordscores = keywordscores
 
   def __repr__(self):
     return str(self.__dict__)
@@ -53,6 +53,17 @@ def new_products(tuplist):
     if db.session.query(Product.azn_product_id).filter_by(azn_product_id=tup.azn_product_id).scalar() is None:
       db.session.add(p)
       db.session.commit()
+
+def update_product_keywords(azn_pid, keywords):
+  """
+  Updates the keywords for a given azn_pid
+  keywords are [('key', score)...]
+  """
+  p = Product.query.filter_by(azn_product_id=azn_pid).first()
+  if p is not None:
+    p.keywords = ",".join([k for k, _ in keywords])
+    p.keywordscores = ",".join([str(s) for _, s in keywords])
+    db.session.commit()
 
 class ProductSchema(ModelSchema):
   class Meta:

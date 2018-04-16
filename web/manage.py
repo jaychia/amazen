@@ -2,9 +2,10 @@ import os
 from flask_script import Manager, Command
 from flask_migrate import Migrate, MigrateCommand
 from app import app, db
-from app.irsystem.models.product import new_products
+from app.irsystem.models.product import new_products, update_product_keywords
 from collections import namedtuple
 import json
+import pickle
 
 # Migrations
 migrate = Migrate(app, db)
@@ -51,6 +52,15 @@ def loadproducts(json_location):
         del tuplist[:]
   new_products(tuplist)
 
+# Loading of keywords and keywordscores
+@manager.command
+def loadkeywords(keywords_location):
+  assert(os.path.isfile(keywords_location))
+  tuplist = []
+  with open(keywords_location, 'r') as f:
+    d = pickle.load(f)
+    for k, v in d.items():
+      update_product_keywords(k, v)
 
 if __name__ == "__main__":
   manager.run()

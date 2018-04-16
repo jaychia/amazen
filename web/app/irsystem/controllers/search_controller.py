@@ -76,7 +76,7 @@ def product_search():
 
 	category = classify_query(query.strip().lower())
 	pids = filter_category_by_query(query, category)
-	if not (descriptors is None):
+	if descriptors is not '':
 		descriptors = descriptors.split(",")
 		descriptors = [x.lower().strip() for x in descriptors]
 		sorted_pids = rank_pids_with_desc(descriptors, pids)
