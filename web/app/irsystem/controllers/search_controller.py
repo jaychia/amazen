@@ -25,13 +25,28 @@ def rank_pids_with_desc(descs, pid):
 
 def pack_pid_json(pids):
 	products = products_with_pids(pids)
-	return [{'product_id': p.azn_product_id,
-			'ratings': 5.0, #TODO: Update
-			'keywords': ['Hello', 'Goodbye'], #TODO: Update
-			'keywordscores': [4.0, 2.0], #TODO: Update
-			'price': p.price,
-			'name': p.name,
-			'seller_name': p.seller_name} for p in products]
+	# return [{
+	# 	'productTitle': p.name,
+	# 	'price': p.price,
+	# 	'seller': p.seller_name,
+	# 	'desc': p.desc,
+	# 	'keywords': ['Hello', 'Goodbye'],
+	# 	'keywordscores': [4.0, 2.0],
+	# 	'rating': 5.0,
+	# 	'numRatings': 578,
+	# 	'imgUrl': p.img_url
+	# } for p in products]
+	return [{
+		'productTitle': "HP 8300 Elite Small Form Factor Desktop Computer, Intel Core i5 - 3470 3.2GHz Quad - Core, 8GB RAM, 500GB SATA, Windows 10 Pro 64 - Bit, USB 3.0, Display Port(Certified Refurbished)",
+		'price': 418.13,
+		'seller': "Charles Bailong",
+		'desc': "Deal: Biggest deal ever Make me happy: oh shitNo drawbacks: really sic",
+		'keywords': ['Hello', 'Goodbye', 'Steamy', 'Cute', 'Smoking', 'Lol'],
+		'keywordscores': [4.0, 2.0, 1.5, 1.0 ,5.0 ,4.3],
+		'rating': 5.0,
+		'numRatings': 578,
+		'imgUrl': "https://media.licdn.com/dms/image/C5603AQEApkGEbFQMJw/profile-displayphoto-shrink_800_800/0?e=1528956000&v=beta&t=kOtxa0-7FomSHErGmHV0i7h78tO3J7I5mpzM6qN1WtE"
+	} for _ in range(10)]
 
 ##################################################################################################
 # Views
@@ -59,7 +74,7 @@ def search_page():
 @irsystem.route('search', methods=['GET'])
 def product_search():
 	query = request.args.get('query')
-	descriptors = request.args.get('descriptors', [])
+	descriptors = request.args.get('descriptors', '')
 	if not query:
 		d = {
 			'status': 400,
@@ -76,4 +91,4 @@ def product_search():
 	else:
 		sorted_pids = pids
 	d = pack_pid_json(sorted_pids)
-	return jsonify(d)
+	return jsonify(data=d)
