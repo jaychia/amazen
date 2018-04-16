@@ -39,7 +39,7 @@ class Product(Base):
 
 def products_with_pids(pid_list):
   products = Product.query.filter(Product.azn_product_id.in_(pid_list)).all()
-  pmap = {p.id: p for p in products}
+  pmap = {p.azn_product_id: p for p in products}
   return [pmap[id] for id in pid_list if id in pmap]
 
 def new_products(tuplist):
