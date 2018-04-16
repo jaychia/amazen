@@ -9,10 +9,13 @@ class Product(Base):
   img_url = db.Column(db.String(), nullable=False)
   azn_product_id = db.Column(db.String(), unique=True, nullable=False, index=True)
   seller_name = db.Column(db.String(), nullable=False)
-  #average_stars = db.Column(db.Float(), nullable=False)
-  #keywords = db.Column(db.String(), nullable=False)
+  desc = db.Column(db.Text(), nullable=False)
+  average_stars = db.Column(db.Float(), nullable=False)
+  num_ratings = db.Column(db.Integer, nullable=False)
+  #keywords = db.Column(db.String(), nullable=True)
+  #keywordscores = db.Column(db.String(), nullable=True)
 
-  def __init__(self, name, price, img_url, azn_product_id, seller_name):
+  def __init__(self, name, price, img_url, azn_product_id, seller_name, desc, average_stars, num_ratings):
     """
     Initialize a product SQLAlchemy Model Object
     Requires: 
@@ -25,8 +28,11 @@ class Product(Base):
     self.img_url = img_url
     self.azn_product_id = azn_product_id
     self.seller_name = seller_name
-    #self.average_stars = average_stars
+    self.desc = desc
+    self.average_stars = average_stars
+    self.num_ratings = num_ratings
     #self.keywords = keywords
+    #self.keywordscores = keywordscores
 
   def __repr__(self):
     return str(self.__dict__)
