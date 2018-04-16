@@ -24,29 +24,21 @@ def rank_pids_with_desc(descs, pid):
 	return ["1234", "123", "12"]
 
 def pack_pid_json(pids):
+	# TODO: REMOVE!!!!
+	pids = ["B0001FYRD0", "B003U584DC", "B0002FP058", "B0092V7EJ8", "B00G5DXM6K", "B0061KSYQK", "B003TQ8IZG", "B00AJHE5E6", "B003IY1GXK", "B00365FJ5M"]
+
 	products = products_with_pids(pids)
-	# return [{
-	# 	'productTitle': p.name,
-	# 	'price': p.price,
-	# 	'seller': p.seller_name,
-	# 	'desc': p.desc,
-	# 	'keywords': ['Hello', 'Goodbye'],
-	# 	'keywordscores': [4.0, 2.0],
-	# 	'rating': 5.0,
-	# 	'numRatings': 578,
-	# 	'imgUrl': p.img_url
-	# } for p in products]
 	return [{
-		'productTitle': "HP 8300 Elite Small Form Factor Desktop Computer, Intel Core i5 - 3470 3.2GHz Quad - Core, 8GB RAM, 500GB SATA, Windows 10 Pro 64 - Bit, USB 3.0, Display Port(Certified Refurbished)",
-		'price': 418.13,
-		'seller': "Charles Bailong",
-		'desc': "Deal: Biggest deal ever Make me happy: oh shitNo drawbacks: really sic",
-		'keywords': ['Hello', 'Goodbye', 'Steamy', 'Cute', 'Smoking', 'Lol'],
-		'keywordscores': [4.0, 2.0, 1.5, 1.0 ,5.0 ,4.3],
-		'rating': 5.0,
-		'numRatings': 578,
-		'imgUrl': "https://media.licdn.com/dms/image/C5603AQEApkGEbFQMJw/profile-displayphoto-shrink_800_800/0?e=1528956000&v=beta&t=kOtxa0-7FomSHErGmHV0i7h78tO3J7I5mpzM6qN1WtE"
-	} for _ in range(10)]
+		'productTitle': p.name,
+		'price': p.price,
+		'seller': p.seller_name,
+		'desc': p.desc,
+		'keywords': ['Hello', 'Goodbye'],
+		'keywordscores': [4.0, 2.0],
+		'rating': p.average_stars,
+		'numRatings': p.num_ratings,
+		'imgUrl': p.img_url
+	} for p in products]
 
 ##################################################################################################
 # Views
