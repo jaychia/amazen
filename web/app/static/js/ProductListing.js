@@ -40,8 +40,9 @@ var ProductListing = function (_React$Component) {
     value: function render() {
       var _this2 = this;
 
-      // Render price
-      var superscript_number = this.props.price % 1 < 10 ? (this.props.price % 1).toString() + "0" : this.props.price % 1;
+      // Render pric;
+      var x = (this.props.price * 100 % 100).toPrecision(2);
+      var superscript_number = (x = 0.0) ? "00" : x < 10 ? "0" + x.toString() : x;
 
       // Render description \n newlines by splitting into spans
       var desc_split = this.props.desc.split("\n").map(function (s) {

@@ -18,6 +18,10 @@ var _ProductListing = require('./ProductListing.jsx');
 
 var _ProductListing2 = _interopRequireDefault(_ProductListing);
 
+var _axios = require('axios');
+
+var _axios2 = _interopRequireDefault(_axios);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -36,13 +40,22 @@ var ResultPage = function (_React$Component) {
 
         var _this = _possibleConstructorReturn(this, (ResultPage.__proto__ || Object.getPrototypeOf(ResultPage)).apply(this, arguments));
 
-        _this.state = { descriptors: _this.props.descriptors.split(',') };
+        _this.state = { descriptors: _this.props.descriptors.split(','), products: [] };
         _this.addButtonOnClick = _this.addButtonOnClick.bind(_this);
         _this.searchButtonOnClick = _this.searchButtonOnClick.bind(_this);
         return _this;
     }
 
     _createClass(ResultPage, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            var _this2 = this;
+
+            _axios2.default.get("/search?query=" + this.props.query + "&descriptors=" + this.props.descriptors).then(function (res) {
+                _this2.setState({ products: res.data.data });
+            });
+        }
+    }, {
         key: 'searchButtonOnClick',
         value: function searchButtonOnClick() {
             var descriptors_str = this.state.descriptors.join(",");
@@ -70,7 +83,7 @@ var ResultPage = function (_React$Component) {
     }, {
         key: 'render',
         value: function render() {
-            var _this2 = this;
+            var _this3 = this;
 
             return _react2.default.createElement(
                 'div',
@@ -114,7 +127,7 @@ var ResultPage = function (_React$Component) {
                                             _react2.default.createElement(
                                                 'button',
                                                 { className: 'btn descriptor-tag-button', type: 'button', onClick: function onClick() {
-                                                        return _this2.deleteButtonOnClick(d);
+                                                        return _this3.deleteButtonOnClick(d);
                                                     } },
                                                 _react2.default.createElement('span', { className: 'glyphicon glyphicon-remove' })
                                             )
@@ -135,18 +148,18 @@ var ResultPage = function (_React$Component) {
                         )
                     )
                 ),
-                Array.from(Array(this.props.productTitle.length).keys()).map(function (i) {
+                this.state.products.map(function (p, i) {
                     return _react2.default.createElement(_ProductListing2.default, {
                         key: i,
-                        productTitle: _this2.props.productTitle[i],
-                        price: _this2.props.price[i],
-                        seller: _this2.props.seller[i],
-                        desc: _this2.props.desc[i],
-                        keywords: _this2.props.keywords[i],
-                        keywordscores: _this2.props.keywordscores[i],
-                        rating: _this2.props.rating[i],
-                        imgUrl: _this2.props.imgUrl[i],
-                        numRatings: _this2.props.numRatings[i] });
+                        productTitle: p.productTitle,
+                        price: p.price,
+                        seller: p.seller,
+                        desc: p.desc,
+                        keywords: p.keywords,
+                        keywordscores: p.keywordscores,
+                        rating: p.rating,
+                        imgUrl: p.imgUrl,
+                        numRatings: p.numRatings });
                 })
             );
         }

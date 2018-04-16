@@ -21,7 +21,9 @@ def filter_category_by_query(q, cat):
 	return ["1234", "123", "12"]
 
 def rank_pids_with_desc(descs, pid):
-	return ["1234", "123", "12"]
+	# TODO: Replace with ranked pids
+	return ["B0001FYRD0", "B003U584DC", "B0002FP058", "B0092V7EJ8", "B00G5DXM6K", "B0061KSYQK", "B003TQ8IZG", "B00AJHE5E6", "B003IY1GXK", "B00365FJ5M"]
+
 
 def pack_pid_json(pids):
 	# TODO: REMOVE!!!!
@@ -66,7 +68,7 @@ def search_page():
 @irsystem.route('search', methods=['GET'])
 def product_search():
 	query = request.args.get('query')
-	descriptors = request.args.get('descriptors', '')
+	descriptors = request.args.get('descriptors', [])
 	if not query:
 		d = {
 			'status': 400,
