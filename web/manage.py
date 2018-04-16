@@ -19,21 +19,23 @@ def p_json_to_tup(p_json):
     return None
   if 'title' not in p_json or 'price' not in p_json or 'imUrl' not in p_json or 'asin' not in p_json:
     return None
+
   avg_stars = 0
   for score, _ in p_json['allReviews']:
     avg_stars += score
   avg_stars /= review_length
-  return ProductTuple(
-      name=p_json['title'],
-      price=p_json['price'],
-      img_url=p_json['imUrl'],
-      azn_product_id=p_json['asin'],
-      seller_name=p_json.get('brand'),
-      desc=p_json.get('desc'),
-      average_stars=avg_stars,
-      num_ratings=review_length
-  )
 
+  return ProductTuple(
+    name=p_json['title'],
+    price=p_json['price'],
+    img_url=p_json['imUrl'],
+    azn_product_id=p_json['asin'],
+    seller_name=p_json.get('brand'),
+    desc=p_json.get('desc'),
+    average_stars=avg_stars,
+    num_ratings=review_length
+  )
+    
 @manager.command
 def loadproducts(json_location):
   assert(os.path.isfile(json_location))
