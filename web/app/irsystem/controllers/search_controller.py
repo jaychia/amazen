@@ -33,8 +33,8 @@ def pack_pid_json(pids):
 		'price': p.price,
 		'seller': p.seller_name if p.seller_name is not None else "",
 		'desc': p.desc if p.desc is not None else "",
-		'keywords': ['Hello', 'Goodbye'],
-		'keywordscores': [4.0, 2.0],
+		'keywords': [] if p.keywords is None else p.keywords.split(","),
+		'keywordscores': [] if p.keywordscores is None else [float(x) for x in p.keywordscores.split(",")],
 		'rating': p.average_stars,
 		'numRatings': p.num_ratings,
 		'imgUrl': p.img_url
