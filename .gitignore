@@ -4,3 +4,4 @@ web/migrations/*
 .db_env
 .DS_Store
 web/app/static/js/bundled/*
+web/app/irsystem/irhelpers/data/*
