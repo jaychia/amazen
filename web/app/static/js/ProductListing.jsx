@@ -9,9 +9,9 @@ export default class ProductListing extends React.Component {
   }
 
   render() {
-    // Render price
-    let superscript_number = (this.props.price % 1 < 10) ? 
-      (this.props.price % 1).toString() + "0" : this.props.price % 1;
+    // Render pric;
+    let x = ((this.props.price * 100) % 100).toPrecision(2);
+    let superscript_number = (x = 0.0) ? "00" : (x < 10) ? "0" + x.toString() : x;
 
     // Render description \n newlines by splitting into spans
     let desc_split = this.props.desc.split("\n").map((s) => <span key={s}>{s}</span>);

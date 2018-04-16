@@ -6,16 +6,16 @@ import axios from 'axios';
 export default class ResultPage extends React.Component {
     constructor() {
         super(...arguments);
-        this.state = { descriptors: this.props.descriptors.split(',') };
+        this.state = { descriptors: this.props.descriptors.split(','), products : [] };
         this.addButtonOnClick = this.addButtonOnClick.bind(this);
         this.searchButtonOnClick = this.searchButtonOnClick.bind(this);
-        console.log("/search?query=" + this.props.query + "&descriptors=" + this.props.descriptors);
+    }
+
+    componentDidMount() {
         axios.get("/search?query=" + this.props.query + "&descriptors=" + this.props.descriptors)
             .then(res => {
-                const products = res.data;
-                console.log(products);
-                this.state = { products: products };
-            })
+                this.setState({ products: res.data.data });
+            });
     }
 
     searchButtonOnClick() {
@@ -76,8 +76,9 @@ export default class ResultPage extends React.Component {
                         </div>
                     </form>
                 </div>
-                {this.state.products.map((p) =>
-                    <ProductListing
+                {this.state.products.map(function (p, i) {
+                    return <ProductListing
+                        key={i}
                         productTitle={p.productTitle}
                         price={p.price}
                         seller={p.seller}
@@ -87,7 +88,7 @@ export default class ResultPage extends React.Component {
                         rating={p.rating}
                         imgUrl={p.imgUrl}
                         numRatings={p.numRatings} />
-                )}
+                })}
             </div>
         );
     }

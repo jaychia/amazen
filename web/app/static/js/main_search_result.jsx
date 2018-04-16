@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ResultPage from './ResultPage.jsx';
-import axios from 'axios';
 
 // Note: Every field is required. If there's nothing in that field, use an empty string.
 let ptitle = ["HP 8300 Elite Small Form Factor Desktop Computer, Intel Core i5-3470 3.2GHz Quad-Core, 8GB RAM, 500GB SATA, Windows 10 Pro 64-Bit, USB 3.0, Display Port (Certified Refurbished)", "Razer Blade Ultra-Thin Gaming Laptop - 14 Full HD(Core i7 - 7700HQ, 16GB RAM, 512TB SSD, GeForce GTX 1060) - VR Ready"];

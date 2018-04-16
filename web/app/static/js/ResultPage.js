@@ -40,19 +40,22 @@ var ResultPage = function (_React$Component) {
 
         var _this = _possibleConstructorReturn(this, (ResultPage.__proto__ || Object.getPrototypeOf(ResultPage)).apply(this, arguments));
 
-        _this.state = { descriptors: _this.props.descriptors.split(',') };
+        _this.state = { descriptors: _this.props.descriptors.split(','), products: [] };
         _this.addButtonOnClick = _this.addButtonOnClick.bind(_this);
         _this.searchButtonOnClick = _this.searchButtonOnClick.bind(_this);
-        console.log("/search?query=" + _this.props.query + "&descriptors=" + _this.props.descriptors);
-        _axios2.default.get("/search?query=" + _this.props.query + "&descriptors=" + _this.props.descriptors).then(function (res) {
-            var products = res.data;
-            console.log(products);
-            _this.state = { products: products };
-        });
         return _this;
     }
 
     _createClass(ResultPage, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            var _this2 = this;
+
+            _axios2.default.get("/search?query=" + this.props.query + "&descriptors=" + this.props.descriptors).then(function (res) {
+                _this2.setState({ products: res.data.data });
+            });
+        }
+    }, {
         key: 'searchButtonOnClick',
         value: function searchButtonOnClick() {
             var descriptors_str = this.state.descriptors.join(",");
@@ -80,7 +83,7 @@ var ResultPage = function (_React$Component) {
     }, {
         key: 'render',
         value: function render() {
-            var _this2 = this;
+            var _this3 = this;
 
             return _react2.default.createElement(
                 'div',
@@ -124,7 +127,7 @@ var ResultPage = function (_React$Component) {
                                             _react2.default.createElement(
                                                 'button',
                                                 { className: 'btn descriptor-tag-button', type: 'button', onClick: function onClick() {
-                                                        return _this2.deleteButtonOnClick(d);
+                                                        return _this3.deleteButtonOnClick(d);
                                                     } },
                                                 _react2.default.createElement('span', { className: 'glyphicon glyphicon-remove' })
                                             )
@@ -145,8 +148,9 @@ var ResultPage = function (_React$Component) {
                         )
                     )
                 ),
-                this.state.products.map(function (p) {
+                this.state.products.map(function (p, i) {
                     return _react2.default.createElement(_ProductListing2.default, {
+                        key: i,
                         productTitle: p.productTitle,
                         price: p.price,
                         seller: p.seller,
