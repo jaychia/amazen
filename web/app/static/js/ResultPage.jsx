@@ -97,13 +97,4 @@ export default class ResultPage extends React.Component {
 ResultPage.propTypes = {
     query: PropTypes.string.isRequired,
     descriptors: PropTypes.string,
-    productTitle: PropTypes.arrayOf(PropTypes.string),
-    price: PropTypes.arrayOf(PropTypes.number),
-    seller: PropTypes.arrayOf(PropTypes.string),
-    desc: PropTypes.arrayOf(PropTypes.string),
-    keywords: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
-    keywordscores: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)),
-    rating: PropTypes.arrayOf(PropTypes.number),
-    imgUrl: PropTypes.arrayOf(PropTypes.string),
-    numRatings: PropTypes.arrayOf(PropTypes.number),
 };

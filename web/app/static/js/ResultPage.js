@@ -173,14 +173,5 @@ exports.default = ResultPage;
 
 ResultPage.propTypes = {
     query: _propTypes2.default.string.isRequired,
-    descriptors: _propTypes2.default.string,
-    productTitle: _propTypes2.default.arrayOf(_propTypes2.default.string),
-    price: _propTypes2.default.arrayOf(_propTypes2.default.number),
-    seller: _propTypes2.default.arrayOf(_propTypes2.default.string),
-    desc: _propTypes2.default.arrayOf(_propTypes2.default.string),
-    keywords: _propTypes2.default.arrayOf(_propTypes2.default.arrayOf(_propTypes2.default.string)),
-    keywordscores: _propTypes2.default.arrayOf(_propTypes2.default.arrayOf(_propTypes2.default.number)),
-    rating: _propTypes2.default.arrayOf(_propTypes2.default.number),
-    imgUrl: _propTypes2.default.arrayOf(_propTypes2.default.string),
-    numRatings: _propTypes2.default.arrayOf(_propTypes2.default.number)
+    descriptors: _propTypes2.default.string
 };
