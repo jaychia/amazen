@@ -33,8 +33,8 @@ def pack_pid_json(pids):
 	return [{
 		'productTitle': p.name,
 		'price': p.price,
-		'seller': p.seller_name,
-		'desc': p.desc,
+		'seller': p.seller_name if p.seller_name is not None else "",
+		'desc': p.desc if p.desc is not None else "",
 		'keywords': ['Hello', 'Goodbye'],
 		'keywordscores': [4.0, 2.0],
 		'rating': p.average_stars,
