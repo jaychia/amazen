@@ -85,7 +85,7 @@ var ResultPage = function (_React$Component) {
                         _react2.default.createElement(
                             'div',
                             { className: 'search-bar' },
-                            _react2.default.createElement('input', { className: 'search-bar-input input-lg', type: 'text', placeholder: 'What are you looking for today?', ref: 'New_search', value: this.props.query }),
+                            _react2.default.createElement('input', { className: 'search-bar-input input-lg', type: 'text', placeholder: 'What are you looking for today?', ref: 'New_search', defaultValue: this.props.query }),
                             _react2.default.createElement(
                                 'div',
                                 { className: 'input-group-btn' },

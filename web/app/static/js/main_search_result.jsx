@@ -13,7 +13,6 @@ let rating = [4.4, 3.8];// PropTypes.number
 // let img = "https://media.licdn.com/dms/image/C5603AQEApkGEbFQMJw/profile-displayphoto-shrink_800_800/0?e=1528956000&v=beta&t=kOtxa0-7FomSHErGmHV0i7h78tO3J7I5mpzM6qN1WtE";
 let img = ["https://www.telegraph.co.uk/content/dam/Travel/hotels/europe/france/paris/eiffel-tower-paris-p.jpg?imwidth=480", "https://images-na.ssl-images-amazon.com/images/I/31vyQTirHdL._AC_US218_.jpg"];
 let numRatings = [587, 888];
-console.log(query);
 
 ReactDOM.render(<ResultPage
     query={query}

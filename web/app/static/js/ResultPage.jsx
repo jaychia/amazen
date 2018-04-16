@@ -38,7 +38,7 @@ export default class ResultPage extends React.Component {
                     <img className="logo-small" src="/static/img/logo_s.png" width="200" />
                     <form className="form-inline result-page-bar">
                         <div className="search-bar">
-                            <input className="search-bar-input input-lg" type="text" placeholder="What are you looking for today?" ref="New_search" value={this.props.query}/>
+                            <input className="search-bar-input input-lg" type="text" placeholder="What are you looking for today?" ref="New_search" defaultValue={this.props.query}/>
                             <div className="input-group-btn">
                                 <button className="btn btn-lg search-bar-button" type="button" onClick={this.searchButtonOnClick}>
                                     <span className="glyphicon glyphicon-search"></span>

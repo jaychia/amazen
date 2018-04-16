@@ -47,7 +47,7 @@ var ProductListing = function (_React$Component) {
       var desc_split = this.props.desc.split("\n").map(function (s) {
         return _react2.default.createElement(
           'span',
-          null,
+          { key: s },
           s
         );
       });

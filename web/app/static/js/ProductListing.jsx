@@ -14,7 +14,7 @@ export default class ProductListing extends React.Component {
       (this.props.price % 1).toString() + "0" : this.props.price % 1;
 
     // Render description \n newlines by splitting into spans
-    let desc_split = this.props.desc.split("\n").map((s) => <span>{s}</span>);
+    let desc_split = this.props.desc.split("\n").map((s) => <span key={s}>{s}</span>);
 
     // Render stars
     let rounded = (Math.round(this.props.rating * 2) / 2);
