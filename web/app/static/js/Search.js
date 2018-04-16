@@ -43,11 +43,6 @@ var Search = function (_React$Component) {
     value: function searchButtonOnClick() {
       var descriptors_str = this.state.descriptors.join(",");
       window.location.href = "search_page?query=" + this.refs.New_search.value + "&descriptors=" + descriptors_str;
-      // axios.get("search_page?query=" + {this.refs.New_search.value} + "&descriptors=" + descriptors_str)
-      //   .then(res => {
-      //     const posts = res.data.data.children.map(obj => obj.data);
-      //     this.setState({ posts });
-      //   });
     }
   }, {
     key: 'addButtonOnClick',
@@ -76,8 +71,6 @@ var Search = function (_React$Component) {
       return _react2.default.createElement(
         'div',
         null,
-        _react2.default.createElement('link', { rel: 'stylesheet', href: '/static/css/bootstrap.min.css' }),
-        _react2.default.createElement('link', { rel: 'stylesheet', href: '/static/main.css' }),
         _react2.default.createElement(
           'div',
           { className: 'text-center' },
