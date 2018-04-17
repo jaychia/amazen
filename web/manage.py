@@ -3,7 +3,7 @@ from flask_script import Manager, Command
 from flask_migrate import Migrate, MigrateCommand
 from app import app, db
 
-from app.irsystem.models.product import new_products, update_product_keywords
+from app.irsystem.models.product import new_products, update_product_keywords, update_product_desc
 from app.irsystem.models.invertedindicesproduct import new_invertedindicesproduct
 from app.irsystem.models.invertedindicesreview import new_invertedindicesreview
 
