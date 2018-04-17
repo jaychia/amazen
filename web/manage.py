@@ -2,7 +2,11 @@ import os
 from flask_script import Manager, Command
 from flask_migrate import Migrate, MigrateCommand
 from app import app, db
+
 from app.irsystem.models.product import new_products, update_product_keywords
+from app.irsystem.models.invertedindicesproduct import new_invertedindicesproduct
+from app.irsystem.models.invertedindicesreview import new_invertedindicesreview
+
 from collections import namedtuple
 import json
 import pickle
@@ -37,6 +41,8 @@ def p_json_to_tup(p_json):
     num_ratings=review_length
   )
     
+
+
 @manager.command
 def loadproducts(json_location):
   assert(os.path.isfile(json_location))
@@ -61,6 +67,26 @@ def loadkeywords(keywords_location):
     d = pickle.load(f)
     for k, v in d.items():
       update_product_keywords(k, v)
+
+@manager.command
+def loadinvertedindicesproduct(pickle_location):
+  assert(os.path.isfile(pickle_location))
+
+  with open(pickle_location, 'rb') as handle:
+  	inverted_indices = pickle.load(handle)
+
+  for term, scorelist in inverted_indices.items():
+  	new_invertedindicesproduct(term, str(scorelist))
+
+@manager.command
+def loadinvertedindicesreview(pickle_location):
+  assert(os.path.isfile(pickle_location))
+
+  with open(pickle_location, 'rb') as handle:
+  	inverted_indices = pickle.load(handle)
+
+  for term, scorelist in inverted_indices.items():
+  	new_invertedindicesreview(term, str(scorelist))
 
 if __name__ == "__main__":
   manager.run()
