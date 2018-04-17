@@ -65,6 +65,13 @@ def update_product_keywords(azn_pid, keywords):
     p.keywordscores = ",".join([str(s) for _, s in keywords])
     db.session.commit()
 
+
+def update_product_desc(tuplist):
+  for tup in tuplist:
+    p = Product.query.filter_by(azn_product_id=tup.azn_product_id).first()
+    p.desc = tup.desc
+    db.session.commit()
+
 class ProductSchema(ModelSchema):
   class Meta:
     model = Product
