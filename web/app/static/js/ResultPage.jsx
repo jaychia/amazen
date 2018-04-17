@@ -6,7 +6,10 @@ import axios from 'axios';
 export default class ResultPage extends React.Component {
     constructor() {
         super(...arguments);
-        this.state = { descriptors: this.props.descriptors.split(','), products : [] };
+        if (this.props.descriptors != "")
+            this.state = { descriptors: this.props.descriptors.split(','), products: [] };
+        else 
+            this.state = { descriptors: [], products: [] };
         this.addButtonOnClick = this.addButtonOnClick.bind(this);
         this.searchButtonOnClick = this.searchButtonOnClick.bind(this);
     }
@@ -43,7 +46,9 @@ export default class ResultPage extends React.Component {
         return (
             <div>
                 <div className="result-page-bar-background">
-                    <img className="logo-small" src="/static/img/logo_s.png" width="200" />
+                    <a href="/">
+                        <img className="logo-small" src="/static/img/logo_s.png" width="200" />
+                    </a>
                     <form className="form-inline result-page-bar">
                         <div className="search-bar">
                             <input className="search-bar-input input-lg" type="text" placeholder="What are you looking for today?" ref="New_search" defaultValue={this.props.query}/>
