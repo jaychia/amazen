@@ -86,7 +86,6 @@ def product_search():
 
 	descs = descriptors.split(",")
 	descs = [x.lower().strip() for x in descs]
-	current_app.logger.info("-----hello------")
 
 	sorted_pids = get_top_products(query,descs)
 

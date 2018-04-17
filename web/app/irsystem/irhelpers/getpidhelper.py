@@ -23,7 +23,7 @@ def to_q_desc(q,descs):
     if len(descs) == 0:
         return q
     else:
-        return " ".join(descs + [q])
+        return " ".join(descs)
 
 # can be used for step 2 and 3
 def top_k_pids_step2(inverted_index_product, k2):
@@ -63,5 +63,8 @@ def top_k_pids_step3(top_pids, inverted_index_review, k3):
 def get_top_k_pids(inverted_index_product, inverted_index_review, k2=100, k3=10):
 
     top_pids_step2 = top_k_pids_step2(inverted_index_product, k2)
+
+    if len(inverted_index_review) == 0:
+        return top_pids_step2 if len(top_pids_step2) <= k3 else top_pids_step2[:k3]
 
     return top_k_pids_step3(top_pids_step2, inverted_index_review, k3)
