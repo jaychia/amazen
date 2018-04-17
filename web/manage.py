@@ -69,24 +69,22 @@ def loadkeywords(keywords_location):
       update_product_keywords(k, v)
 
 @manager.command
-def loadinvertedindicesproduct(pickle_location):
-  assert(os.path.isfile(pickle_location))
+def loadinvertedindicesproduct(json_location):
+  assert(os.path.isfile(json_location))
 
-  with open(pickle_location, 'rb') as handle:
-  	inverted_indices = pickle.load(handle)
-
-  for term, scorelist in inverted_indices.items():
-  	new_invertedindicesproduct(term, str(scorelist))
-
+  with open(json_location, 'r') as f:
+    for line in f:
+      p_json = json.loads(line)
+      new_invertedindicesproduct(p_json['term'], p_json['scorelist'])
+      
 @manager.command
-def loadinvertedindicesreview(pickle_location):
-  assert(os.path.isfile(pickle_location))
+def loadinvertedindicesreview(json_location):
+  assert(os.path.isfile(json_location))
 
-  with open(pickle_location, 'rb') as handle:
-  	inverted_indices = pickle.load(handle)
-
-  for term, scorelist in inverted_indices.items():
-  	new_invertedindicesreview(term, str(scorelist))
-
+  with open(json_location, 'r') as f:
+    for line in f:
+      p_json = json.loads(line)
+      new_invertedindicesreview(p_json['term'], p_json['scorelist'])
+      
 if __name__ == "__main__":
   manager.run()
