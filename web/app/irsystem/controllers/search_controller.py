@@ -32,7 +32,7 @@ def rank_pids_with_desc(descs, pid):
 
 def pack_pid_json(pids):
 	# TODO: REMOVE!!!!
-	pids = ["B0001FYRD0", "B003U584DC", "B0002FP058", "B0092V7EJ8", "B00G5DXM6K", "B0061KSYQK", "B003TQ8IZG", "B00AJHE5E6", "B003IY1GXK", "B00365FJ5M"]
+	# pids = ["B0001FYRD0", "B003U584DC", "B0002FP058", "B0092V7EJ8", "B00G5DXM6K", "B0061KSYQK", "B003TQ8IZG", "B00AJHE5E6", "B003IY1GXK", "B00365FJ5M"]
 
 	products = products_with_pids(pids)
 	return [{
@@ -89,16 +89,12 @@ def product_search():
 	current_app.logger.info("-----hello------")
 
 	sorted_pids = get_top_products(query,descs)
-	current_app.logger.info(str((len(sorted_pids))))
 
-	current_app.logger.info("---bye-------")
-
-
-	if descriptors is not '':
-		descriptors = descriptors.split(",")
-		descriptors = [x.lower().strip() for x in descriptors]
-		sorted_pids = rank_pids_with_desc(descriptors, pids)
-	else:
-		sorted_pids = pids
+	# if descriptors is not '':
+	# 	descriptors = descriptors.split(",")
+	# 	descriptors = [x.lower().strip() for x in descriptors]
+	# 	sorted_pids = rank_pids_with_desc(descriptors, pids)
+	# else:
+	# 	sorted_pids = pids
 	d = pack_pid_json(sorted_pids)
 	return jsonify(data=d)
