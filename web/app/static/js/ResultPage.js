@@ -40,7 +40,7 @@ var ResultPage = function (_React$Component) {
 
         var _this = _possibleConstructorReturn(this, (ResultPage.__proto__ || Object.getPrototypeOf(ResultPage)).apply(this, arguments));
 
-        _this.state = { descriptors: _this.props.descriptors.split(','), products: [] };
+        if (_this.props.descriptors != "") _this.state = { descriptors: _this.props.descriptors.split(','), products: [] };else _this.state = { descriptors: [], products: [] };
         _this.addButtonOnClick = _this.addButtonOnClick.bind(_this);
         _this.searchButtonOnClick = _this.searchButtonOnClick.bind(_this);
         return _this;
@@ -91,7 +91,11 @@ var ResultPage = function (_React$Component) {
                 _react2.default.createElement(
                     'div',
                     { className: 'result-page-bar-background' },
-                    _react2.default.createElement('img', { className: 'logo-small', src: '/static/img/logo_s.png', width: '200' }),
+                    _react2.default.createElement(
+                        'a',
+                        { href: '/' },
+                        _react2.default.createElement('img', { className: 'logo-small', src: '/static/img/logo_s.png', width: '200' })
+                    ),
                     _react2.default.createElement(
                         'form',
                         { className: 'form-inline result-page-bar' },
