@@ -19,6 +19,8 @@ from app import socketio
 
 # Import module models 
 from app.irsystem.models import product
+from app.irsystem.models import invertedindicesproduct
+from app.irsystem.models import invertedindicesreview
 
 # IMPORT THE BLUEPRINT APP OBJECT 
 from app.irsystem import irsystem
