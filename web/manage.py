@@ -58,6 +58,13 @@ def loadproducts(json_location):
         del tuplist[:]
   new_products(tuplist)
 
+@manager.command
+def loadproductslist(folder_location):
+  files = [f for f in os.listdir(json_folder_location) if os.path.isfile(
+      os.path.join(json_folder_location, f))]
+  for fname in files:
+    loadproducts(json_folder_location + '/' + fname)
+
 
 @manager.command
 def update_desc(json_location):
