@@ -82,14 +82,28 @@ def update_desc(json_location):
   update_product_desc(tuplist)
 
 # Loading of keywords and keywordscores
+# @manager.command
+# def loadkeywords(keywords_location):
+#   assert(os.path.isfile(keywords_location))
+#   tuplist = []
+#   with open(keywords_location, 'r') as f:
+#     d = pickle.load(f)
+#     for k, v in d.items():
+#       update_product_keywords(k, v)
+
 @manager.command
 def loadkeywords(keywords_location):
   assert(os.path.isfile(keywords_location))
   tuplist = []
   with open(keywords_location, 'r') as f:
-    d = pickle.load(f)
-    for k, v in d.items():
-      update_product_keywords(k, v)
+    for line in f:
+      k_json = json.loads(line)
+      asin = k_json['asin']
+      keywords = [l[0] for l in k_json['keywords']]
+      dlist = lambda d: [d[str(i)] for i in range(1,6)]
+      keywords_scores_dist = [dlist(d) for d in [l[1] for l in k_json['keywords']]]
+      keywords_scores = [l[2] for l in k_json['keywords']]
+      update_product_keywords(asin, keywords, keywords_scores, keywords_scores_dist)
 
 @manager.command
 def loadinvertedindicesproduct(json_location):
