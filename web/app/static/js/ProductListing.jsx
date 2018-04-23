@@ -37,8 +37,8 @@ export default class ProductListing extends React.Component {
       .call(xAxis);
     // add points from user input in rating_freq
     var points = []
-    Object.keys(rating_freq).forEach(function (key) {
-      points.push({ x: xScale(Number(key)), y: yScale(rating_freq[key] + Math.exp(-10)) });
+    rating_freq.map((e, i) => {
+      points.push({ x: xScale(i + 1), y: yScale(e + Math.exp(-10)) });
     });
     // define line and area generators
     var lineGenerator = d3.line()
