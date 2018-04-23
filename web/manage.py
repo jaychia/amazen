@@ -97,7 +97,14 @@ def loadinvertedindicesproduct(json_location):
         new_invertedindicesproduct(tuplist)
         del tuplist[:]
     new_invertedindicesproduct(tuplist)
-      
+
+@manager.command
+def loadinvertedindicesproductlist(json_folder_location):
+  files = [f for f in os.listdir(json_folder_location) if os.path.isfile(
+      os.path.join(json_folder_location, f))]
+  for fname in files:
+    loadinvertedindicesproduct(json_folder_location + '/' + fname)
+
 @manager.command
 def loadinvertedindicesreview(json_location):
   assert(os.path.isfile(json_location))
@@ -111,6 +118,13 @@ def loadinvertedindicesreview(json_location):
         new_invertedindicesreview(tuplist)
         del tuplist[:]
     new_invertedindicesreview(tuplist)
+
+@manager.command
+def loadinvertedindicesreviewlist(json_folder_location):
+  files = [f for f in os.listdir(json_folder_location) if os.path.isfile(
+      os.path.join(json_folder_location, f))]
+  for fname in files:
+    loadinvertedindicesreview(json_folder_location + '/' + fname)
       
 if __name__ == "__main__":
   manager.run()
