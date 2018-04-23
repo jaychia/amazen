@@ -31,16 +31,15 @@ def scorelists_with_terms_for_product(term_list):
   invertedindicesproducts = Invertedindicesproduct.query.filter(Invertedindicesproduct.term.in_(term_list)).all()
   return {p.term: literal_eval(p.scorelist) for p in invertedindicesproducts}
 
-def new_invertedindicesproduct(in_term, in_scorelist):
+def new_invertedindicesproduct(tuplist):
   """
   Creates new product in database
   tuplist must be list of named tuples
   InvertedindicesproductTuple(name, price, img_url, azn_product_id, seller_name)
   """
-  p = Invertedindicesproduct(in_term, in_scorelist)
-  if db.session.query(Invertedindicesproduct.term).filter_by(term=in_term).scalar() is None:
-    db.session.add(p)
-    db.session.commit()
+  db.session.bulk_save_objects(list(
+      map(lambda x: Invertedindicesproduct(x[0], x[1]), tuplist)))
+  db.session.commit()
 
 class InvertedindicesproductSchema(ModelSchema):
   class Meta:

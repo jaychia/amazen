@@ -58,6 +58,13 @@ def loadproducts(json_location):
         del tuplist[:]
   new_products(tuplist)
 
+@manager.command
+def loadproductslist(json_folder_location):
+  files = [f for f in os.listdir(json_folder_location) if os.path.isfile(
+      os.path.join(json_folder_location, f))]
+  for fname in files:
+    loadproducts(json_folder_location + '/' + fname)
+
 
 @manager.command
 def update_desc(json_location):
@@ -75,32 +82,70 @@ def update_desc(json_location):
   update_product_desc(tuplist)
 
 # Loading of keywords and keywordscores
+# @manager.command
+# def loadkeywords(keywords_location):
+#   assert(os.path.isfile(keywords_location))
+#   tuplist = []
+#   with open(keywords_location, 'r') as f:
+#     d = pickle.load(f)
+#     for k, v in d.items():
+#       update_product_keywords(k, v)
+
 @manager.command
 def loadkeywords(keywords_location):
   assert(os.path.isfile(keywords_location))
   tuplist = []
   with open(keywords_location, 'r') as f:
-    d = pickle.load(f)
-    for k, v in d.items():
-      update_product_keywords(k, v)
+    for line in f:
+      k_json = json.loads(line)
+      asin = k_json['asin']
+      keywords = [l[0] for l in k_json['keywords']]
+      dlist = lambda d: [d[str(i)] for i in range(1,6)]
+      keywords_scores_dist = [dlist(d) for d in [l[1] for l in k_json['keywords']]]
+      keywords_scores = [l[2] for l in k_json['keywords']]
+      update_product_keywords(asin, keywords, keywords_scores, keywords_scores_dist)
 
 @manager.command
 def loadinvertedindicesproduct(json_location):
   assert(os.path.isfile(json_location))
 
   with open(json_location, 'r') as f:
+    tuplist = []
     for line in f:
       p_json = json.loads(line)
-      new_invertedindicesproduct(p_json['term'], p_json['scorelist'])
-      
+      tuplist.append((p_json['term'], p_json['scorelist']))
+      if len(tuplist) > 50000:
+        new_invertedindicesproduct(tuplist)
+        del tuplist[:]
+    new_invertedindicesproduct(tuplist)
+
+@manager.command
+def loadinvertedindicesproductlist(json_folder_location):
+  files = [f for f in os.listdir(json_folder_location) if os.path.isfile(
+      os.path.join(json_folder_location, f))]
+  for fname in files:
+    loadinvertedindicesproduct(json_folder_location + '/' + fname)
+
 @manager.command
 def loadinvertedindicesreview(json_location):
   assert(os.path.isfile(json_location))
 
   with open(json_location, 'r') as f:
+    tuplist = []
     for line in f:
       p_json = json.loads(line)
-      new_invertedindicesreview(p_json['term'], p_json['scorelist'])
+      tuplist.append((p_json['term'], p_json['scorelist']))
+      if len(tuplist) > 50000:
+        new_invertedindicesreview(tuplist)
+        del tuplist[:]
+    new_invertedindicesreview(tuplist)
+
+@manager.command
+def loadinvertedindicesreviewlist(json_folder_location):
+  files = [f for f in os.listdir(json_folder_location) if os.path.isfile(
+      os.path.join(json_folder_location, f))]
+  for fname in files:
+    loadinvertedindicesreview(json_folder_location + '/' + fname)
       
 if __name__ == "__main__":
   manager.run()

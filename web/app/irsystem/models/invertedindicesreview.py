@@ -28,14 +28,13 @@ def scorelists_with_terms_for_review(term_list):
   invertedindicesreviews = Invertedindicesreview.query.filter(Invertedindicesreview.term.in_(term_list)).all()
   return {r.term: literal_eval(r.scorelist) for r in invertedindicesreviews}
 
-def new_invertedindicesreview(in_term, in_scorelist):
+def new_invertedindicesreview(tuplist):
   """
   Creates new invertedindicesreview in database
   """
-  p = Invertedindicesreview(in_term, in_scorelist)
-  if db.session.query(Invertedindicesreview.term).filter_by(term=in_term).scalar() is None:
-    db.session.add(p)
-    db.session.commit()
+  db.session.bulk_save_objects(list(
+      map(lambda x: Invertedindicesreview(x[0], x[1]), tuplist)))
+  db.session.commit()
 
 class InvertedindicesreviewSchema(ModelSchema):
   class Meta:

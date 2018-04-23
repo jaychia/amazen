@@ -13,7 +13,6 @@ html * {
         padding: 20px 0;
         text-align: center;
     }
-
     .global-search {
         text-align: center;
         padding: 10px;
@@ -92,6 +91,21 @@ html * {
 
 .descriptor-bar-input:focus {
     outline: none;
+}
+
+.descriptor-bar-container {
+    display: flex;
+    align-content: flex-end;
+    justify-content: flex-start;
+}
+
+.suggestionTag {
+    font-size: 12px;
+}
+
+.suggestionTag.tag {
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 .search-bar-button {
@@ -203,7 +217,7 @@ html * {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 100%;
+    max-width: 60%;
 }
 
 .product-price {
@@ -226,6 +240,8 @@ html * {
 .product-desc {
     font-size: 16px;
     height: 100%;
+    max-height: 200px;
+    overflow: scroll;
 }
 
 .product-keyword-dashboard {
@@ -282,6 +298,7 @@ html * {
 }
 
 /* Search Result */
+
 .logo-small {
     display: inline-block;
     vertical-align: top;
