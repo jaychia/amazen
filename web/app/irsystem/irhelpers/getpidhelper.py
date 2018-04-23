@@ -39,7 +39,7 @@ def valid_pid_set(inverted_index_product):
     
     return all_terms_pid_set
 
-def top_k_asins_step3(valid_pids, inverted_index_review):
+def top_k_pids_step3(valid_pids, inverted_index_review):
     product_simscores = defaultdict(float)
     
     for term, scorelist in inverted_index_review.items():
@@ -62,6 +62,6 @@ def get_top_k_pids(inverted_index_product, inverted_index_review):
     top_pids_step2 = valid_pid_set(inverted_index_product)
 
     if len(inverted_index_review) == 0:
-        return top_pids_step2
+        return list(top_pids_step2)
 
     return top_k_pids_step3(top_pids_step2, inverted_index_review)
