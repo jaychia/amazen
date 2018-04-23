@@ -37,16 +37,17 @@ def get_suggested_words(querylist):
 def pack_pid_json(pids):
 
 	products = products_with_pids(pids)
+	convertkeyword = lambda x: 0. if x == "nan" else float(x)
 	return [{
-		'productTitle': p.name,
-		'price': p.price,
-		'seller': p.seller_name if p.seller_name is not None else "",
-		'desc': p.desc if p.desc is not None else "",
-		'keywords': [] if p.keywords is None else p.keywords.split(","),
-		'keywordscores': [] if p.keywordscores is None else [float(x) for x in p.keywordscores.split(",")],
-		'rating': p.average_stars,
-		'numRatings': p.num_ratings,
-		'imgUrl': p.img_url
+	'productTitle': p.name,
+	'price': p.price,
+	'seller': p.seller_name if p.seller_name is not None else "",
+	'desc': p.desc if p.desc is not None else "",
+	'keywords': [] if p.keywords is None else p.keywords.split(","),
+	'keywordscores': [] if p.keywordscores is None else [convertkeyword(x) for x in p.keywordscores.split(",")],
+	'rating': p.average_stars,
+	'numRatings': p.num_ratings,
+	'imgUrl': p.img_url
 	} for p in products]
 
 ##################################################################################################
