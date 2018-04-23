@@ -8,6 +8,7 @@ import numpy as np
 import os
 from nltk.stem.snowball import SnowballStemmer
 import pickle
+from flask import current_app
 
 # string to token set
 def to_tokens_set(in_str):
@@ -24,7 +25,7 @@ def to_q_desc(q,descs):
     if len(descs) == 0:
         return q
     else:
-        return " ".join(descs)
+        return " ".join(descs + [q])
 
 # can be used for step 2. need to have all terms from query appear.
 def valid_pid_set(inverted_index_product):
@@ -63,5 +64,10 @@ def get_top_k_pids(inverted_index_product, inverted_index_review):
 
     if len(inverted_index_review) == 0:
         return list(top_pids_step2)
+    current_app.logger.info(len(top_pids_step2))
 
-    return top_k_pids_step3(top_pids_step2, inverted_index_review)
+    pids_to_return = top_k_pids_step3(top_pids_step2, inverted_index_review)
+
+    current_app.logger.info(len(pids_to_return))
+    return pids_to_return
+
