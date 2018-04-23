@@ -45,6 +45,7 @@ def pack_pid_json(pids):
 	'desc': p.desc if p.desc is not None else "",
 	'keywords': [] if p.keywords is None else p.keywords.split(","),
 	'keywordscores': [] if p.keywordscores is None else [convertkeyword(x) for x in p.keywordscores.split(",")],
+	'keywordscorelist': [] if p.keywordscoredist is None else [int(x) for x in p.keywordscoredist.replace("[","").replace("]","").split(",")],
 	'rating': p.average_stars,
 	'numRatings': p.num_ratings,
 	'imgUrl': p.img_url
