@@ -3,7 +3,7 @@ from flask_script import Manager, Command
 from flask_migrate import Migrate, MigrateCommand
 from app import app, db
 
-from app.irsystem.models.product import new_products, update_product_keywords
+from app.irsystem.models.product import new_products, update_product_keywords, update_product_desc
 from app.irsystem.models.invertedindicesproduct import new_invertedindicesproduct
 from app.irsystem.models.invertedindicesreview import new_invertedindicesreview
 
@@ -36,7 +36,7 @@ def p_json_to_tup(p_json):
     img_url=p_json['imUrl'],
     azn_product_id=p_json['asin'],
     seller_name=p_json.get('brand'),
-    desc=p_json.get('desc'),
+    desc=p_json.get('description'),
     average_stars=avg_stars,
     num_ratings=review_length
   )
@@ -57,6 +57,22 @@ def loadproducts(json_location):
         new_products(tuplist)
         del tuplist[:]
   new_products(tuplist)
+
+
+@manager.command
+def update_desc(json_location):
+  assert(os.path.isfile(json_location))
+  tuplist = []
+  with open(json_location, 'r') as f:
+    for line in f:
+      p_json = json.loads(line)
+      p = p_json_to_tup(p_json)
+      if p is not None:
+        tuplist.append(p)
+      if len(tuplist) > 50000:
+        update_product_desc(tuplist)
+        del tuplist[:]
+  update_product_desc(tuplist)
 
 # Loading of keywords and keywordscores
 @manager.command
