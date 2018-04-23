@@ -59,7 +59,7 @@ def loadproducts(json_location):
   new_products(tuplist)
 
 @manager.command
-def loadproductslist(folder_location):
+def loadproductslist(json_folder_location):
   files = [f for f in os.listdir(json_folder_location) if os.path.isfile(
       os.path.join(json_folder_location, f))]
   for fname in files:
