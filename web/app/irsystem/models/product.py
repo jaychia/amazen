@@ -48,11 +48,10 @@ def new_products(tuplist):
   tuplist must be list of named tuples
   ProductTuple(name, price, img_url, azn_product_id, seller_name)
   """
-  for tup in tuplist:
-    p = Product(tup.name, tup.price, tup.img_url, tup.azn_product_id, tup.seller_name, tup.desc, tup.average_stars, tup.num_ratings)
-    if db.session.query(Product.azn_product_id).filter_by(azn_product_id=tup.azn_product_id).scalar() is None:
-      db.session.add(p)
-      db.session.commit()
+  db.session.bulk_save_objects(list(map(lambda tup: Product(tup.name, tup.price, tup.img_url, tup.azn_product_id,
+                          tup.seller_name, tup.desc, tup.average_stars, tup.num_ratings),
+      tuplist)))
+  db.session.commit()
 
 def update_product_keywords(azn_pid, keywords):
   """
