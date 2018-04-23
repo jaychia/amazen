@@ -14,6 +14,10 @@ var _propTypes = require('prop-types');
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
+var _reactPopup = require('react-popup');
+
+var _reactPopup2 = _interopRequireDefault(_reactPopup);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -32,10 +36,68 @@ var ProductListing = function (_React$Component) {
   function ProductListing() {
     _classCallCheck(this, ProductListing);
 
-    return _possibleConstructorReturn(this, (ProductListing.__proto__ || Object.getPrototypeOf(ProductListing)).apply(this, arguments));
+    var _this = _possibleConstructorReturn(this, (ProductListing.__proto__ || Object.getPrototypeOf(ProductListing)).apply(this, arguments));
+
+    _this.keywordOnClick = _this.keywordOnClick.bind(_this);
+    return _this;
   }
 
   _createClass(ProductListing, [{
+    key: 'addTermPlot',
+    value: function addTermPlot(term, rating_freq) {
+      // SVG params
+      var h = 150;
+      var w = 600;
+      var m = 20;
+      var svg = d3.select(document.createElementNS('http://www.w3.org/2000/svg', 'svg')).attr("height", h + m).attr("width", w + m);
+      var text = svg.append("text").text(term).attr("x", 10).attr("y", 25).style("font-size", 18);
+      // define scales and axis
+      var xScale = d3.scaleOrdinal().domain(["1", "2", "3", "4", "5"]).range([0 + m, w / 5 + m, 2 * w / 5 + m, 3 * w / 5 + m, 4 * w / 5 + m]);
+      var yScale = d3.scaleLog().domain([Math.exp(-10), 1000]).range([h - m / 2, 0]);
+      var xAxis = d3.axisBottom(xScale);
+      svg.append("g").attr("class", "axis axis--x").attr("transform", "translate(0," + h + ")").call(xAxis);
+      // add points from user input in rating_freq
+      var points = [];
+      rating_freq.map(function (e, i) {
+        points.push({ x: xScale(i + 1), y: yScale(e + Math.exp(-10)) });
+      });
+      // define line and area generators
+      var lineGenerator = d3.line().x(function (d) {
+        return d.x;
+      }).y(function (d) {
+        return d.y;
+      }).curve(d3.curveCardinal);
+      var area = d3.area().x(function (d) {
+        return d.x;
+      }).y0(h).y1(function (d) {
+        return d.y;
+      }).curve(d3.curveCardinal);
+      // define fill/stroke gradient target
+      var grad = svg.append("linearGradient").attr("id", "linGrad");
+      var stop1 = grad.append("stop").attr("id", "stop1").attr("offset", "0%").attr("stop-color", "#f00000").attr("stop-opacity", "0.9");
+      var stop2 = grad.append("stop").attr("id", "stop2").attr("offset", "100%").attr("stop-color", "#00aa3f");
+      // append paths and area
+      var pathData = lineGenerator(points);
+      svg.append("path").data([points]).attr("class", "area").attr("d", area).style("fill", "url(#linGrad)").style("opacity", "0.3");
+      svg.append('path').attr('d', pathData).attr("class", "path").style("stroke", "url(#linGrad)").style("stroke-width", 4).style("fill", "None");
+      var doctype = '<?xml version="1.0" standalone="no"?>' + '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">';
+      var source = new XMLSerializer().serializeToString(svg.node());
+      var blob = new Blob([doctype + source], { type: 'image/svg+xml;charset=utf-8' });
+      var url = window.URL.createObjectURL(blob);
+      var img = _react2.default.createElement('img', { src: url });
+      return img;
+    }
+  }, {
+    key: 'keywordOnClick',
+    value: function keywordOnClick(word, score_list) {
+      var img = this.addTermPlot(word, score_list);
+      _reactPopup2.default.create({
+        title: 'Keyword Detail',
+        content: img,
+        className: 'alert'
+      }, true);
+    }
+  }, {
     key: 'render',
     value: function render() {
       var _this2 = this;
@@ -70,7 +132,7 @@ var ProductListing = function (_React$Component) {
       ));
 
       var keywords = this.props.keywords.map(function (e, i) {
-        return [e, _this2.props.keywordscores[i]];
+        return [e, _this2.props.keywordscores[i], _this2.props.keywordScoreList[i]];
       });
       var div = 5.0 / 8;
       var k2_to_div = function k2_to_div(k2) {
@@ -78,8 +140,10 @@ var ProductListing = function (_React$Component) {
         var rgb_str = 'rgb(' + rgb[0].toString() + "," + rgb[1].toString() + "," + rgb[2].toString() + ", 1" + ')';
         var colorStyle = { 'backgroundColor': rgb_str };
         return _react2.default.createElement(
-          'div',
-          { className: 'keyword', style: colorStyle },
+          'button',
+          { className: 'keyword', style: colorStyle, type: 'button', onClick: function onClick() {
+              return _this2.keywordOnClick(k2[0], k2[2]);
+            } },
           k2[0]
         );
       };
@@ -88,6 +152,7 @@ var ProductListing = function (_React$Component) {
       return _react2.default.createElement(
         'div',
         { className: 'product-listing-container' },
+        _react2.default.createElement(_reactPopup2.default, null),
         _react2.default.createElement(
           'div',
           { className: 'product-listing' },

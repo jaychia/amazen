@@ -159,9 +159,13 @@ var ResultPage = function (_React$Component) {
                         price: p.price,
                         seller: p.seller,
                         desc: p.desc,
-                        keywords: p.keywords,
-                        keywordscores: p.keywordscores,
-                        rating: p.rating,
+                        keywords: ["la", "ha", "ho"],
+                        keywordscores: [1, 1, 1],
+                        keywordScoreList: [[1, 2, 1, 0, 4], [3, 3, 3, 3, 3], [1, 2, 1, 0, 4]]
+                        // keywords={p.keywords}
+                        // keywordscores={p.keywordscores}
+                        // keywordScoreList={p.keywordScoreList}
+                        , rating: p.rating,
                         imgUrl: p.imgUrl,
                         numRatings: p.numRatings });
                 })
