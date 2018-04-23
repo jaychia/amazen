@@ -1,9 +1,10 @@
 import React from 'react';
+import axios from 'axios';
 
 export default class Search extends React.Component {
   constructor() {
     super(...arguments);
-    this.state = {descriptors: []};
+    this.state = {descriptors: [], suggestions: []};
     this.addButtonOnClick = this.addButtonOnClick.bind(this);
     this.searchButtonOnClick = this.searchButtonOnClick.bind(this);
   }
@@ -17,6 +18,10 @@ export default class Search extends React.Component {
     var new_d = this.refs.New_descriptor.value;
     this.refs.New_descriptor.value = "";
     if(new_d != "" && this.state.descriptors.indexOf(new_d) == -1)
+      axios.get("/suggestions?query=" + this.refs.New_search.value + "," + this.state.descriptors.join(","))
+        .then(res => {
+          this.setState({ suggestions: res.data.data });
+        });
       this.setState((prevState, props) => ({
         descriptors: [...prevState.descriptors, new_d]
       }));
@@ -30,6 +35,7 @@ export default class Search extends React.Component {
   };
 
   render() {
+    console.log(this.state.suggestions);
     return (
       <div>
         <div className="text-center">

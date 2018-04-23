@@ -26,13 +26,11 @@ def get_top_products(q,descs,k2=100,k3=10):
 def filter_category_by_query(q, cat):
 	return ["1234", "123", "12"]
 
-def rank_pids_with_desc(descs, pid):
-	# TODO: Replace with ranked pids
-	return ["B0001FYRD0", "B003U584DC", "B0002FP058", "B0092V7EJ8", "B00G5DXM6K", "B0061KSYQK", "B003TQ8IZG", "B00AJHE5E6", "B003IY1GXK", "B00365FJ5M"]
+def get_suggested_words(querylist):
+	#TODO: fill in with Jooho
+	return ["strong", "charles", "yolo"]
 
 def pack_pid_json(pids):
-	# TODO: REMOVE!!!!
-	# pids = ["B0001FYRD0", "B003U584DC", "B0002FP058", "B0092V7EJ8", "B00G5DXM6K", "B0061KSYQK", "B003TQ8IZG", "B00AJHE5E6", "B003IY1GXK", "B00365FJ5M"]
 
 	products = products_with_pids(pids)
 	return [{
@@ -89,11 +87,12 @@ def product_search():
 
 	sorted_pids = get_top_products(query,descs)
 
-	# if descriptors is not '':
-	# 	descriptors = descriptors.split(",")
-	# 	descriptors = [x.lower().strip() for x in descriptors]
-	# 	sorted_pids = rank_pids_with_desc(descriptors, pids)
-	# else:
-	# 	sorted_pids = pids
 	d = pack_pid_json(sorted_pids)
+	return jsonify(data=d)
+
+@irsystem.route('suggestions', methods=['GET'])
+def suggested_words():
+	query = request.args.get('query')
+	current_app.logger.info(query)
+	d = get_suggested_words(query)
 	return jsonify(data=d)
