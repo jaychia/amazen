@@ -7,6 +7,8 @@ from app.irsystem.models.invertedindicesreview import scorelists_with_terms_for_
 from flask import jsonify
 from flask import current_app
 from app.irsystem.irhelpers.getpidhelper import *
+import random
+from datetime import datetime
 
 project_name = "Amazen"
 net_id = "Joo Ho Yeo (jy396) | Amritansh Kwatra (ak2244) | Alex Yoo (ay244) | Jay Chia (jc2375) | Charles Bai (cb674)"
@@ -27,8 +29,10 @@ def filter_category_by_query(q, cat):
 	return ["1234", "123", "12"]
 
 def get_suggested_words(querylist):
-	#TODO: fill in with Jooho
-	return ["strong", "charles", "yolo"]
+	l = ["strong", "charles", "yolo", "hey",
+            "yo", "random", "jooho", "amrit", "alex"]
+	
+	return [random.choice(l) for _ in range(3)]
 
 def pack_pid_json(pids):
 

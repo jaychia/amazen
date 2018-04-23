@@ -20736,10 +20736,36 @@ var Search = function (_React$Component) {
     _this.state = { descriptors: [], suggestions: [] };
     _this.addButtonOnClick = _this.addButtonOnClick.bind(_this);
     _this.searchButtonOnClick = _this.searchButtonOnClick.bind(_this);
+    _this.suggestionTagOnClick = _this.suggestionTagOnClick.bind(_this);
+    _this.getNewSuggestions = _this.getNewSuggestions.bind(_this);
     return _this;
   }
 
   _createClass(Search, [{
+    key: 'getNewSuggestions',
+    value: function getNewSuggestions() {
+      var _this2 = this;
+
+      _axios2.default.get("/suggestions?query=" + this.refs.New_search.value + "," + this.state.descriptors.join(",")).then(function (res) {
+        _this2.setState({ suggestions: res.data.data });
+      });
+    }
+  }, {
+    key: 'suggestionTagOnClick',
+    value: function suggestionTagOnClick(sugg) {
+      var _this3 = this;
+
+      if (sugg != "" && this.state.descriptors.indexOf(sugg) == -1) {
+        this.setState(function (prevState, props) {
+          return {
+            descriptors: [].concat(_toConsumableArray(prevState.descriptors), [sugg])
+          };
+        }, function () {
+          _this3.getNewSuggestions();
+        });
+      }
+    }
+  }, {
     key: 'searchButtonOnClick',
     value: function searchButtonOnClick() {
       var descriptors_str = this.state.descriptors.join(",");
@@ -20748,17 +20774,16 @@ var Search = function (_React$Component) {
   }, {
     key: 'addButtonOnClick',
     value: function addButtonOnClick() {
-      var _this2 = this;
+      var _this4 = this;
 
       var new_d = this.refs.New_descriptor.value;
       this.refs.New_descriptor.value = "";
-      if (new_d != "" && this.state.descriptors.indexOf(new_d) == -1) _axios2.default.get("/suggestions?query=" + this.refs.New_search.value + "," + this.state.descriptors.join(",")).then(function (res) {
-        _this2.setState({ suggestions: res.data.data });
-      });
-      this.setState(function (prevState, props) {
+      if (new_d != "" && this.state.descriptors.indexOf(new_d) == -1) this.setState(function (prevState, props) {
         return {
           descriptors: [].concat(_toConsumableArray(prevState.descriptors), [new_d])
         };
+      }, function () {
+        _this4.getNewSuggestions();
       });
     }
   }, {
@@ -20772,9 +20797,8 @@ var Search = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      var _this3 = this;
+      var _this5 = this;
 
-      console.log(this.state.suggestions);
       return _react2.default.createElement(
         'div',
         null,
@@ -20795,7 +20819,9 @@ var Search = function (_React$Component) {
               { className: 'input-group-btn' },
               _react2.default.createElement(
                 'button',
-                { className: 'btn btn-lg search-bar-button', type: 'button', onClick: this.searchButtonOnClick },
+                { className: 'btn btn-lg search-bar-button', type: 'button', onClick: function onClick() {
+                    return _this5.searchButtonOnClick();
+                  } },
                 _react2.default.createElement('span', { className: 'glyphicon glyphicon-search' })
               )
             )
@@ -20818,7 +20844,7 @@ var Search = function (_React$Component) {
                     _react2.default.createElement(
                       'button',
                       { className: 'btn descriptor-tag-button', type: 'button', onClick: function onClick() {
-                          return _this3.deleteButtonOnClick(d);
+                          return _this5.deleteButtonOnClick(d);
                         } },
                       _react2.default.createElement('span', { className: 'glyphicon glyphicon-remove' })
                     )
@@ -20832,9 +20858,38 @@ var Search = function (_React$Component) {
               { className: 'input-group-btn' },
               _react2.default.createElement(
                 'button',
-                { className: 'btn btn-lg search-bar-button', type: 'button', onClick: this.addButtonOnClick },
+                { className: 'btn btn-lg search-bar-button', type: 'button', onClick: function onClick() {
+                    return _this5.addButtonOnClick();
+                  } },
                 _react2.default.createElement('span', { className: 'glyphicon glyphicon-plus' })
               )
+            )
+          ),
+          _react2.default.createElement(
+            'div',
+            { className: 'descriptor-bar-container' },
+            this.state.suggestions.length > 0 && _react2.default.createElement(
+              'div',
+              null,
+              _react2.default.createElement(
+                'span',
+                { className: 'suggestionTag' },
+                'Suggestions:\xA0'
+              ),
+              this.state.suggestions.map(function (s, i) {
+                return _react2.default.createElement(
+                  'span',
+                  { key: s + Date.now().toString() + i.toString(), className: 'suggestionTag' },
+                  _react2.default.createElement(
+                    'span',
+                    { className: 'suggestionTag tag', onClick: function onClick() {
+                        return _this5.suggestionTagOnClick(s);
+                      } },
+                    s
+                  ),
+                  ',\xA0'
+                );
+              })
             )
           )
         )
