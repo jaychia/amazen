@@ -92,7 +92,14 @@ def loadinvertedindicesproduct(json_location):
     for line in f:
       p_json = json.loads(line)
       new_invertedindicesproduct(p_json['term'], p_json['scorelist'])
-      
+
+@manager.command
+def loadinvertedindicesproductlist(json_folder_location):
+  files = [f for f in os.listdir(json_folder_location) if os.path.isfile(
+      os.path.join(json_folder_location, f))]
+  for fname in files:
+    loadinvertedindicesproduct(json_folder_location + '/' + fname)
+
 @manager.command
 def loadinvertedindicesreview(json_location):
   assert(os.path.isfile(json_location))
@@ -101,6 +108,13 @@ def loadinvertedindicesreview(json_location):
     for line in f:
       p_json = json.loads(line)
       new_invertedindicesreview(p_json['term'], p_json['scorelist'])
+
+@manager.command
+def loadinvertedindicesreviewlist(json_folder_location):
+  files = [f for f in os.listdir(json_folder_location) if os.path.isfile(
+      os.path.join(json_folder_location, f))]
+  for fname in files:
+    loadinvertedindicesreview(json_folder_location + '/' + fname)
       
 if __name__ == "__main__":
   manager.run()
