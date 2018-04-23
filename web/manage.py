@@ -89,9 +89,14 @@ def loadinvertedindicesproduct(json_location):
   assert(os.path.isfile(json_location))
 
   with open(json_location, 'r') as f:
+    tuplist = []
     for line in f:
       p_json = json.loads(line)
-      new_invertedindicesproduct(p_json['term'], p_json['scorelist'])
+      tuplist.append((p_json['term'], p_json['scorelist']))
+      if len(tuplist) > 50000:
+        new_invertedindicesproduct(tuplist)
+        del tuplist[:]
+    new_invertedindicesproduct(tuplist)
 
 @manager.command
 def loadinvertedindicesproductlist(json_folder_location):
@@ -105,9 +110,14 @@ def loadinvertedindicesreview(json_location):
   assert(os.path.isfile(json_location))
 
   with open(json_location, 'r') as f:
+    tuplist = []
     for line in f:
       p_json = json.loads(line)
-      new_invertedindicesreview(p_json['term'], p_json['scorelist'])
+      tuplist.append((p_json['term'], p_json['scorelist']))
+      if len(tuplist) > 50000:
+        new_invertedindicesreview(tuplist)
+        del tuplist[:]
+    new_invertedindicesreview(tuplist)
 
 @manager.command
 def loadinvertedindicesreviewlist(json_folder_location):
