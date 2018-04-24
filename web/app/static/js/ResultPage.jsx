@@ -82,7 +82,6 @@ export default class ResultPage extends React.Component {
                     </form>
                 </div>
                 {this.state.products.map(function (p, i) {
-                    console.log(p);
                     return <ProductListing
                         key={i}
                         productTitle={p.productTitle}

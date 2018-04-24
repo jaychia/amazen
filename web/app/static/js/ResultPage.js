@@ -153,7 +153,6 @@ var ResultPage = function (_React$Component) {
                     )
                 ),
                 this.state.products.map(function (p, i) {
-                    console.log(p);
                     return _react2.default.createElement(_ProductListing2.default, {
                         key: i,
                         productTitle: p.productTitle,
