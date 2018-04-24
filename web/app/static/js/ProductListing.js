@@ -53,7 +53,30 @@ var ProductListing = function (_React$Component) {
       var text = svg.append("text").text(term).attr("x", 10).attr("y", 25).style("font-size", 18);
       // define scales and axis
       var xScale = d3.scaleOrdinal().domain(["1", "2", "3", "4", "5"]).range([0 + m, w / 5 + m, 2 * w / 5 + m, 3 * w / 5 + m, 4 * w / 5 + m]);
-      var yScale = d3.scaleLog().domain([Math.exp(-10), 1000]).range([h - m / 2, 0]);
+
+      var minNum = Math.exp(-3);
+      var maxNum = 0;
+      var adjs = -0.00001;
+      var allEqual = function allEqual(arr) {
+        return arr.every(function (v) {
+          return v === arr[0];
+        });
+      };
+      if (allEqual(Object.values(rating_freq))) {
+        rating_freq["1"] += adjs;
+      }
+
+      Object.keys(rating_freq).forEach(function (key) {
+        if (rating_freq[key] < minNum && rating_freq[key] > 0) {
+          minNum = rating_freq[key];
+        }
+        if (rating_freq[key] > maxNum) {
+          maxNum = rating_freq[key];
+        }
+      });
+
+      var yScale = d3.scaleLinear().domain([minNum, maxNum]).range([h - m, m]);
+
       var xAxis = d3.axisBottom(xScale);
       svg.append("g").attr("class", "axis axis--x").attr("transform", "translate(0," + h + ")").call(xAxis);
       // add points from user input in rating_freq
