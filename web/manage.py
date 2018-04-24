@@ -156,7 +156,6 @@ def loadcooccurencetermlist(json_folder_location):
 @manager.command
 def deletecooccurenceterm():
   delete_cooccurenceterm()
-  
 
 if __name__ == "__main__":
   manager.run()

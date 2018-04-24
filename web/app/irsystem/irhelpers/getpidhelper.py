@@ -75,10 +75,13 @@ def get_top_k_pids(inverted_index_product, inverted_index_review):
 def get_cooccurred_terms(terms_scorelist_dict):
 
     term_cooc_scores = defaultdict(float)
+
+    identical_terms = set(terms_scorelist_dict.keys())
     
     for term, scorelist in terms_scorelist_dict.items():
         for (term, score) in scorelist:
-            term_cooc_scores[term] += score
+            if term not in identical_terms:
+                term_cooc_scores[term] += score
 
     term_cooc_scores_keys = list(term_cooc_scores.keys())
     term_cooc_scores_np = np.array([term_cooc_scores[i] for i in term_cooc_scores_keys])
