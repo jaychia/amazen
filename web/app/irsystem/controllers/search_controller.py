@@ -37,6 +37,13 @@ def get_suggested_words(querylist):
 def pack_pid_json(pids):
 	products = products_with_pids(pids)
 	convertkeyword = lambda x: 0. if x == "nan" else float(x)
+
+	def convert_keywordscorelist(p):
+		kwscorelisttmp = [int(x) for x in p.keywordscoredist.replace("[", "").replace("]", "").split(",")]
+		kwscorelist = []
+		for i in range(len(kwscorelisttmp) / 5):
+			kwscorelist.append(kwscorelisttmp[i*5 : (i+1)*5])
+		return kwscorelist
 	return [{
 	'productTitle': p.name,
 	'price': p.price,
@@ -44,10 +51,11 @@ def pack_pid_json(pids):
 	'desc': p.desc if p.desc is not None else "",
 	'keywords': [] if p.keywords is None else p.keywords.split(","),
 	'keywordscores': [] if p.keywordscores is None else [convertkeyword(x) for x in p.keywordscores.split(",")],
-	'keywordscorelist': [] if p.keywordscoredist is None else [int(x) for x in p.keywordscoredist.replace("[","").replace("]","").split(",")],
+	'keywordscorelist': [] if p.keywordscoredist is None else convert_keywordscorelist(p),
 	'rating': p.average_stars,
 	'numRatings': p.num_ratings,
-	'imgUrl': p.img_url
+	'imgUrl': p.img_url,
+	'asin': p.azn_product_id
 	} for p in products]
 
 ##################################################################################################

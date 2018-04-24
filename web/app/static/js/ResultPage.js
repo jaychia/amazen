@@ -153,21 +153,20 @@ var ResultPage = function (_React$Component) {
                     )
                 ),
                 this.state.products.map(function (p, i) {
+                    console.log(p);
                     return _react2.default.createElement(_ProductListing2.default, {
                         key: i,
                         productTitle: p.productTitle,
                         price: p.price,
                         seller: p.seller,
                         desc: p.desc,
-                        keywords: ["la", "ha", "ho"],
-                        keywordscores: [1, 1, 1],
-                        keywordScoreList: [[1, 2, 1, 0, 4], [3, 3, 3, 3, 3], [1, 2, 1, 0, 4]]
-                        // keywords={p.keywords}
-                        // keywordscores={p.keywordscores}
-                        // keywordScoreList={p.keywordScoreList}
-                        , rating: p.rating,
+                        keywords: p.keywords,
+                        keywordscores: p.keywordscores,
+                        keywordScoreList: p.keywordscorelist,
+                        rating: p.rating,
                         imgUrl: p.imgUrl,
-                        numRatings: p.numRatings });
+                        numRatings: p.numRatings,
+                        asin: p.asin });
                 })
             );
         }

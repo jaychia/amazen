@@ -131,9 +131,11 @@ export default class ProductListing extends React.Component {
           </div>
           <div className="product-main">
             <div>
-              <div className="product-title">
-                {this.props.productTitle}
-              </div>
+              <a href={"https://amazon.com/dp/" + this.props.asin}>
+                <div className="product-title">
+                  {this.props.productTitle}
+                </div>
+              </a>
               <div className="product-seller">
                 {this.props.seller}
               </div>
@@ -172,4 +174,5 @@ ProductListing.propTypes = {
   rating: PropTypes.number,
   numRatings: PropTypes.number,
   imgUrl: PropTypes.string,
+  asin: PropTypes.string.isRequired
 };

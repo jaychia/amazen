@@ -168,9 +168,13 @@ var ProductListing = function (_React$Component) {
               'div',
               null,
               _react2.default.createElement(
-                'div',
-                { className: 'product-title' },
-                this.props.productTitle
+                'a',
+                { href: "https://amazon.com/dp/" + this.props.asin },
+                _react2.default.createElement(
+                  'div',
+                  { className: 'product-title' },
+                  this.props.productTitle
+                )
               ),
               _react2.default.createElement(
                 'div',
@@ -246,5 +250,6 @@ ProductListing.propTypes = {
   keywordscores: _propTypes2.default.arrayOf(_propTypes2.default.number).isRequired,
   rating: _propTypes2.default.number,
   numRatings: _propTypes2.default.number,
-  imgUrl: _propTypes2.default.string
+  imgUrl: _propTypes2.default.string,
+  asin: _propTypes2.default.string.isRequired
 };
