@@ -10,7 +10,7 @@ export default class ProductListing extends React.Component {
     this.keywordOnClick = this.keywordOnClick.bind(this);
   }
 
-  addTermPlot(term, rating_freq) {
+  addTermPlot(rating_freq) {
     // SVG params
     var h = 150;
     var w = 600;
@@ -18,11 +18,6 @@ export default class ProductListing extends React.Component {
     var svg = d3.select(document.createElementNS('http://www.w3.org/2000/svg', 'svg'))
       .attr("height", h + m)
       .attr("width", w + m);
-    var text = svg.append("text")
-      .text(term)
-      .attr("x", 10)
-      .attr("y", 25)
-      .style("font-size", 18);
     // define scales and axis
     var xScale = d3.scaleOrdinal()
       .domain(["1", "2", "3", "4", "5"])
@@ -32,16 +27,16 @@ export default class ProductListing extends React.Component {
     var maxNum = 0
     var adjs = -0.00001
     const allEqual = arr => arr.every(v => v === arr[0])
-    if (allEqual(Object.values(rating_freq))) {
-      rating_freq["1"] += adjs
+    if (allEqual(rating_freq)) {
+      rating_freq[0] += adjs
     }
 
-    Object.keys(rating_freq).forEach(function (key) {
-      if (rating_freq[key] < minNum && rating_freq[key] > 0) {
-        minNum = rating_freq[key]
+    rating_freq.forEach(function (val) {
+      if (val < minNum && val > 0) {
+        minNum = val
       }
-      if (rating_freq[key] > maxNum) {
-        maxNum = rating_freq[key]
+      if (val > maxNum) {
+        maxNum = val
       }
     });
 
@@ -106,9 +101,9 @@ export default class ProductListing extends React.Component {
   } 
 
   keywordOnClick(word, score_list) {
-    var img = this.addTermPlot(word, score_list);
+    var img = this.addTermPlot(score_list);
     Popup.create({
-      title: 'Keyword Detail',
+      title: word,
       content: img,
       className: 'alert',
     }, true);
