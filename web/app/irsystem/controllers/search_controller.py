@@ -23,7 +23,7 @@ def get_top_products(q,descs,k2=100,k3=10):
 	inverted_index_product = scorelists_with_terms_for_product(to_tokens_set(q))
 	inverted_index_review = scorelists_with_terms_for_review(to_tokens_set(to_q_desc(q,descs)))
 
-	return get_top_k_pids(inverted_index_product, inverted_index_review)[:10]
+	return get_top_k_pids(inverted_index_product, inverted_index_review)
 
 def filter_category_by_query(q, cat):
 	return ["1234", "123", "12"]
@@ -35,7 +35,6 @@ def get_suggested_words(querylist):
 	return [random.choice(l) for _ in range(3)]
 
 def pack_pid_json(pids):
-
 	products = products_with_pids(pids)
 	convertkeyword = lambda x: 0. if x == "nan" else float(x)
 	return [{
