@@ -6,6 +6,7 @@ from app import app, db
 from app.irsystem.models.product import new_products, update_product_keywords, update_product_desc
 from app.irsystem.models.invertedindicesproduct import new_invertedindicesproduct
 from app.irsystem.models.invertedindicesreview import new_invertedindicesreview
+from app.irsystem.models.cooccurenceterm import new_cooccurenceterm, delete_cooccurenceterm
 
 from collections import namedtuple
 import json
@@ -146,6 +147,32 @@ def loadinvertedindicesreviewlist(json_folder_location):
       os.path.join(json_folder_location, f))]
   for fname in files:
     loadinvertedindicesreview(json_folder_location + '/' + fname)
-      
+  
+@manager.command
+def loadcooccurenceterm(json_location):
+  assert(os.path.isfile(json_location))
+
+  with open(json_location, 'r') as f:
+    tuplist = []
+    for line in f:
+      p_json = json.loads(line)
+      tuplist.append((p_json['term'], str(p_json['termlist'])))
+      if len(tuplist) > 50000:
+        new_cooccurenceterm(tuplist)
+        del tuplist[:]
+    new_cooccurenceterm(tuplist)
+
+@manager.command
+def loadcooccurencetermlist(json_folder_location):
+  files = [f for f in os.listdir(json_folder_location) if os.path.isfile(
+      os.path.join(json_folder_location, f))]
+  print(len(files))
+  for fname in files:
+    loadcooccurenceterm(json_folder_location + '/' + fname)
+
+@manager.command
+def deletecooccurenceterm():
+  delete_cooccurenceterm()
+
 if __name__ == "__main__":
   manager.run()

@@ -39,6 +39,13 @@ class Product(Base):
   def __repr__(self):
     return str(self.__dict__)
 
+def keywords_with_pids(pid_list):
+  products = Product.query.filter(Product.azn_product_id.in_(pid_list)).all()
+  pmap = {p.azn_product_id: p.keywords for p in products}
+
+  return [pmap[id] for id in pid_list if id in pmap][:k]
+
+
 def products_with_pids(pid_list, k=10):
 
   products = Product.query.filter(Product.azn_product_id.in_(pid_list)).all()

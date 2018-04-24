@@ -21,6 +21,7 @@ from app import socketio
 from app.irsystem.models import product
 from app.irsystem.models import invertedindicesproduct
 from app.irsystem.models import invertedindicesreview
+from app.irsystem.models import cooccurenceterm
 
 # IMPORT THE BLUEPRINT APP OBJECT 
 from app.irsystem import irsystem

@@ -4,6 +4,8 @@ from app.irsystem.models.helpers import NumpyEncoder as NumpyEncoder
 from app.irsystem.models.product import products_with_pids
 from app.irsystem.models.invertedindicesproduct import scorelists_with_terms_for_product
 from app.irsystem.models.invertedindicesreview import scorelists_with_terms_for_review
+from app.irsystem.models.cooccurenceterm import scorelists_with_terms_for_cooccurenceterm
+
 from flask import jsonify
 from flask import current_app
 from app.irsystem.irhelpers.getpidhelper import *
@@ -23,16 +25,33 @@ def get_top_products(q,descs,k2=100,k3=10):
 	inverted_index_product = scorelists_with_terms_for_product(to_tokens_set(q))
 	inverted_index_review = scorelists_with_terms_for_review(to_tokens_set(to_q_desc(q,descs)))
 
-	return get_top_k_pids(inverted_index_product, inverted_index_review)[:10]
+	return get_top_k_pids(inverted_index_product, inverted_index_review)
 
 def filter_category_by_query(q, cat):
 	return ["1234", "123", "12"]
 
-def get_suggested_words(querylist):
-	l = ["strong", "charles", "yolo", "hey",
-            "yo", "random", "jooho", "amrit", "alex"]
-	
-	return [random.choice(l) for _ in range(3)]
+def get_suggested_words(q_strings):
+	q = " ".join(q_strings.split(","))
+
+	current_app.logger.info(q)
+
+	current_app.logger.info(to_tokens_set(q))
+
+	cooccured_term_scorelist_dict = scorelists_with_terms_for_cooccurenceterm(list(to_tokens_set(q)))
+
+	current_app.logger.info(cooccured_term_scorelist_dict)
+
+	cooccured_terms_stemmed = get_cooccurred_terms(cooccured_term_scorelist_dict)
+
+	current_app.logger.info(cooccured_terms_stemmed)
+
+	l = ["strong", "cheap", "quality", "good",
+            "durable", "fast", "cost-effecient", "new", "trendy", "affordable", "environmental", "safe", "reliable"]
+
+	if len(cooccured_terms_stemmed) == 0:
+		cooccured_terms_stemmed = [random.choice(l) for _ in range(3)]
+
+	return cooccured_terms_stemmed
 
 def pack_pid_json(pids):
 
