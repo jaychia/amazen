@@ -30,7 +30,7 @@ def get_top_products(q,descs,k2=100,k3=10):
 def filter_category_by_query(q, cat):
 	return ["1234", "123", "12"]
 
-def get_suggested_words(q_strings):
+def get_suggested_words(q_strings, k=5):
 	q = " ".join(q_strings.split(","))
 
 	current_app.logger.info(q)
@@ -45,18 +45,26 @@ def get_suggested_words(q_strings):
 
 	current_app.logger.info(cooccured_terms_stemmed)
 
-	l = ["strong", "cheap", "quality", "good",
-            "durable", "fast", "cost-effecient", "new", "trendy", "affordable", "environmental", "safe", "reliable"]
+	l = ["strong", "cheap", "quality", "good", "durable", "fast", "cost-effecient", "new", "trendy", "affordable", "environmental", "safe", "reliable"]
 
-	if len(cooccured_terms_stemmed) == 0:
-		cooccured_terms_stemmed = [random.choice(l) for _ in range(3)]
+	ran_perm = np.random.permutation(len(l))[:k]
+	stock_desc = [l[int(i)] for i in ran_perm]
 
-	return cooccured_terms_stemmed
+	if len(cooccured_terms_stemmed) <= k:
+		cooccured_terms_stemmed =  cooccured_terms_stemmed + stock_desc
+
+	return cooccured_terms_stemmed[:k]
 
 def pack_pid_json(pids):
-
 	products = products_with_pids(pids)
 	convertkeyword = lambda x: 0. if x == "nan" else float(x)
+
+	def convert_keywordscorelist(p):
+		kwscorelisttmp = [int(x) for x in p.keywordscoredist.replace("[", "").replace("]", "").split(",")]
+		kwscorelist = []
+		for i in range(len(kwscorelisttmp) / 5):
+			kwscorelist.append(kwscorelisttmp[i*5 : (i+1)*5])
+		return kwscorelist
 	return [{
 	'productTitle': p.name,
 	'price': p.price,
@@ -64,9 +72,11 @@ def pack_pid_json(pids):
 	'desc': p.desc if p.desc is not None else "",
 	'keywords': [] if p.keywords is None else p.keywords.split(","),
 	'keywordscores': [] if p.keywordscores is None else [convertkeyword(x) for x in p.keywordscores.split(",")],
+	'keywordscorelist': [] if p.keywordscoredist is None else convert_keywordscorelist(p),
 	'rating': p.average_stars,
 	'numRatings': p.num_ratings,
-	'imgUrl': p.img_url
+	'imgUrl': p.img_url,
+	'asin': p.azn_product_id
 	} for p in products]
 
 ##################################################################################################
