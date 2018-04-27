@@ -13,3 +13,4 @@ redis-app/tokenized/*
 redis-app/nltk/*
 redis-app/wordset/*
 redis-app/venv/*
+redis-app/filtered-tokenized.zip
