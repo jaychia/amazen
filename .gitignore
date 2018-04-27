@@ -5,3 +5,11 @@ web/migrations/*
 .DS_Store
 web/app/static/js/bundled/*
 web/app/irsystem/irhelpers/data/*
+redis-data/*
+redis-backup/*
+redis-app/filtered-tokenized/*
+redis-app/data/*
+redis-app/tokenized/*
+redis-app/nltk/*
+redis-app/wordset/*
+redis-app/venv/*
