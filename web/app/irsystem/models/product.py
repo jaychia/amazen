@@ -40,7 +40,6 @@ class Product(Base):
     return str(self.__dict__)
 
 def products_with_pids(pid_list, k=20):
-
   products = Product.query.filter(Product.azn_product_id.in_(pid_list)).all()
   pmap = {p.azn_product_id: p for p in products}
 

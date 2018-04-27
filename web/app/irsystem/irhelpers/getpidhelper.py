@@ -71,3 +71,23 @@ def get_top_k_pids(inverted_index_product, inverted_index_review):
     current_app.logger.info(len(pids_to_return))
     return pids_to_return
 
+# move to other file later for cooccurence helpers
+def get_cooccurred_terms(terms_scorelist_dict):
+
+    term_cooc_scores = defaultdict(float)
+
+    identical_terms = set(terms_scorelist_dict.keys())
+    
+    for term, scorelist in terms_scorelist_dict.items():
+        for (term, score) in scorelist:
+            if term not in identical_terms:
+                term_cooc_scores[term] += score
+
+    term_cooc_scores_keys = list(term_cooc_scores.keys())
+    term_cooc_scores_np = np.array([term_cooc_scores[i] for i in term_cooc_scores_keys])
+    
+    term_cooc_scores_keys_indices_ordered = np.argsort(term_cooc_scores_np)[::-1]
+            
+    top_k_term_list = [term_cooc_scores_keys[key_index] for key_index in term_cooc_scores_keys_indices_ordered]
+    
+    return top_k_term_list

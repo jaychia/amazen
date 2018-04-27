@@ -10,7 +10,7 @@ export default class ProductListing extends React.Component {
     this.keywordOnClick = this.keywordOnClick.bind(this);
   }
 
-  addTermPlot(term, rating_freq) {
+  addTermPlot(rating_freq) {
     // SVG params
     var h = 150;
     var w = 600;
@@ -18,18 +18,33 @@ export default class ProductListing extends React.Component {
     var svg = d3.select(document.createElementNS('http://www.w3.org/2000/svg', 'svg'))
       .attr("height", h + m)
       .attr("width", w + m);
-    var text = svg.append("text")
-      .text(term)
-      .attr("x", 10)
-      .attr("y", 25)
-      .style("font-size", 18);
     // define scales and axis
     var xScale = d3.scaleOrdinal()
       .domain(["1", "2", "3", "4", "5"])
       .range([0 + m, w / 5 + m, 2 * w / 5 + m, 3 * w / 5 + m, 4 * w / 5 + m]);
-    var yScale = d3.scaleLog()
-      .domain([Math.exp(-10), 1000])
-      .range([h - m / 2, 0]);
+
+    var minNum = Math.exp(-3)
+    var maxNum = 0
+    var adjs = -0.00001
+    const allEqual = arr => arr.every(v => v === arr[0])
+    if (allEqual(rating_freq)) {
+      rating_freq[0] += adjs
+    }
+
+    rating_freq.forEach(function (val) {
+      if (val < minNum && val > 0) {
+        minNum = val
+      }
+      if (val > maxNum) {
+        maxNum = val
+      }
+    });
+
+    var yScale = d3.scaleLinear()
+      .domain([minNum, maxNum])
+      .range([h - m, m]);
+
+
     var xAxis = d3.axisBottom(xScale);
     svg.append("g")
       .attr("class", "axis axis--x")
@@ -86,9 +101,9 @@ export default class ProductListing extends React.Component {
   } 
 
   keywordOnClick(word, score_list) {
-    var img = this.addTermPlot(word, score_list);
+    var img = this.addTermPlot(score_list);
     Popup.create({
-      title: 'Keyword Detail',
+      title: word,
       content: img,
       className: 'alert',
     }, true);

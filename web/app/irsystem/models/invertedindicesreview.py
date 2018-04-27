@@ -25,6 +25,7 @@ class Invertedindicesreview(Base):
     return str(self.__dict__)
 
 def scorelists_with_terms_for_review(term_list):
+  current_app.logger.info(term_list)
   invertedindicesreviews = Invertedindicesreview.query.filter(Invertedindicesreview.term.in_(term_list)).all()
   return {r.term: literal_eval(r.scorelist) for r in invertedindicesreviews}
 
