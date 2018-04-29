@@ -124,8 +124,8 @@ def product_search():
 	descriptors = request.args.get('descriptors', [])
 
 	#jooho: dummy code
-	descriptors_pos= []
-	descriptors_neg= []
+	descriptors_pos= ""
+	descriptors_neg= ""
 
 	if not query:
 		d = {
@@ -147,7 +147,7 @@ def product_search():
 	sorted_pids_and_info = get_top_products(query,decs_pos, decs_neg)
 
 	# only wanna show positive descriptors in results
-	d = pack_pid_json(sorted_pids_and_info, to_q_desc(query,decs_pos))
+	d = pack_pid_json(sorted_pids_and_info, to_q_desc(query, decs_pos))
 	return jsonify(data=d)
 
 @irsystem.route('suggestions', methods=['GET'])
