@@ -18,7 +18,7 @@ class Product(Base):
   keywordssents = db.Column(db.String(), nullable=True)
 
 
-  def __init__(self, name, price, img_url, azn_product_id, seller_name, desc, average_stars, num_ratings, keywords=None, keywordscores=None, keywordscoredist=None, keywordssents):
+  def __init__(self, name, price, img_url, azn_product_id, seller_name, desc, average_stars, num_ratings, keywords=None, keywordscores=None, keywordscoredist=None, keywordssents=None):
     """
     Initialize a product SQLAlchemy Model Object
     Requires: 

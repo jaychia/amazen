@@ -4,8 +4,8 @@ from flask_migrate import Migrate, MigrateCommand
 from app import app, db
 
 from app.irsystem.models.product import new_products, update_product_keywords, update_product_desc
-from app.irsystem.models.invertedindicesproduct import new_invertedindicesproduct
-from app.irsystem.models.invertedindicesreview import new_invertedindicesreview
+from app.irsystem.models.invertedindicesproduct import new_invertedindicesproduct, delete_invertedindicesproduct
+from app.irsystem.models.invertedindicesreview import new_invertedindicesreview, delete_invertedindicesreview
 from app.irsystem.models.cooccurenceterm import new_cooccurenceterm, delete_cooccurenceterm
 from app.irsystem.models.review import new_review
 
@@ -178,8 +178,10 @@ def loadreviewlist(json_folder_location):
     loadreview(json_folder_location + '/' + fname)
 
 @manager.command
-def deletecooccurenceterm():
+def deletejoohotables():
   delete_cooccurenceterm()
+  delete_invertedindicesreview()
+  delete_invertedindicesproduct()
 
 if __name__ == "__main__":
   manager.run()
