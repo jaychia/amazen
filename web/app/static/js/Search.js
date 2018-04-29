@@ -188,7 +188,7 @@ var Search = function (_React$Component) {
           _react2.default.createElement(
             'div',
             { className: 'search-bar' },
-            _react2.default.createElement('input', { className: 'search-bar-input input-lg', onChange: this.queryChange, type: 'text', placeholder: 'What are you looking for today?', ref: 'New_search' }),
+            _react2.default.createElement('input', { className: 'search-bar-input input-lg', onChange: this.queryChange, type: 'text', placeholder: 'What product are you looking for today?', ref: 'New_search' }),
             _react2.default.createElement(
               'div',
               { className: 'input-group-btn' },
