@@ -71,13 +71,13 @@ def pack_pid_json(pids_and_info, q_d_string):
 
 		return before_stemmed_descs_list
 
-	def get_descitptors_review_num(term_reviewnum_dict):
-		descitptors_review_num_list = list()
+	def get_descriptors_review_num(term_reviewnum_dict):
+		descriptors_review_num_list = list()
 		for stemmed_term in term_reviewnum_dict:
 			if stemmed_term in reverse_stem_dict:
-				descitptors_review_num_list.append(term_reviewnum_dict[stemmed_term])
+				descriptors_review_num_list.append(term_reviewnum_dict[stemmed_term])
 
-		return descitptors_review_num_list
+		return descriptors_review_num_list
 
 	return [{
 	'productTitle': p.name,
@@ -88,7 +88,7 @@ def pack_pid_json(pids_and_info, q_d_string):
 	'keywordscores': [] if p.keywordscores is None else [convertkeyword(x) for x in p.keywordscores.split(",")],
 	'keywordscorelist': [] if p.keywordscoredist is None else convert_keywordscorelist(p),
 	'descriptors': [] if p.azn_product_id not in pid_term_reviewnum_dict else get_descriptors(pid_term_reviewnum_dict[p.azn_product_id]),
-	'descitptors_review_num': [] if p.azn_product_id not in pid_term_reviewnum_dict else get_descitptors_review_num(pid_term_reviewnum_dict[p.azn_product_id]),
+	'descriptors_review_num': [] if p.azn_product_id not in pid_term_reviewnum_dict else get_descriptors_review_num(pid_term_reviewnum_dict[p.azn_product_id]),
 	'rating': p.average_stars,
 	'numRatings': p.num_ratings,
 	'imgUrl': p.img_url,
@@ -142,8 +142,6 @@ def product_search():
 
 	decs_neg = descriptors_neg.split(",")
 	decs_neg = [x.lower().strip() for x in decs_neg]
-	# descs = descriptors.split(",")
-	# descs = [x.lower().strip() for x in descs]
 
 	# ir ranking
 	sorted_pids_and_info = get_top_products(query,decs_pos, decs_neg)
