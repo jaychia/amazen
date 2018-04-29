@@ -4,48 +4,55 @@ import axios from 'axios';
 export default class Search extends React.Component {
   constructor() {
     super(...arguments);
-    this.state = {descriptors: [], suggestions: []};
-    this.addButtonOnClick = this.addButtonOnClick.bind(this);
-    this.searchButtonOnClick = this.searchButtonOnClick.bind(this);
-    this.suggestionTagOnClick = this.suggestionTagOnClick.bind(this);
+    /* sugg = {text: string, status: "HIDDEN", "NEUTRAL", "UP", "DOWN"} */
+    this.state = {suggs = []};
+    this.likeButtonOnClick = this.likeButtonOnClick.bind(this);
+    this.dislikeButtonOnClick = this.likeButtonOnClick.bind(this);
+    this.setNeutralButtonOnClick = this.setNeutralButtonOnClick.bind(this);
     this.getNewSuggestions = this.getNewSuggestions.bind(this);
+    this.searchButtonOnClick = this.searchButtonOnClick.bind(this);
   }
 
   getNewSuggestions() {
-    axios.get("/suggestions?query=" + this.refs.New_search.value + "," + this.state.descriptors.join(","))
-      .then(res => {
-        this.setState({ suggestions: res.data.data });
+    axios.get(
+      "/suggestions?query=" + this.refs.New_search.value + 
+      "&positive=" + this.state.suggs.filter(sugg => sugg.status == "UP").map(sugg => sugg.text).join(",") +
+      "&negative=" + this.state.suggs.filter(sugg => sugg.status == "DOWN").map(sugg => sugg.text).join(",") +
+      "&neutral=" + this.state.suggs.filter(sugg => sugg.status == "HIDDEN" || sugg.status == "NEUTRAL").map(sugg => sugg.text).join(",")
+      ).then(res => {
+        // Hide previous neutrals and add new suggestions as neutrals
+        let hiddenstate = this.state.suggs.map((sugg) => {
+          (sugg.status == "NEUTRAL") ? { text: sugg.text, status: "HIDDEN" } : sugg;
+        });
+        let string_to_suggs = (str) => ({text: str, status: "NEUTRAL"});
+        this.setState((prevState, props) => ({ suggs: [...hiddenstate, string_to_suggs(res.data.data)] }));
       });
   }
 
-  suggestionTagOnClick(sugg) {
-    if (sugg != "" && this.state.descriptors.indexOf(sugg) == -1) {
-      this.setState((prevState, props) => ({
-        descriptors: [...prevState.descriptors, sugg]
-      }), () => {this.getNewSuggestions();});
-    }
+  likeButtonOnClick(suggtext) {
+    this.setState((prevState, props) => ({
+      suggs: prevState.map(sugg => {(sugg.text !== suggtext) ? sugg : {text: suggtext, status: "UP"}})
+    }));
+  }
+
+  dislikeButtonOnClick(suggtext) {
+    this.setState((prevState, props) => ({
+      suggs: prevState.map(sugg => { (sugg.text !== suggtext) ? sugg : { text: suggtext, status: "DOWN" } })
+    }));
+  }
+
+  setNeutralButtonOnClick(suggtext) {
+    this.setState((prevState, props) => ({
+      suggs: prevState.map(sugg => { (sugg.text !== suggtext) ? sugg : { text: suggtext, status: "NEUTRAL" } })
+    }));
   }
 
   searchButtonOnClick() {
     var descriptors_str = this.state.descriptors.join(",");
-    window.location.href = "search_page?query=" + this.refs.New_search.value + "&descriptors=" + descriptors_str;
+    window.location.href = "search_page?query=" + this.refs.New_search.value + 
+      "&positive=" + this.state.suggs.filter(sugg => sugg.status == "UP").map(sugg => sugg.text).join(",") +
+      "&negative=" + this.state.suggs.filter(sugg => sugg.status == "DOWN").map(sugg => sugg.text).join(",");
   }
-
-  addButtonOnClick() {
-    var new_d = this.refs.New_descriptor.value;
-    this.refs.New_descriptor.value = "";
-    if(new_d != "" && this.state.descriptors.indexOf(new_d) == -1)
-      this.setState((prevState, props) => ({
-        descriptors: [...prevState.descriptors, new_d]
-      }), () => {this.getNewSuggestions();});
-  };
-
-  deleteButtonOnClick(deletedName) {
-    var arr = this.state.descriptors;
-    var i = arr.indexOf(deletedName);
-    arr.splice(i, 1);
-    this.setState({descriptors: arr});
-  };
 
   render() {
     return (
