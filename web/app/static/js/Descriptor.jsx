@@ -10,13 +10,13 @@ export default class Descriptor extends React.Component {
     if (this.props.status == "NEUTRAL") {
       return (
         <div className="desc-tag">
-          <button className="card card-1" type="button" onClick={() => this.props.onDislikeClick(this.props.text)}>
+          <button className="card card-1 card-left" type="button" onClick={() => this.props.onDislikeClick(this.props.text)}>
             <img className="thumbs" src="static/img/thumb-down.png"></img>
           </button>
           <span className="desc-tag-text card card-2">
             {this.props.text}
           </span>
-          <button className="card card-1" type="button" onClick={() => this.props.onLikeClick(this.props.text)}>
+          <button className="card card-1 card-right" type="button" onClick={() => this.props.onLikeClick(this.props.text)}>
             <img className="thumbs" src="static/img/thumb-up.png"></img>
           </button>
         </div>

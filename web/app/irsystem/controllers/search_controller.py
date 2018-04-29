@@ -119,7 +119,8 @@ def search_page():
 @irsystem.route('search', methods=['GET'])
 def product_search():
 	query = request.args.get('query')
-	descriptors = request.args.get('descriptors', [])
+	positive = request.args.get('positive', [])
+	negative = request.args.get('negative', [])
 	if not query:
 		d = {
 			'status': 400,

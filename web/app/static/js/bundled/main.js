@@ -21417,7 +21417,7 @@ var Descriptor = function (_React$Component) {
           { className: 'desc-tag' },
           _react2.default.createElement(
             'button',
-            { className: 'card card-1', type: 'button', onClick: function onClick() {
+            { className: 'card card-1 card-left', type: 'button', onClick: function onClick() {
                 return _this2.props.onDislikeClick(_this2.props.text);
               } },
             _react2.default.createElement('img', { className: 'thumbs', src: 'static/img/thumb-down.png' })
@@ -21429,7 +21429,7 @@ var Descriptor = function (_React$Component) {
           ),
           _react2.default.createElement(
             'button',
-            { className: 'card card-1', type: 'button', onClick: function onClick() {
+            { className: 'card card-1 card-right', type: 'button', onClick: function onClick() {
                 return _this2.props.onLikeClick(_this2.props.text);
               } },
             _react2.default.createElement('img', { className: 'thumbs', src: 'static/img/thumb-up.png' })
