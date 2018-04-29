@@ -15,8 +15,10 @@ class Product(Base):
   keywords = db.Column(db.String(), nullable=True)
   keywordscores = db.Column(db.String(), nullable=True)
   keywordscoredist = db.Column(db.String(), nullable=True)
+  keywordssents = db.Column(db.String(), nullable=True)
 
-  def __init__(self, name, price, img_url, azn_product_id, seller_name, desc, average_stars, num_ratings, keywords=None, keywordscores=None, keywordscoredist=None):
+
+  def __init__(self, name, price, img_url, azn_product_id, seller_name, desc, average_stars, num_ratings, keywords=None, keywordscores=None, keywordscoredist=None, keywordssents):
     """
     Initialize a product SQLAlchemy Model Object
     Requires: 
@@ -35,6 +37,7 @@ class Product(Base):
     self.keywords = keywords
     self.keywordscores = keywordscores
     self.keywordscoredist = keywordscoredist
+    self.keywordssents = keywordssents
 
   def __repr__(self):
     return str(self.__dict__)
@@ -71,7 +74,7 @@ def new_products(tuplist):
 #     db.session.commit()
 
 
-def update_product_keywords(asin, keywords, keywords_scores, keywords_scores_dist):
+def update_product_keywords(asin, keywords, keywords_scores, keywords_scores_dist, keywords_sents):
   p = Product.query.filter_by(azn_product_id=asin).first()
   if p is not None:
     p.keywords = ",".join(keywords)
@@ -86,6 +89,7 @@ def update_product_keywords(asin, keywords, keywords_scores, keywords_scores_dis
       s = s + "]"
       keyworddistlist.append(s)
     p.keywordscoredist = ",".join(keyworddistlist)
+    p.keywordssents = ",".join(keywords_sents)
     db.session.commit()
     
 
