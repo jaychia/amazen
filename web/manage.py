@@ -6,7 +6,7 @@ from app import app, db
 from app.irsystem.models.product import new_products, update_product_keywords, update_product_desc
 from app.irsystem.models.invertedindicesproduct import new_invertedindicesproduct, delete_invertedindicesproduct
 from app.irsystem.models.invertedindicesreview import new_invertedindicesreview, delete_invertedindicesreview
-from app.irsystem.models.review import new_review
+from app.irsystem.models.review import new_review, delete_review
 from app.irsystem.models.cooccurenceterm import delete_cooccurenceterm
 
 from collections import namedtuple
@@ -81,7 +81,7 @@ def loadinvertedindicesreview(json_location):
     tuplist = []
     for line in f:
       p_json = json.loads(line)
-      tuplist.append((p_json['term'], str(p_json['asinlist'])))
+      tuplist.append((p_json['term'], str([four_tup[:3] for four_tup in p_json['asinlist']])))
       if len(tuplist) > 50000:
         new_invertedindicesreview(tuplist)
         del tuplist[:]
@@ -107,7 +107,6 @@ def loadreview(json_location):
   with open(json_location, 'r') as f:
     tuplist = []
     for line in f:
-      p_json = json.loads(line)
       tuplist.append((p_json['review_id'], str(p_json['review_text'])))
       if len(tuplist) > 50000:
         new_review(tuplist)
@@ -117,8 +116,6 @@ def loadreview(json_location):
 @manager.command
 def deletejoohotables():
   delete_invertedindicesreview()
-  delete_invertedindicesproduct()
-  delete_cooccurenceterm()
 
 dispatcher = {
   'loadproducts': loadproducts,

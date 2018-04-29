@@ -44,13 +44,13 @@ hash_key = "_jooho_"
 
 def top_k_pids_step3(valid_pids, inverted_index_review):
     product_simscores = defaultdict(float)
-    asin_term_info_dict = defaultdict(list)
+    asin_term_info_dict = defaultdict(lambda: defaultdict(int))
     
     for term, scorelist in inverted_index_review.items():
-        for (asin, score, numofreviews, reviewindex) in scorelist:
+        for (asin, score, numofreviews) in scorelist:
             if asin in valid_pids:
                 product_simscores[asin] += score
-                asin_term_info_dict[asin].append((term,numofreviews, "".join(asin,hash_key,str(reviewindex))))
+                asin_term_info_dict[asin][term] = int(numofreviews)
     
     product_simscores_keys = list(product_simscores.keys())
     product_simscores_np = np.array([product_simscores[i] for i in product_simscores_keys])
@@ -68,9 +68,7 @@ def get_top_k_pids(inverted_index_product, inverted_index_review):
 
     if len(inverted_index_review) == 0:
         return list(top_pids_step2)
-    current_app.logger.info(len(top_pids_step2))
 
     pids_and_info_to_return = top_k_pids_step3(top_pids_step2, inverted_index_review)
 
-    current_app.logger.info(len(pids_and_info_to_return))
     return pids_and_info_to_return
