@@ -28,10 +28,12 @@ def amrit_suggestions(query):
 def classify_query(q):
 	return "electronics"
 
-def get_top_products(q,descs,k2=100,k3=10):
+def get_top_products(q,descs_pos, descs_neg):
 	inverted_index_product = scorelists_with_terms_for_product(to_tokens_set(q))
-	inverted_index_review = scorelists_with_terms_for_review(to_tokens_set(to_q_desc(q,descs)))
-	return get_top_k_pids(inverted_index_product, inverted_index_review)
+	inverted_index_review_pos = scorelists_with_terms_for_review(to_tokens_set(to_q_desc(q,descs_pos)))
+	# negative descriptors will be penalized
+	inverted_index_review_neg = scorelists_with_terms_for_review(to_tokens_set(" ".join(descs_neg)))
+	return get_top_k_pids(inverted_index_product, inverted_index_review_pos, inverted_index_review_neg)
 
 def filter_category_by_query(q, cat):
 	return ["1234", "123", "12"]
@@ -120,6 +122,11 @@ def search_page():
 def product_search():
 	query = request.args.get('query')
 	descriptors = request.args.get('descriptors', [])
+
+	#jooho: dummy code
+	descriptors_pos= []
+	descriptors_neg= []
+
 	if not query:
 		d = {
 			'status': 400,
@@ -130,12 +137,19 @@ def product_search():
 	category = classify_query(query.strip().lower())
 	pids = filter_category_by_query(query, category)
 
-	descs = descriptors.split(",")
-	descs = [x.lower().strip() for x in descs]
+	decs_pos = descriptors_pos.split(",")
+	decs_pos = [x.lower().strip() for x in decs_pos]
 
-	sorted_pids_and_info = get_top_products(query,descs)
+	decs_neg = descriptors_neg.split(",")
+	decs_neg = [x.lower().strip() for x in decs_neg]
+	# descs = descriptors.split(",")
+	# descs = [x.lower().strip() for x in descs]
 
-	d = pack_pid_json(sorted_pids_and_info, to_q_desc(query,descs))
+	# ir ranking
+	sorted_pids_and_info = get_top_products(query,decs_pos, decs_neg)
+
+	# only wanna show positive descriptors in results
+	d = pack_pid_json(sorted_pids_and_info, to_q_desc(query,decs_neg))
 	return jsonify(data=d)
 
 @irsystem.route('suggestions', methods=['GET'])
