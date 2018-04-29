@@ -8,7 +8,7 @@ export default class Search extends React.Component {
     /* sugg = {text: string, status: "HIDDEN", "NEUTRAL", "UP", "DOWN"} */
     this.state = {suggs: [], querysuggs:[]};
     this.likeButtonOnClick = this.likeButtonOnClick.bind(this);
-    this.dislikeButtonOnClick = this.likeButtonOnClick.bind(this);
+    this.dislikeButtonOnClick = this.dislikeButtonOnClick.bind(this);
     this.setNeutralButtonOnClick = this.setNeutralButtonOnClick.bind(this);
     this.getNewSuggestions = this.getNewSuggestions.bind(this);
     this.searchButtonOnClick = this.searchButtonOnClick.bind(this);
@@ -56,19 +56,19 @@ export default class Search extends React.Component {
 
   likeButtonOnClick(suggtext) {
     this.setState((prevState, props) => ({
-      suggs: prevState.map(sugg => {(sugg.text !== suggtext) ? sugg : {text: suggtext, status: "UP"}})
+      suggs: prevState.suggs.map(sugg => (sugg.text !== suggtext) ? sugg : {text: suggtext, status: "UP"})
     }));
   }
 
   dislikeButtonOnClick(suggtext) {
     this.setState((prevState, props) => ({
-      suggs: prevState.map(sugg => { (sugg.text !== suggtext) ? sugg : { text: suggtext, status: "DOWN" } })
+      suggs: prevState.suggs.map(sugg => (sugg.text !== suggtext) ? sugg : { text: suggtext, status: "DOWN" })
     }));
   }
 
   setNeutralButtonOnClick(suggtext) {
     this.setState((prevState, props) => ({
-      suggs: prevState.map(sugg => { (sugg.text !== suggtext) ? sugg : { text: suggtext, status: "NEUTRAL" } })
+      suggs: prevState.suggs.map(sugg => (sugg.text !== suggtext) ? sugg : { text: suggtext, status: "NEUTRAL" })
     }));
   }
 
@@ -111,26 +111,24 @@ export default class Search extends React.Component {
               </span>)}
           </div>}
           <br />
-          <div className="descriptor-bar-container">
-            {this.state.suggs.length > 0 &&
-              <div className="desc-search-container">
-                <button type="button" className="refresh-button" onClick={this.getNewSuggestions}>
-                  <span className="glyphicon glyphicon-repeat"></span>
-                </button>
-                <div className="desc-container">
-                  {this.state.suggs.map((s, i) =>
-                  <Descriptor
-                  key={s.text + "-descriptor-key"}
-                  text={s.text}
-                  status={s.status} 
-                  onLikeClick={this.likeButtonOnClick} 
-                  onDislikeClick={this.dislikeButtonOnClick}
-                  onCancelClick={this.setNeutralButtonOnClick} />
-                  )}
-                </div>
+          {this.state.suggs.length > 0 &&
+            <div className="desc-search-container">
+            <button type="button" className="card card-1 refresh-button" onClick={this.getNewSuggestions}>
+                <span className="glyphicon glyphicon-repeat"></span>
+              </button>
+              <div className="desc-container">
+                {this.state.suggs.filter(s => s.status != "HIDDEN").map((s, i) =>
+                <Descriptor
+                key={s.text + "-descriptor-key"}
+                text={s.text}
+                status={s.status} 
+                onLikeClick={this.likeButtonOnClick} 
+                onDislikeClick={this.dislikeButtonOnClick}
+                onCancelClick={this.setNeutralButtonOnClick} />
+                )}
               </div>
-            }
-          </div>
+            </div>
+          }
         </form>
       </div>
     );

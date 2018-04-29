@@ -73,7 +73,7 @@ a * {
     outline: none;
 }
 
-.query-suggestions-container{
+.query-suggestions-container {
     margin-bottom: 12px;
 }
 
@@ -90,15 +90,46 @@ a * {
     display: flex;
 }
 
+.desc-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.desc-tag {
+    margin: 4px 8px 4px 8px;
+    display: inline-flex;
+}
+
+.thumbs {
+    width: 12px;
+    height: 12px;
+}
+
+.desc-tag-text {
+    padding: 2px 4px 2px 4px;
+    margin: 0px 3px 0px 3px;
+}
+
+.desc-tag.up {
+    padding: 2px 35px 2px 35px;
+    background-color: rgba(82, 142, 151, 1);
+}
+
+.desc-tag.down {
+    padding: 2px 35px 2px 35px;
+    background-color: rgba(233, 108, 98, 1);
+}
+
 .refresh-button {
-    background-color: grey;
-    border-radius: 5px;
+    background-color: white;
+    border-radius: 30px;
     font-size: 30px;
     margin-right: 12px;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 12px;
+    flex-grow: 0;
 }
 
 .refresh-button:focus {
@@ -140,25 +171,9 @@ a * {
     color: #4285F4;
 }
 
-.descriptor-bar {
-    margin-top: -8px;
-}
-
 .search-wrapper {
     margin: auto;
     max-width: 600px;
-}
-
-.descriptor-tag-button {
-    background: transparent;
-    margin: 0;
-    padding: 0;
-}
-
-.descriptor-tag {
-    font-size: 20px;
-    font-weight: 400;
-    margin: 4px 4px 4px 4px;
 }
 
 /* PRODUCT LISTING */
@@ -519,4 +534,38 @@ a * {
         text-align: center;
         margin-top: 10px;
     }
+}
+
+.card {
+    background: #fff;
+    border-radius: 2px;
+}
+
+.card:focus {
+    outline: none;
+}
+
+.card-1 {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+}
+
+.card-1:hover {
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25), 0 3px 3px rgba(0, 0, 0, 0.22);
+}
+
+.card-2 {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.16), 0 1px 2px rgba(0, 0, 0, 0.23);
+}
+
+.card-3 {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+}
+
+.card-4 {
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+}
+
+.card-5 {
+    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.30), 0 15px 12px rgba(0, 0, 0, 0.22);
 }

@@ -21409,11 +21409,45 @@ var Descriptor = function (_React$Component) {
   _createClass(Descriptor, [{
     key: 'render',
     value: function render() {
-      return _react2.default.createElement(
-        'span',
-        null,
-        this.props.text
-      );
+      var _this2 = this;
+
+      if (this.props.status == "NEUTRAL") {
+        return _react2.default.createElement(
+          'div',
+          { className: 'desc-tag' },
+          _react2.default.createElement(
+            'button',
+            { className: 'card card-1', type: 'button', onClick: function onClick() {
+                return _this2.props.onDislikeClick(_this2.props.text);
+              } },
+            _react2.default.createElement('img', { className: 'thumbs', src: 'static/img/thumb-down.png' })
+          ),
+          _react2.default.createElement(
+            'span',
+            { className: 'desc-tag-text card card-2' },
+            this.props.text
+          ),
+          _react2.default.createElement(
+            'button',
+            { className: 'card card-1', type: 'button', onClick: function onClick() {
+                return _this2.props.onLikeClick(_this2.props.text);
+              } },
+            _react2.default.createElement('img', { className: 'thumbs', src: 'static/img/thumb-up.png' })
+          )
+        );
+      } else if (this.props.status == "UP") {
+        return _react2.default.createElement(
+          'span',
+          { className: 'card card-2 desc-tag up' },
+          this.props.text
+        );
+      } else if (this.props.status == "DOWN") {
+        return _react2.default.createElement(
+          'span',
+          { className: 'card card-2 desc-tag down' },
+          this.props.text
+        );
+      }
     }
   }]);
 
@@ -21473,7 +21507,7 @@ var Search = function (_React$Component) {
 
     _this.state = { suggs: [], querysuggs: [] };
     _this.likeButtonOnClick = _this.likeButtonOnClick.bind(_this);
-    _this.dislikeButtonOnClick = _this.likeButtonOnClick.bind(_this);
+    _this.dislikeButtonOnClick = _this.dislikeButtonOnClick.bind(_this);
     _this.setNeutralButtonOnClick = _this.setNeutralButtonOnClick.bind(_this);
     _this.getNewSuggestions = _this.getNewSuggestions.bind(_this);
     _this.searchButtonOnClick = _this.searchButtonOnClick.bind(_this);
@@ -21549,8 +21583,8 @@ var Search = function (_React$Component) {
     value: function likeButtonOnClick(suggtext) {
       this.setState(function (prevState, props) {
         return {
-          suggs: prevState.map(function (sugg) {
-            sugg.text !== suggtext ? sugg : { text: suggtext, status: "UP" };
+          suggs: prevState.suggs.map(function (sugg) {
+            return sugg.text !== suggtext ? sugg : { text: suggtext, status: "UP" };
           })
         };
       });
@@ -21560,8 +21594,8 @@ var Search = function (_React$Component) {
     value: function dislikeButtonOnClick(suggtext) {
       this.setState(function (prevState, props) {
         return {
-          suggs: prevState.map(function (sugg) {
-            sugg.text !== suggtext ? sugg : { text: suggtext, status: "DOWN" };
+          suggs: prevState.suggs.map(function (sugg) {
+            return sugg.text !== suggtext ? sugg : { text: suggtext, status: "DOWN" };
           })
         };
       });
@@ -21571,8 +21605,8 @@ var Search = function (_React$Component) {
     value: function setNeutralButtonOnClick(suggtext) {
       this.setState(function (prevState, props) {
         return {
-          suggs: prevState.map(function (sugg) {
-            sugg.text !== suggtext ? sugg : { text: suggtext, status: "NEUTRAL" };
+          suggs: prevState.suggs.map(function (sugg) {
+            return sugg.text !== suggtext ? sugg : { text: suggtext, status: "NEUTRAL" };
           })
         };
       });
@@ -21654,30 +21688,28 @@ var Search = function (_React$Component) {
             })
           ),
           _react2.default.createElement('br', null),
-          _react2.default.createElement(
+          this.state.suggs.length > 0 && _react2.default.createElement(
             'div',
-            { className: 'descriptor-bar-container' },
-            this.state.suggs.length > 0 && _react2.default.createElement(
+            { className: 'desc-search-container' },
+            _react2.default.createElement(
+              'button',
+              { type: 'button', className: 'card card-1 refresh-button', onClick: this.getNewSuggestions },
+              _react2.default.createElement('span', { className: 'glyphicon glyphicon-repeat' })
+            ),
+            _react2.default.createElement(
               'div',
-              { className: 'desc-search-container' },
-              _react2.default.createElement(
-                'button',
-                { type: 'button', className: 'refresh-button', onClick: this.getNewSuggestions },
-                _react2.default.createElement('span', { className: 'glyphicon glyphicon-repeat' })
-              ),
-              _react2.default.createElement(
-                'div',
-                { className: 'desc-container' },
-                this.state.suggs.map(function (s, i) {
-                  return _react2.default.createElement(_Descriptor2.default, {
-                    key: s.text + "-descriptor-key",
-                    text: s.text,
-                    status: s.status,
-                    onLikeClick: _this4.likeButtonOnClick,
-                    onDislikeClick: _this4.dislikeButtonOnClick,
-                    onCancelClick: _this4.setNeutralButtonOnClick });
-                })
-              )
+              { className: 'desc-container' },
+              this.state.suggs.filter(function (s) {
+                return s.status != "HIDDEN";
+              }).map(function (s, i) {
+                return _react2.default.createElement(_Descriptor2.default, {
+                  key: s.text + "-descriptor-key",
+                  text: s.text,
+                  status: s.status,
+                  onLikeClick: _this4.likeButtonOnClick,
+                  onDislikeClick: _this4.dislikeButtonOnClick,
+                  onCancelClick: _this4.setNeutralButtonOnClick });
+              })
             )
           )
         )

@@ -34,11 +34,45 @@ var Descriptor = function (_React$Component) {
   _createClass(Descriptor, [{
     key: 'render',
     value: function render() {
-      return _react2.default.createElement(
-        'span',
-        null,
-        this.props.text
-      );
+      var _this2 = this;
+
+      if (this.props.status == "NEUTRAL") {
+        return _react2.default.createElement(
+          'div',
+          { className: 'desc-tag' },
+          _react2.default.createElement(
+            'button',
+            { className: 'card card-1', type: 'button', onClick: function onClick() {
+                return _this2.props.onDislikeClick(_this2.props.text);
+              } },
+            _react2.default.createElement('img', { className: 'thumbs', src: 'static/img/thumb-down.png' })
+          ),
+          _react2.default.createElement(
+            'span',
+            { className: 'desc-tag-text card card-2' },
+            this.props.text
+          ),
+          _react2.default.createElement(
+            'button',
+            { className: 'card card-1', type: 'button', onClick: function onClick() {
+                return _this2.props.onLikeClick(_this2.props.text);
+              } },
+            _react2.default.createElement('img', { className: 'thumbs', src: 'static/img/thumb-up.png' })
+          )
+        );
+      } else if (this.props.status == "UP") {
+        return _react2.default.createElement(
+          'span',
+          { className: 'card card-2 desc-tag up' },
+          this.props.text
+        );
+      } else if (this.props.status == "DOWN") {
+        return _react2.default.createElement(
+          'span',
+          { className: 'card card-2 desc-tag down' },
+          this.props.text
+        );
+      }
     }
   }]);
 

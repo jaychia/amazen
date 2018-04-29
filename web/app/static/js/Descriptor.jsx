@@ -7,11 +7,31 @@ export default class Descriptor extends React.Component {
   }
 
   render() {
-    return (
-    <span>
-      {this.props.text}
-    </span>
-    );
+    if (this.props.status == "NEUTRAL") {
+      return (
+        <div className="desc-tag">
+          <button className="card card-1" type="button" onClick={() => this.props.onDislikeClick(this.props.text)}>
+            <img className="thumbs" src="static/img/thumb-down.png"></img>
+          </button>
+          <span className="desc-tag-text card card-2">
+            {this.props.text}
+          </span>
+          <button className="card card-1" type="button" onClick={() => this.props.onLikeClick(this.props.text)}>
+            <img className="thumbs" src="static/img/thumb-up.png"></img>
+          </button>
+        </div>
+      );
+    } else if (this.props.status == "UP") {
+      return(
+      <span className="card card-2 desc-tag up">
+        {this.props.text}
+      </span>);
+    } else if (this.props.status == "DOWN") {
+      return(
+      <span className="card card-2 desc-tag down">
+        {this.props.text}
+      </span>);
+    }
   }
 }
 
