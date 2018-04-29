@@ -21647,15 +21647,15 @@ var Search = function (_React$Component) {
         null,
         _react2.default.createElement(
           'div',
-          { className: 'text-center' },
-          _react2.default.createElement('img', { src: '/static/img/logo.png', width: '400' })
+          { className: 'text-center azn-logo' },
+          _react2.default.createElement('img', { src: '/static/img/logo.png', width: '300' })
         ),
         _react2.default.createElement(
           'form',
           { className: 'form-inline global-search search-wrapper' },
           _react2.default.createElement(
             'div',
-            { className: 'search-bar' },
+            { className: 'search-bar card card-1' },
             _react2.default.createElement('input', { className: 'search-bar-input input-lg', onChange: this.queryChange, type: 'text', placeholder: 'What product are you looking for today?', ref: 'New_search' }),
             _react2.default.createElement(
               'div',
