@@ -4,5 +4,6 @@ import ResultPage from './ResultPage.jsx';
 
 ReactDOM.render(<ResultPage
     query={query}
-    descriptors={descriptors} 
+    positive={positive}
+    negative={negative}
     />, document.getElementById('root'));
