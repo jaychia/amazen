@@ -18,6 +18,9 @@ net_id = "Joo Ho Yeo (jy396) | Amritansh Kwatra (ak2244) | Alex Yoo (ay244) | Ja
 ###################################################################################################
 # Placeholder functions
 ##################################################################################################
+def amrit_suggestions(query):
+	pass
+
 def classify_query(q):
 	return "electronics"
 

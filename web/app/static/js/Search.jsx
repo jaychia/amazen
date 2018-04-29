@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import Descriptor from './Descriptor.jsx';
 
 export default class Search extends React.Component {
   constructor() {
@@ -70,34 +71,15 @@ export default class Search extends React.Component {
             </div>
           </div>
           <br />
-            <div className="search-bar descriptor-bar">
-              <div className="descriptor-wrapper">
-                {this.state.descriptors.map((d) =>
-                  <div key={d} className="descriptor-tag-wrapper">
-                      <span className="badge badge-default descriptor-tag">
-                        {d}
-                        <button className="btn descriptor-tag-button" type="button" onClick={() => this.deleteButtonOnClick(d)}>
-                          <span className="glyphicon glyphicon-remove"></span>
-                        </button>
-                      </span>
-                  </div>
-                )}
-                <input type="text" className="input-lg descriptor-bar-input" placeholder="Descriptors" ref="New_descriptor" />
-              </div>
-              <div className="input-group-btn">
-                <button className="btn btn-lg search-bar-button" type="button" onClick={() => this.addButtonOnClick()}>
-                  <span className="glyphicon glyphicon-plus"></span>
-                </button>
-              </div>
-            </div>
           <div className="descriptor-bar-container">
-            {this.state.suggestions.length > 0 && 
+            {this.state.suggs.length > 0 &&
               <div>
-              <span className="suggestionTag">Suggestions:&nbsp;</span>
-                {this.state.suggestions.map((s, i) =>
-                <span key={s + Date.now().toString() + i.toString()} className="suggestionTag">
-                  <span className="suggestionTag tag" onClick={() => this.suggestionTagOnClick(s)}>{s}</span>,&nbsp;
-                </span>
+                {this.state.suggs.map((s, i) =>
+                <Descriptor text={sugg.text} 
+                status={sugg.status} 
+                onLikeClick={this.likeButtonOnClick} 
+                onDislikeClick={this.dislikeButtonOnClick}
+                onCancelClick={this.setNeutralButtonOnClick} />
                 )}
               </div>}
           </div>
