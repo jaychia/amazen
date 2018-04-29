@@ -59,45 +59,6 @@ def loadproducts(json_location):
   new_products(tuplist)
 
 @manager.command
-def update_desc(json_location):
-  assert(os.path.isfile(json_location))
-  tuplist = []
-  with open(json_location, 'r') as f:
-    for line in f:
-      p_json = json.loads(line)
-      p = p_json_to_tup(p_json)
-      if p is not None:
-        tuplist.append(p)
-      if len(tuplist) > 50000:
-        update_product_desc(tuplist)
-        del tuplist[:]
-  update_product_desc(tuplist)
-
-# Loading of keywords and keywordscores
-# @manager.command
-# def loadkeywords(keywords_location):
-#   assert(os.path.isfile(keywords_location))
-#   tuplist = []
-#   with open(keywords_location, 'r') as f:
-#     d = pickle.load(f)
-#     for k, v in d.items():
-#       update_product_keywords(k, v)
-
-@manager.command
-def loadkeywords(keywords_location):
-  assert(os.path.isfile(keywords_location))
-  with open(keywords_location, 'r') as f:
-    for line in f:
-      k_json = json.loads(line)
-      asin = k_json['asin']
-      keywords = [l[0] for l in k_json['keywords']]
-      dlist = lambda d: [d[str(i)] for i in range(1,6)]
-      keywords_scores_dist = [dlist(d) for d in [l[1] for l in k_json['keywords']]]
-      keywords_scores = [l[2] for l in k_json['keywords']]
-      keywords_sents = [l[3] for l in k_json['keywords']]
-      update_product_keywords(asin, keywords, keywords_scores, keywords_scores_dist, keywords_sents)
-
-@manager.command
 def loadinvertedindicesproduct(json_location):
   assert(os.path.isfile(json_location))
 
@@ -126,37 +87,32 @@ def loadinvertedindicesreview(json_location):
     new_invertedindicesreview(tuplist)
 
 @manager.command
+def loadkeywords(keywords_location):
+  assert(os.path.isfile(keywords_location))
+  with open(keywords_location, 'r') as f:
+    for line in f:
+      k_json = json.loads(line)
+      asin = k_json['asin']
+      keywords = [l[0] for l in k_json['keywords']]
+      dlist = lambda d: [d[str(i)] for i in range(1,6)]
+      keywords_scores_dist = [dlist(d) for d in [l[1] for l in k_json['keywords']]]
+      keywords_scores = [l[2] for l in k_json['keywords']]
+      keywords_sents = [l[3] for l in k_json['keywords']]
+      update_product_keywords(asin, keywords, keywords_scores, keywords_scores_dist, keywords_sents)
+
+dispatcher = {
+  'loadproducts': loadproducts,
+  'loadkeywords': loadkeywords,
+  'loadinvertedindicesproduct': loadinvertedindicesproduct,
+  'loadinvertedindicesreview': loadinvertedindicesreview
+}
+
+@manager.command
 def loaddatalist(func, json_folder_location):
   files = [f for f in os.listdir(json_folder_location) if os.path.isfile(
       os.path.join(json_folder_location, f))]
   for fname in files:
-    func(json_folder_location + '/' + fname)
-  
-@manager.command
-def loadcooccurenceterm(json_location):
-  assert(os.path.isfile(json_location))
-
-  with open(json_location, 'r') as f:
-    tuplist = []
-    for line in f:
-      p_json = json.loads(line)
-      tuplist.append((p_json['term'], str(p_json['termlist'])))
-      if len(tuplist) > 50000:
-        new_cooccurenceterm(tuplist)
-        del tuplist[:]
-    new_cooccurenceterm(tuplist)
-
-@manager.command
-def loadcooccurencetermlist(json_folder_location):
-  files = [f for f in os.listdir(json_folder_location) if os.path.isfile(
-      os.path.join(json_folder_location, f))]
-  print(len(files))
-  for fname in files:
-    loadcooccurenceterm(json_folder_location + '/' + fname)
-
-@manager.command
-def deletecooccurenceterm():
-  delete_cooccurenceterm()
+    dispatcher[func](json_folder_location + '/' + fname)
 
 if __name__ == "__main__":
   manager.run()
