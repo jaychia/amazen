@@ -21438,13 +21438,17 @@ var Descriptor = function (_React$Component) {
       } else if (this.props.status == "UP") {
         return _react2.default.createElement(
           'span',
-          { className: 'card card-2 desc-tag up' },
+          { className: 'card card-1 desc-tag up', onClick: function onClick() {
+              return _this2.props.onCancelClick(_this2.props.text);
+            } },
           this.props.text
         );
       } else if (this.props.status == "DOWN") {
         return _react2.default.createElement(
           'span',
-          { className: 'card card-2 desc-tag down' },
+          { className: 'card card-1 desc-tag down', onClick: function onClick() {
+              return _this2.props.onCancelClick(_this2.props.text);
+            } },
           this.props.text
         );
       }

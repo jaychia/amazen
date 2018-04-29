@@ -23,12 +23,12 @@ export default class Descriptor extends React.Component {
       );
     } else if (this.props.status == "UP") {
       return(
-      <span className="card card-2 desc-tag up">
+      <span className="card card-1 desc-tag up" onClick={() => this.props.onCancelClick(this.props.text)}>
         {this.props.text}
       </span>);
     } else if (this.props.status == "DOWN") {
       return(
-      <span className="card card-2 desc-tag down">
+        <span className="card card-1 desc-tag down" onClick={() => this.props.onCancelClick(this.props.text)}>
         {this.props.text}
       </span>);
     }
