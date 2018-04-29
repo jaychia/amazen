@@ -16,5 +16,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 _reactDom2.default.render(_react2.default.createElement(_ResultPage2.default, {
     query: query,
-    descriptors: descriptors
+    positive: positive,
+    negative: negative
 }), document.getElementById('root'));

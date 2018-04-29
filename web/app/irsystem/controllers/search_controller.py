@@ -118,10 +118,11 @@ def search():
 @irsystem.route('search_page', methods=['GET'])
 def search_page():
 	initial_query = request.args.get('query')
-	initial_descriptors = request.args.get('descriptors', [])
+	positive = request.args.get('positive', [])
+	negative = request.args.get('negative', [])
 	if initial_query is None:
 		return render_template('search.html')
-	return render_template('search_results.html', query=initial_query, descriptors=initial_descriptors)
+	return render_template('search_results.html', query=initial_query, positive=positive, negative=negative)
 
 @irsystem.route('search', methods=['GET'])
 def product_search():
@@ -154,6 +155,7 @@ def product_search():
 
 	# only wanna show positive descriptors in results
 	d = pack_pid_json(sorted_pids_and_info, to_q_desc(query, decs_pos))
+	current_app.logger.info(sorted_pids_and_info)
 	return jsonify(data=d)
 
 @irsystem.route('suggestions', methods=['GET'])
