@@ -90,11 +90,11 @@ export default class Search extends React.Component {
     )
     return (
       <div>
-        <div className="text-center">
-          <img src="/static/img/logo.png" width="400" />
+        <div className="text-center azn-logo">
+          <img src="/static/img/logo.png" width="300" />
         </div>
         <form className="form-inline global-search search-wrapper">
-          <div className="search-bar">
+          <div className="search-bar card card-1">
             <input className="search-bar-input input-lg" onChange={this.queryChange} type="text" placeholder="What product are you looking for today?" ref="New_search"/>
             <div className="input-group-btn">
               {searchButton}
