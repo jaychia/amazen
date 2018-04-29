@@ -7,6 +7,8 @@ from app.irsystem.models.product import new_products, update_product_keywords, u
 from app.irsystem.models.invertedindicesproduct import new_invertedindicesproduct
 from app.irsystem.models.invertedindicesreview import new_invertedindicesreview
 from app.irsystem.models.cooccurenceterm import new_cooccurenceterm, delete_cooccurenceterm
+from app.irsystem.models.review import new_review
+
 
 from collections import namedtuple
 import json
@@ -152,6 +154,27 @@ def loadcooccurencetermlist(json_folder_location):
   print(len(files))
   for fname in files:
     loadcooccurenceterm(json_folder_location + '/' + fname)
+
+@manager.command
+def loadreview(json_location):
+  assert(os.path.isfile(json_location))
+  with open(json_location, 'r') as f:
+    tuplist = []
+    for line in f:
+      p_json = json.loads(line)
+      tuplist.append((p_json['review_id'], str(p_json['review_text'])))
+      if len(tuplist) > 50000:
+        new_review(tuplist)
+        del tuplist[:]
+    new_review(tuplist)
+
+@manager.command
+def loadreviewlist(json_folder_location):
+  files = [f for f in os.listdir(json_folder_location) if os.path.isfile(
+      os.path.join(json_folder_location, f))]
+  print(len(files))
+  for fname in files:
+    loadreview(json_folder_location + '/' + fname)
 
 @manager.command
 def deletecooccurenceterm():

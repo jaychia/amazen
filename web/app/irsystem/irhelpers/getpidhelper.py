@@ -90,4 +90,5 @@ def get_cooccurred_terms(terms_scorelist_dict):
             
     top_k_term_list = [term_cooc_scores_keys[key_index] for key_index in term_cooc_scores_keys_indices_ordered]
     
+    current_app.logger.info(top_k_term_list)
     return top_k_term_list

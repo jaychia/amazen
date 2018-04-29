@@ -11,6 +11,7 @@ from flask import current_app
 from app.irsystem.irhelpers.getpidhelper import *
 import random
 from datetime import datetime
+import nltk
 
 project_name = "Amazen"
 net_id = "Joo Ho Yeo (jy396) | Amritansh Kwatra (ak2244) | Alex Yoo (ay244) | Jay Chia (jc2375) | Charles Bai (cb674)"
@@ -22,6 +23,9 @@ def classify_query(q):
 	return "electronics"
 
 def get_top_products(q,descs,k2=100,k3=10):
+
+	current_app.logger.info(nltk.pos_tag(["hi", "bob", "jooho", "samsung", "good"]))
+
 	inverted_index_product = scorelists_with_terms_for_product(to_tokens_set(q))
 	inverted_index_review = scorelists_with_terms_for_review(to_tokens_set(to_q_desc(q,descs)))
 
@@ -33,25 +37,23 @@ def filter_category_by_query(q, cat):
 def get_suggested_words(q_strings, k=5):
 	q = " ".join(q_strings.split(","))
 
-	current_app.logger.info(q)
-
-	current_app.logger.info(to_tokens_set(q))
+	# current_app.logger.info(to_tokens_set(q))
 
 	cooccured_term_scorelist_dict = scorelists_with_terms_for_cooccurenceterm(list(to_tokens_set(q)))
 
-	current_app.logger.info(cooccured_term_scorelist_dict)
-
 	cooccured_terms_stemmed = get_cooccurred_terms(cooccured_term_scorelist_dict)
-
-	current_app.logger.info(cooccured_terms_stemmed)
 
 	l = ["strong", "cheap", "quality", "good", "durable", "fast", "cost-effecient", "new", "trendy", "affordable", "environmental", "safe", "reliable"]
 
 	ran_perm = np.random.permutation(len(l))[:k]
 	stock_desc = [l[int(i)] for i in ran_perm]
+	
+	# current_app.logger.info(len(cooccured_terms_stemmed))
 
 	if len(cooccured_terms_stemmed) <= k:
 		cooccured_terms_stemmed =  cooccured_terms_stemmed + stock_desc
+
+	# current_app.logger.info(cooccured_terms_stemmed[:k])
 
 	return cooccured_terms_stemmed[:k]
 
