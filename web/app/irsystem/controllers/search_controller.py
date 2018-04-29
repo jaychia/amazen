@@ -29,6 +29,9 @@ def classify_query(q):
 	return "electronics"
 
 def get_top_products(q,descs_pos, descs_neg):
+  	current_app.logger.info(descs_pos)
+  	current_app.logger.info(descs_neg)
+
 	inverted_index_product = scorelists_with_terms_for_product(to_tokens_set(q))
 	inverted_index_review_pos = scorelists_with_terms_for_review(to_tokens_set(to_q_desc(q,descs_pos)))
 	# negative descriptors will be penalized
@@ -61,7 +64,7 @@ def pack_pid_json(pids_and_info, q_d_string):
 		kwscorelist = []
 		for i in range(len(kwscorelisttmp) / 5):
 			kwscorelist.append(kwscorelisttmp[i*5 : (i+1)*5])
-		return kwscorelist
+		return kwscorelist		
 
 	def get_descriptors(term_reviewnum_dict):
 		before_stemmed_descs_list = list()
@@ -78,6 +81,8 @@ def pack_pid_json(pids_and_info, q_d_string):
 				descriptors_review_num_list.append(term_reviewnum_dict[stemmed_term])
 
 		return descriptors_review_num_list
+
+	current_app.logger.info([p.name for p in products])
 
 	return [{
 	'productTitle': p.name,
@@ -121,11 +126,12 @@ def search_page():
 @irsystem.route('search', methods=['GET'])
 def product_search():
 	query = request.args.get('query')
-	descriptors = request.args.get('descriptors', [])
+	descriptors_pos = request.args.get('positive', "")
+	descriptors_neg = request.args.get('negative', "")
 
-	#jooho: dummy code
-	descriptors_pos= "smart, good"
-	descriptors_neg= "cheap"
+	current_app.logger.info(descriptors_pos)
+  	current_app.logger.info(descriptors_neg)
+
 
 	if not query:
 		d = {
@@ -137,10 +143,10 @@ def product_search():
 	category = classify_query(query.strip().lower())
 	pids = filter_category_by_query(query, category)
 
-	decs_pos = descriptors_pos.split(",")
+	decs_pos = descriptors_pos.split(",") if descriptors_pos != "" else []
 	decs_pos = [x.lower().strip() for x in decs_pos]
 
-	decs_neg = descriptors_neg.split(",")
+	decs_neg = descriptors_neg.split(",") if descriptors_neg != "" else []
 	decs_neg = [x.lower().strip() for x in decs_neg]
 
 	# ir ranking

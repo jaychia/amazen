@@ -90,8 +90,6 @@ def update_product_keywords(asin, keywords, keywords_scores, keywords_scores_dis
     p.keywordscoredist = ",".join(keyworddistlist)
     p.keywordssents = ",".join(keywords_sents)
     db.session.commit()
-    
-
 
 def update_product_desc(tuplist):
   for tup in tuplist:
