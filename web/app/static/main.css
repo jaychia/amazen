@@ -73,6 +73,38 @@ a * {
     outline: none;
 }
 
+.query-suggestions-container{
+    margin-bottom: 12px;
+}
+
+.suggestionTag {
+    font-size: 12px;
+}
+
+.suggestionTag.tag {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.desc-search-container {
+    display: flex;
+}
+
+.refresh-button {
+    background-color: grey;
+    border-radius: 5px;
+    font-size: 30px;
+    margin-right: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px;
+}
+
+.refresh-button:focus {
+    outline: none;
+}
+
 .search-bar-button {
     background: none;
     box-shadow: none;

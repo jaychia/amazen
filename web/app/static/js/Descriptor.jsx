@@ -7,9 +7,11 @@ export default class Descriptor extends React.Component {
   }
 
   render() {
-    return (<span>
+    return (
+    <span>
       {this.props.text}
-    </span>);
+    </span>
+    );
   }
 }
 

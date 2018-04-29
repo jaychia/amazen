@@ -13,6 +13,14 @@ export default class Search extends React.Component {
     this.getNewSuggestions = this.getNewSuggestions.bind(this);
     this.searchButtonOnClick = this.searchButtonOnClick.bind(this);
     this.queryChange = this.queryChange.bind(this);
+    this.querySuggestionTagClick = this.querySuggestionTagClick.bind(this);
+  }
+
+  querySuggestionTagClick(s) {
+    this.refs.New_search.value = this.refs.New_search.value + " " + s;
+    this.setState((prevState, props) => ({
+      querysuggs: [...prevState.querysuggs.filter(t => t != s)]
+    }));
   }
 
   queryChange() {
@@ -37,8 +45,10 @@ export default class Search extends React.Component {
       ).then(res => {
         // Hide previous neutrals and add new suggestions as neutrals
         let hiddenstate = this.state.suggs.map((sugg) => {
-          (sugg.status == "NEUTRAL") ? { text: sugg.text, status: "HIDDEN" } : sugg;
+          return (sugg.status == "NEUTRAL") ? { text: sugg.text, status: "HIDDEN" } : sugg;
         });
+        console.log(this.state.suggs);
+        console.log(hiddenstate);
         let string_to_suggs = (str_list) => str_list.map((str) => ({ text: str, status: "NEUTRAL" }));
         this.setState((prevState, props) => ({ suggs: [...hiddenstate, ...string_to_suggs(res.data.data)] }));
       });
@@ -69,8 +79,6 @@ export default class Search extends React.Component {
   }
 
   render() {
-    console.log(this.state.suggs);
-    console.log(this.state.querysuggs);
     let searchButton = (this.state.suggs.length != 0) ? (
       <button className="btn btn-lg search-bar-button" type="button" onClick={() => this.searchButtonOnClick()}>
         <span className="glyphicon glyphicon-search"></span>
@@ -92,19 +100,36 @@ export default class Search extends React.Component {
               {searchButton}
             </div>
           </div>
+          {this.state.querysuggs.length > 0 &&
+          <div className="query-suggestions-container">
+            <span className="suggestionTag">Suggestions:&nbsp;</span>
+            {this.state.querysuggs.map((s, i) =>
+              <span key={s + Date.now().toString() + i.toString()} className="suggestionTag">
+                <span className="suggestionTag tag" 
+                  onClick={() => this.querySuggestionTagClick(s)}>{s}
+                </span>,&nbsp;
+              </span>)}
+          </div>}
           <br />
           <div className="descriptor-bar-container">
             {this.state.suggs.length > 0 &&
-              <div>
-                {this.state.suggs.map((s, i) =>
-                <Descriptor 
-                text={s.text}
-                status={s.status} 
-                onLikeClick={this.likeButtonOnClick} 
-                onDislikeClick={this.dislikeButtonOnClick}
-                onCancelClick={this.setNeutralButtonOnClick} />
-                )}
-              </div>}
+              <div className="desc-search-container">
+                <button type="button" className="refresh-button" onClick={this.getNewSuggestions}>
+                  <span className="glyphicon glyphicon-repeat"></span>
+                </button>
+                <div className="desc-container">
+                  {this.state.suggs.map((s, i) =>
+                  <Descriptor
+                  key={s.text + "-descriptor-key"}
+                  text={s.text}
+                  status={s.status} 
+                  onLikeClick={this.likeButtonOnClick} 
+                  onDislikeClick={this.dislikeButtonOnClick}
+                  onCancelClick={this.setNeutralButtonOnClick} />
+                  )}
+                </div>
+              </div>
+            }
           </div>
         </form>
       </div>

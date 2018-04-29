@@ -21478,10 +21478,23 @@ var Search = function (_React$Component) {
     _this.getNewSuggestions = _this.getNewSuggestions.bind(_this);
     _this.searchButtonOnClick = _this.searchButtonOnClick.bind(_this);
     _this.queryChange = _this.queryChange.bind(_this);
+    _this.querySuggestionTagClick = _this.querySuggestionTagClick.bind(_this);
     return _this;
   }
 
   _createClass(Search, [{
+    key: 'querySuggestionTagClick',
+    value: function querySuggestionTagClick(s) {
+      this.refs.New_search.value = this.refs.New_search.value + " " + s;
+      this.setState(function (prevState, props) {
+        return {
+          querysuggs: [].concat(_toConsumableArray(prevState.querysuggs.filter(function (t) {
+            return t != s;
+          })))
+        };
+      });
+    }
+  }, {
     key: 'queryChange',
     value: function queryChange() {
       var _this2 = this;
@@ -21517,8 +21530,10 @@ var Search = function (_React$Component) {
       }).join(",")).then(function (res) {
         // Hide previous neutrals and add new suggestions as neutrals
         var hiddenstate = _this3.state.suggs.map(function (sugg) {
-          sugg.status == "NEUTRAL" ? { text: sugg.text, status: "HIDDEN" } : sugg;
+          return sugg.status == "NEUTRAL" ? { text: sugg.text, status: "HIDDEN" } : sugg;
         });
+        console.log(_this3.state.suggs);
+        console.log(hiddenstate);
         var string_to_suggs = function string_to_suggs(str_list) {
           return str_list.map(function (str) {
             return { text: str, status: "NEUTRAL" };
@@ -21580,8 +21595,6 @@ var Search = function (_React$Component) {
     value: function render() {
       var _this4 = this;
 
-      console.log(this.state.suggs);
-      console.log(this.state.querysuggs);
       var searchButton = this.state.suggs.length != 0 ? _react2.default.createElement(
         'button',
         { className: 'btn btn-lg search-bar-button', type: 'button', onClick: function onClick() {
@@ -21616,21 +21629,55 @@ var Search = function (_React$Component) {
               searchButton
             )
           ),
+          this.state.querysuggs.length > 0 && _react2.default.createElement(
+            'div',
+            { className: 'query-suggestions-container' },
+            _react2.default.createElement(
+              'span',
+              { className: 'suggestionTag' },
+              'Suggestions:\xA0'
+            ),
+            this.state.querysuggs.map(function (s, i) {
+              return _react2.default.createElement(
+                'span',
+                { key: s + Date.now().toString() + i.toString(), className: 'suggestionTag' },
+                _react2.default.createElement(
+                  'span',
+                  { className: 'suggestionTag tag',
+                    onClick: function onClick() {
+                      return _this4.querySuggestionTagClick(s);
+                    } },
+                  s
+                ),
+                ',\xA0'
+              );
+            })
+          ),
           _react2.default.createElement('br', null),
           _react2.default.createElement(
             'div',
             { className: 'descriptor-bar-container' },
             this.state.suggs.length > 0 && _react2.default.createElement(
               'div',
-              null,
-              this.state.suggs.map(function (s, i) {
-                return _react2.default.createElement(_Descriptor2.default, {
-                  text: s.text,
-                  status: s.status,
-                  onLikeClick: _this4.likeButtonOnClick,
-                  onDislikeClick: _this4.dislikeButtonOnClick,
-                  onCancelClick: _this4.setNeutralButtonOnClick });
-              })
+              { className: 'desc-search-container' },
+              _react2.default.createElement(
+                'button',
+                { type: 'button', className: 'refresh-button', onClick: this.getNewSuggestions },
+                _react2.default.createElement('span', { className: 'glyphicon glyphicon-repeat' })
+              ),
+              _react2.default.createElement(
+                'div',
+                { className: 'desc-container' },
+                this.state.suggs.map(function (s, i) {
+                  return _react2.default.createElement(_Descriptor2.default, {
+                    key: s.text + "-descriptor-key",
+                    text: s.text,
+                    status: s.status,
+                    onLikeClick: _this4.likeButtonOnClick,
+                    onDislikeClick: _this4.dislikeButtonOnClick,
+                    onCancelClick: _this4.setNeutralButtonOnClick });
+                })
+              )
             )
           )
         )
