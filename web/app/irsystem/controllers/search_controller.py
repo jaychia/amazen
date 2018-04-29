@@ -124,8 +124,8 @@ def product_search():
 	descriptors = request.args.get('descriptors', [])
 
 	#jooho: dummy code
-	descriptors_pos= ""
-	descriptors_neg= ""
+	descriptors_pos= "smart, good"
+	descriptors_neg= "cheap"
 
 	if not query:
 		d = {

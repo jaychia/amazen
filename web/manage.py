@@ -132,7 +132,6 @@ def loaddatalist(func, json_folder_location):
   for fname in files:
     dispatcher[func](json_folder_location + '/' + fname)
 
-
 if __name__ == "__main__":
   manager.run()
 
