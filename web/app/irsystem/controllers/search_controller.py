@@ -1,5 +1,6 @@
 from . import *
 from app.irsystem.models.helpers import *
+from app.irsystem.models.get_suggestions import get_suggestions
 from app.irsystem.models.helpers import NumpyEncoder as NumpyEncoder
 from app.irsystem.models.product import products_with_pids
 from app.irsystem.models.invertedindicesproduct import scorelists_with_terms_for_product
@@ -20,7 +21,7 @@ net_id = "Joo Ho Yeo (jy396) | Amritansh Kwatra (ak2244) | Alex Yoo (ay244) | Ja
 # Placeholder functions
 ##################################################################################################
 def amrit_suggestions(query):
-	return ["This is", "some suggesitons", "for your perusal"]
+	return get_suggestions(query)
 
 def classify_query(q):
 	return "electronics"
