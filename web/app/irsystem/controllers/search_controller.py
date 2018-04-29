@@ -1,5 +1,6 @@
 from . import *
 from app.irsystem.models.helpers import *
+from app.irsystem.models.get_suggestions import get_suggestions
 from app.irsystem.models.helpers import NumpyEncoder as NumpyEncoder
 from app.irsystem.models.product import products_with_pids
 from app.irsystem.models.invertedindicesproduct import scorelists_with_terms_for_product
@@ -9,6 +10,7 @@ from app.irsystem.models.cooccurenceterm import scorelists_with_terms_for_cooccu
 from flask import jsonify
 from flask import current_app
 from app.irsystem.irhelpers.getpidhelper import *
+from app.irsystem.models.cooc import get_cooc
 import random
 from datetime import datetime
 import nltk
@@ -19,6 +21,9 @@ net_id = "Joo Ho Yeo (jy396) | Amritansh Kwatra (ak2244) | Alex Yoo (ay244) | Ja
 ###################################################################################################
 # Placeholder functions
 ##################################################################################################
+def amrit_suggestions(query):
+	return get_suggestions(query)
+
 def classify_query(q):
 	return "electronics"
 
@@ -33,29 +38,6 @@ def get_top_products(q,descs,k2=100,k3=10):
 
 def filter_category_by_query(q, cat):
 	return ["1234", "123", "12"]
-
-def get_suggested_words(q_strings, k=5):
-	q = " ".join(q_strings.split(","))
-
-	# current_app.logger.info(to_tokens_set(q))
-
-	cooccured_term_scorelist_dict = scorelists_with_terms_for_cooccurenceterm(list(to_tokens_set(q)))
-
-	cooccured_terms_stemmed = get_cooccurred_terms(cooccured_term_scorelist_dict)
-
-	l = ["strong", "cheap", "quality", "good", "durable", "fast", "cost-effecient", "new", "trendy", "affordable", "environmental", "safe", "reliable"]
-
-	ran_perm = np.random.permutation(len(l))[:k]
-	stock_desc = [l[int(i)] for i in ran_perm]
-	
-	# current_app.logger.info(len(cooccured_terms_stemmed))
-
-	if len(cooccured_terms_stemmed) <= k:
-		cooccured_terms_stemmed =  cooccured_terms_stemmed + stock_desc
-
-	# current_app.logger.info(cooccured_terms_stemmed[:k])
-
-	return cooccured_terms_stemmed[:k]
 
 def pack_pid_json(pids):
 	products = products_with_pids(pids)
@@ -128,7 +110,20 @@ def product_search():
 
 @irsystem.route('suggestions', methods=['GET'])
 def suggested_words():
-	query = request.args.get('query')
-	current_app.logger.info(query)
-	d = get_suggested_words(query)
+	query = request.args.get('query').split() if request.args.get('query') != "" else []
+	positive = request.args.get('positive').split(
+		',')if request.args.get('positive') != "" else []
+	negative = request.args.get('negative').split(
+		',') if request.args.get('negative') != "" else []
+	neutral = request.args.get('neutral').split(
+		',') if request.args.get('neutral') != "" else []
+	d = get_cooc(query + positive, negative, neutral, 1.5, 1.5, 1000)
 	return jsonify(data=d)
+
+@irsystem.route('query_suggestions', methods=['GET'])
+def suggested_query():
+	query = request.args.get('query')
+	if query is None:
+		return None
+	d = amrit_suggestions(query)
+	return jsonify(data=d, querystring=query)
