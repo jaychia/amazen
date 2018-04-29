@@ -4,9 +4,10 @@ from flask_migrate import Migrate, MigrateCommand
 from app import app, db
 
 from app.irsystem.models.product import new_products, update_product_keywords, update_product_desc
-from app.irsystem.models.invertedindicesproduct import new_invertedindicesproduct
-from app.irsystem.models.invertedindicesreview import new_invertedindicesreview
-from app.irsystem.models.cooccurenceterm import new_cooccurenceterm, delete_cooccurenceterm
+from app.irsystem.models.invertedindicesproduct import new_invertedindicesproduct, delete_invertedindicesproduct
+from app.irsystem.models.invertedindicesreview import new_invertedindicesreview, delete_invertedindicesreview
+from app.irsystem.models.review import new_review, delete_review
+from app.irsystem.models.cooccurenceterm import delete_cooccurenceterm
 
 from collections import namedtuple
 import json
@@ -66,7 +67,7 @@ def loadinvertedindicesproduct(json_location):
     tuplist = []
     for line in f:
       p_json = json.loads(line)
-      tuplist.append((p_json['term'], p_json['scorelist']))
+      tuplist.append((p_json['term'], str(p_json['asinlist'])))
       if len(tuplist) > 50000:
         new_invertedindicesproduct(tuplist)
         del tuplist[:]
@@ -80,7 +81,7 @@ def loadinvertedindicesreview(json_location):
     tuplist = []
     for line in f:
       p_json = json.loads(line)
-      tuplist.append((p_json['term'], p_json['scorelist']))
+      tuplist.append((p_json['term'], str([four_tup[:3] for four_tup in p_json['asinlist']])))
       if len(tuplist) > 50000:
         new_invertedindicesreview(tuplist)
         del tuplist[:]
@@ -100,11 +101,28 @@ def loadkeywords(keywords_location):
       keywords_sents = [l[3] for l in k_json['keywords']]
       update_product_keywords(asin, keywords, keywords_scores, keywords_scores_dist, keywords_sents)
 
+@manager.command
+def loadreview(json_location):
+  assert(os.path.isfile(json_location))
+  with open(json_location, 'r') as f:
+    tuplist = []
+    for line in f:
+      tuplist.append((p_json['review_id'], str(p_json['review_text'])))
+      if len(tuplist) > 50000:
+        new_review(tuplist)
+        del tuplist[:]
+    new_review(tuplist)
+
+@manager.command
+def deletejoohotables():
+  delete_invertedindicesreview()
+
 dispatcher = {
   'loadproducts': loadproducts,
   'loadkeywords': loadkeywords,
   'loadinvertedindicesproduct': loadinvertedindicesproduct,
-  'loadinvertedindicesreview': loadinvertedindicesreview
+  'loadinvertedindicesreview': loadinvertedindicesreview,
+  'loadreview': loadreview
 }
 
 @manager.command
@@ -113,6 +131,7 @@ def loaddatalist(func, json_folder_location):
       os.path.join(json_folder_location, f))]
   for fname in files:
     dispatcher[func](json_folder_location + '/' + fname)
+
 
 if __name__ == "__main__":
   manager.run()

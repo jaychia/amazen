@@ -13,6 +13,8 @@ from app.irsystem.irhelpers.getpidhelper import *
 from app.irsystem.models.cooc import get_cooc
 import random
 from datetime import datetime
+import nltk
+from nltk.stem.snowball import SnowballStemmer
 
 project_name = "Amazen"
 net_id = "Joo Ho Yeo (jy396) | Amritansh Kwatra (ak2244) | Alex Yoo (ay244) | Jay Chia (jc2375) | Charles Bai (cb674)"
@@ -29,14 +31,27 @@ def classify_query(q):
 def get_top_products(q,descs,k2=100,k3=10):
 	inverted_index_product = scorelists_with_terms_for_product(to_tokens_set(q))
 	inverted_index_review = scorelists_with_terms_for_review(to_tokens_set(to_q_desc(q,descs)))
-
 	return get_top_k_pids(inverted_index_product, inverted_index_review)
 
 def filter_category_by_query(q, cat):
 	return ["1234", "123", "12"]
 
-def pack_pid_json(pids):
+def pack_pid_json(pids_and_info, q_d_string):
+	pids = [info_tup[0] for info_tup in pids_and_info]
+
+	pid_term_reviewnum_dict = dict()
+	if len(pids) > 0 and len(pids[0]) > 1:
+		for pid_info in pids_and_info:
+			pid_term_reviewnum_dict[pid_info[0]] = pid_info[1]
+
+	stemmer = SnowballStemmer("english")
+	reverse_stem_dict = dict()
+	for before_stem_word in to_tokens_set_no_stem(q_d_string):
+		after_stem_word = stemmer.stem(before_stem_word)
+		reverse_stem_dict[after_stem_word] = before_stem_word
+
 	products = products_with_pids(pids)
+
 	convertkeyword = lambda x: 0. if x == "nan" else float(x)
 
 	def convert_keywordscorelist(p):
@@ -45,6 +60,23 @@ def pack_pid_json(pids):
 		for i in range(len(kwscorelisttmp) / 5):
 			kwscorelist.append(kwscorelisttmp[i*5 : (i+1)*5])
 		return kwscorelist
+
+	def get_descriptors(term_reviewnum_dict):
+		before_stemmed_descs_list = list()
+		for stemmed_term in term_reviewnum_dict:
+			if stemmed_term in reverse_stem_dict:
+				before_stemmed_descs_list.append(reverse_stem_dict[stemmed_term])
+
+		return before_stemmed_descs_list
+
+	def get_descitptors_review_num(term_reviewnum_dict):
+		descitptors_review_num_list = list()
+		for stemmed_term in term_reviewnum_dict:
+			if stemmed_term in reverse_stem_dict:
+				descitptors_review_num_list.append(term_reviewnum_dict[stemmed_term])
+
+		return descitptors_review_num_list
+
 	return [{
 	'productTitle': p.name,
 	'price': p.price,
@@ -53,6 +85,8 @@ def pack_pid_json(pids):
 	'keywords': [] if p.keywords is None else p.keywords.split(","),
 	'keywordscores': [] if p.keywordscores is None else [convertkeyword(x) for x in p.keywordscores.split(",")],
 	'keywordscorelist': [] if p.keywordscoredist is None else convert_keywordscorelist(p),
+	'descriptors': [] if p.azn_product_id not in pid_term_reviewnum_dict else get_descriptors(pid_term_reviewnum_dict[p.azn_product_id]),
+	'descitptors_review_num': [] if p.azn_product_id not in pid_term_reviewnum_dict else get_descitptors_review_num(pid_term_reviewnum_dict[p.azn_product_id]),
 	'rating': p.average_stars,
 	'numRatings': p.num_ratings,
 	'imgUrl': p.img_url,
@@ -99,9 +133,9 @@ def product_search():
 	descs = descriptors.split(",")
 	descs = [x.lower().strip() for x in descs]
 
-	sorted_pids = get_top_products(query,descs)
+	sorted_pids_and_info = get_top_products(query,descs)
 
-	d = pack_pid_json(sorted_pids)
+	d = pack_pid_json(sorted_pids_and_info, to_q_desc(query,descs))
 	return jsonify(data=d)
 
 @irsystem.route('suggestions', methods=['GET'])

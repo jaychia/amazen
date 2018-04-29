@@ -41,6 +41,10 @@ def new_invertedindicesproduct(tuplist):
       map(lambda x: Invertedindicesproduct(x[0], x[1]), tuplist)))
   db.session.commit()
 
+def delete_invertedindicesproduct():
+  db.session.query(Invertedindicesproduct).delete()
+  db.session.commit()
+
 class InvertedindicesproductSchema(ModelSchema):
   class Meta:
     model = Invertedindicesproduct

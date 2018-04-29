@@ -37,6 +37,10 @@ def new_invertedindicesreview(tuplist):
       map(lambda x: Invertedindicesreview(x[0], x[1]), tuplist)))
   db.session.commit()
 
+def delete_invertedindicesreview():
+  db.session.query(Invertedindicesreview).delete()
+  db.session.commit()
+
 class InvertedindicesreviewSchema(ModelSchema):
   class Meta:
     model = Invertedindicesreview
