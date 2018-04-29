@@ -21409,10 +21409,10 @@ var Descriptor = function (_React$Component) {
   _createClass(Descriptor, [{
     key: 'render',
     value: function render() {
-      _react2.default.createElement(
+      return _react2.default.createElement(
         'span',
         null,
-        this.proops.text
+        this.props.text
       );
     }
   }]);
@@ -21519,11 +21519,13 @@ var Search = function (_React$Component) {
         var hiddenstate = _this3.state.suggs.map(function (sugg) {
           sugg.status == "NEUTRAL" ? { text: sugg.text, status: "HIDDEN" } : sugg;
         });
-        var string_to_suggs = function string_to_suggs(str) {
-          return { text: str, status: "NEUTRAL" };
+        var string_to_suggs = function string_to_suggs(str_list) {
+          return str_list.map(function (str) {
+            return { text: str, status: "NEUTRAL" };
+          });
         };
         _this3.setState(function (prevState, props) {
-          return { suggs: [].concat(_toConsumableArray(hiddenstate), [string_to_suggs(res.data.data)]) };
+          return { suggs: [].concat(_toConsumableArray(hiddenstate), _toConsumableArray(string_to_suggs(res.data.data))) };
         });
       });
     }
@@ -21593,7 +21595,6 @@ var Search = function (_React$Component) {
           } },
         _react2.default.createElement('span', { className: 'glyphicon glyphicon-chevron-down' })
       );
-
       return _react2.default.createElement(
         'div',
         null,
@@ -21623,8 +21624,9 @@ var Search = function (_React$Component) {
               'div',
               null,
               this.state.suggs.map(function (s, i) {
-                return _react2.default.createElement(_Descriptor2.default, { text: sugg.text,
-                  status: sugg.status,
+                return _react2.default.createElement(_Descriptor2.default, {
+                  text: s.text,
+                  status: s.status,
                   onLikeClick: _this4.likeButtonOnClick,
                   onDislikeClick: _this4.dislikeButtonOnClick,
                   onCancelClick: _this4.setNeutralButtonOnClick });

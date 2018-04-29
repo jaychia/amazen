@@ -34,10 +34,10 @@ var Descriptor = function (_React$Component) {
   _createClass(Descriptor, [{
     key: 'render',
     value: function render() {
-      _react2.default.createElement(
+      return _react2.default.createElement(
         'span',
         null,
-        this.proops.text
+        this.props.text
       );
     }
   }]);

@@ -39,8 +39,8 @@ export default class Search extends React.Component {
         let hiddenstate = this.state.suggs.map((sugg) => {
           (sugg.status == "NEUTRAL") ? { text: sugg.text, status: "HIDDEN" } : sugg;
         });
-        let string_to_suggs = (str) => ({text: str, status: "NEUTRAL"});
-        this.setState((prevState, props) => ({ suggs: [...hiddenstate, string_to_suggs(res.data.data)] }));
+        let string_to_suggs = (str_list) => str_list.map((str) => ({ text: str, status: "NEUTRAL" }));
+        this.setState((prevState, props) => ({ suggs: [...hiddenstate, ...string_to_suggs(res.data.data)] }));
       });
   }
 
@@ -80,7 +80,6 @@ export default class Search extends React.Component {
           <span className="glyphicon glyphicon-chevron-down"></span>
         </button>
     )
-
     return (
       <div>
         <div className="text-center">
@@ -98,8 +97,9 @@ export default class Search extends React.Component {
             {this.state.suggs.length > 0 &&
               <div>
                 {this.state.suggs.map((s, i) =>
-                <Descriptor text={sugg.text} 
-                status={sugg.status} 
+                <Descriptor 
+                text={s.text}
+                status={s.status} 
                 onLikeClick={this.likeButtonOnClick} 
                 onDislikeClick={this.dislikeButtonOnClick}
                 onCancelClick={this.setNeutralButtonOnClick} />

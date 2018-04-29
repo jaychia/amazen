@@ -10,7 +10,7 @@ from app.irsystem.models.cooccurenceterm import scorelists_with_terms_for_cooccu
 from flask import jsonify
 from flask import current_app
 from app.irsystem.irhelpers.getpidhelper import *
-from app.irsystem.irhelpers.cooc import get_cooc
+from app.irsystem.models.cooc import get_cooc
 import random
 from datetime import datetime
 
@@ -106,17 +106,19 @@ def product_search():
 
 @irsystem.route('suggestions', methods=['GET'])
 def suggested_words():
-	query = request.args.get('query')
-	positive = request.args.get('positive').split(',')
-	negative = request.args.get('negative').split(',')
-	neutral = request.args.get('neutral').split(',')
-	d = get_cooc(positive, negative, neutral, 1.5, 1.5, 1000)
+	query = request.args.get('query').split() if request.args.get('query') != "" else []
+	positive = request.args.get('positive').split(
+		',')if request.args.get('positive') != "" else []
+	negative = request.args.get('negative').split(
+		',') if request.args.get('negative') != "" else []
+	neutral = request.args.get('neutral').split(
+		',') if request.args.get('neutral') != "" else []
+	d = get_cooc(query + positive, negative, neutral, 1.5, 1.5, 1000)
 	return jsonify(data=d)
 
 @irsystem.route('query_suggestions', methods=['GET'])
 def suggested_query():
 	query = request.args.get('query')
-	current_app.logger.info("AMRIT:" + query)
 	if query is None:
 		return None
 	d = amrit_suggestions(query)
