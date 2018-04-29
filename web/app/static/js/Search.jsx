@@ -6,12 +6,26 @@ export default class Search extends React.Component {
   constructor() {
     super(...arguments);
     /* sugg = {text: string, status: "HIDDEN", "NEUTRAL", "UP", "DOWN"} */
-    this.state = {suggs = []};
+    this.state = {suggs: [], querysuggs:[]};
     this.likeButtonOnClick = this.likeButtonOnClick.bind(this);
     this.dislikeButtonOnClick = this.likeButtonOnClick.bind(this);
     this.setNeutralButtonOnClick = this.setNeutralButtonOnClick.bind(this);
     this.getNewSuggestions = this.getNewSuggestions.bind(this);
     this.searchButtonOnClick = this.searchButtonOnClick.bind(this);
+    this.queryChange = this.queryChange.bind(this);
+  }
+
+  queryChange() {
+    let curr_query = this.refs.New_search.value;
+    if (this.state.suggs.length == 0) {
+      axios.get(
+        "/query_suggestions?query=" + curr_query
+      ).then(res => {
+        if (res.data.querystring == curr_query) {
+          this.setState((prevState, props) => ({ querysuggs: res.data.data }));
+        }
+      });
+    }
   }
 
   getNewSuggestions() {
@@ -49,13 +63,24 @@ export default class Search extends React.Component {
   }
 
   searchButtonOnClick() {
-    var descriptors_str = this.state.descriptors.join(",");
     window.location.href = "search_page?query=" + this.refs.New_search.value + 
       "&positive=" + this.state.suggs.filter(sugg => sugg.status == "UP").map(sugg => sugg.text).join(",") +
       "&negative=" + this.state.suggs.filter(sugg => sugg.status == "DOWN").map(sugg => sugg.text).join(",");
   }
 
   render() {
+    console.log(this.state.suggs);
+    console.log(this.state.querysuggs);
+    let searchButton = (this.state.suggs.length != 0) ? (
+      <button className="btn btn-lg search-bar-button" type="button" onClick={() => this.searchButtonOnClick()}>
+        <span className="glyphicon glyphicon-search"></span>
+      </button>
+    ) : (
+        <button className="btn btn-lg search-bar-button" type="button" onClick={() => this.getNewSuggestions()}>
+          <span className="glyphicon glyphicon-chevron-down"></span>
+        </button>
+    )
+
     return (
       <div>
         <div className="text-center">
@@ -63,11 +88,9 @@ export default class Search extends React.Component {
         </div>
         <form className="form-inline global-search search-wrapper">
           <div className="search-bar">
-            <input className="search-bar-input input-lg" type="text" placeholder="What are you looking for today?" ref="New_search"/>
+            <input className="search-bar-input input-lg" onChange={this.queryChange} type="text" placeholder="What are you looking for today?" ref="New_search"/>
             <div className="input-group-btn">
-              <button className="btn btn-lg search-bar-button" type="button" onClick={() => this.searchButtonOnClick()}>
-                <span className="glyphicon glyphicon-search"></span>
-              </button>
+              {searchButton}
             </div>
           </div>
           <br />

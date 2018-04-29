@@ -9,6 +9,7 @@ from app.irsystem.models.cooccurenceterm import scorelists_with_terms_for_cooccu
 from flask import jsonify
 from flask import current_app
 from app.irsystem.irhelpers.getpidhelper import *
+from app.irsystem.irhelpers.cooc import get_cooc
 import random
 from datetime import datetime
 
@@ -19,7 +20,7 @@ net_id = "Joo Ho Yeo (jy396) | Amritansh Kwatra (ak2244) | Alex Yoo (ay244) | Ja
 # Placeholder functions
 ##################################################################################################
 def amrit_suggestions(query):
-	pass
+	return ["This is", "some suggesitons", "for your perusal"]
 
 def classify_query(q):
 	return "electronics"
@@ -32,31 +33,6 @@ def get_top_products(q,descs,k2=100,k3=10):
 
 def filter_category_by_query(q, cat):
 	return ["1234", "123", "12"]
-
-def get_suggested_words(q_strings, k=5):
-	q = " ".join(q_strings.split(","))
-
-	current_app.logger.info(q)
-
-	current_app.logger.info(to_tokens_set(q))
-
-	cooccured_term_scorelist_dict = scorelists_with_terms_for_cooccurenceterm(list(to_tokens_set(q)))
-
-	current_app.logger.info(cooccured_term_scorelist_dict)
-
-	cooccured_terms_stemmed = get_cooccurred_terms(cooccured_term_scorelist_dict)
-
-	current_app.logger.info(cooccured_terms_stemmed)
-
-	l = ["strong", "cheap", "quality", "good", "durable", "fast", "cost-effecient", "new", "trendy", "affordable", "environmental", "safe", "reliable"]
-
-	ran_perm = np.random.permutation(len(l))[:k]
-	stock_desc = [l[int(i)] for i in ran_perm]
-
-	if len(cooccured_terms_stemmed) <= k:
-		cooccured_terms_stemmed =  cooccured_terms_stemmed + stock_desc
-
-	return cooccured_terms_stemmed[:k]
 
 def pack_pid_json(pids):
 	products = products_with_pids(pids)
@@ -130,6 +106,17 @@ def product_search():
 @irsystem.route('suggestions', methods=['GET'])
 def suggested_words():
 	query = request.args.get('query')
-	current_app.logger.info(query)
-	d = get_suggested_words(query)
+	positive = request.args.get('positive').split(',')
+	negative = request.args.get('negative').split(',')
+	neutral = request.args.get('neutral').split(',')
+	d = get_cooc(positive, negative, neutral, 1.5, 1.5, 1000)
 	return jsonify(data=d)
+
+@irsystem.route('query_suggestions', methods=['GET'])
+def suggested_query():
+	query = request.args.get('query')
+	current_app.logger.info("AMRIT:" + query)
+	if query is None:
+		return None
+	d = amrit_suggestions(query)
+	return jsonify(data=d, querystring=query)
