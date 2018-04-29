@@ -95,7 +95,7 @@ export default class Search extends React.Component {
         </div>
         <form className="form-inline global-search search-wrapper">
           <div className="search-bar">
-            <input className="search-bar-input input-lg" onChange={this.queryChange} type="text" placeholder="What are you looking for today?" ref="New_search"/>
+            <input className="search-bar-input input-lg" onChange={this.queryChange} type="text" placeholder="What product are you looking for today?" ref="New_search"/>
             <div className="input-group-btn">
               {searchButton}
             </div>
