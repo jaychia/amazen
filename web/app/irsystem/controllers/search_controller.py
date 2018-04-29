@@ -28,9 +28,6 @@ def classify_query(q):
 	return "electronics"
 
 def get_top_products(q,descs,k2=100,k3=10):
-
-	current_app.logger.info(nltk.pos_tag(["hi", "bob", "jooho", "samsung", "good"]))
-
 	inverted_index_product = scorelists_with_terms_for_product(to_tokens_set(q))
 	inverted_index_review = scorelists_with_terms_for_review(to_tokens_set(to_q_desc(q,descs)))
 
@@ -39,7 +36,15 @@ def get_top_products(q,descs,k2=100,k3=10):
 def filter_category_by_query(q, cat):
 	return ["1234", "123", "12"]
 
-def pack_pid_json(pids):
+def pack_pid_json(pids_and_info):
+	pids = [info_tup[0] for info_tup in pids_and_info]
+	# # yes additional info (numofreviews, reviewindex)
+	# if len(sorted_pids) > 0 and len(sorted_pids[0])>1:
+	# 	sorted_pids = [info_tup[0] for info_tup in sorted_pids_and_info]
+	# # just pids
+	# else:
+	# 	sorted_pids = sorted_pids_and_info
+
 	products = products_with_pids(pids)
 	convertkeyword = lambda x: 0. if x == "nan" else float(x)
 
@@ -103,9 +108,9 @@ def product_search():
 	descs = descriptors.split(",")
 	descs = [x.lower().strip() for x in descs]
 
-	sorted_pids = get_top_products(query,descs)
+	sorted_pids_and_info = get_top_products(query,descs)
 
-	d = pack_pid_json(sorted_pids)
+	d = pack_pid_json(sorted_pids_and_info)
 	return jsonify(data=d)
 
 @irsystem.route('suggestions', methods=['GET'])

@@ -6,9 +6,8 @@ from app import app, db
 from app.irsystem.models.product import new_products, update_product_keywords, update_product_desc
 from app.irsystem.models.invertedindicesproduct import new_invertedindicesproduct, delete_invertedindicesproduct
 from app.irsystem.models.invertedindicesreview import new_invertedindicesreview, delete_invertedindicesreview
-from app.irsystem.models.cooccurenceterm import new_cooccurenceterm, delete_cooccurenceterm
 from app.irsystem.models.review import new_review
-
+from app.irsystem.models.cooccurenceterm import delete_cooccurenceterm
 
 from collections import namedtuple
 import json
@@ -68,7 +67,7 @@ def loadinvertedindicesproduct(json_location):
     tuplist = []
     for line in f:
       p_json = json.loads(line)
-      tuplist.append((p_json['term'], p_json['scorelist']))
+      tuplist.append((p_json['term'], str(p_json['asinlist'])))
       if len(tuplist) > 50000:
         new_invertedindicesproduct(tuplist)
         del tuplist[:]
@@ -82,7 +81,7 @@ def loadinvertedindicesreview(json_location):
     tuplist = []
     for line in f:
       p_json = json.loads(line)
-      tuplist.append((p_json['term'], p_json['scorelist']))
+      tuplist.append((p_json['term'], str(p_json['asinlist'])))
       if len(tuplist) > 50000:
         new_invertedindicesreview(tuplist)
         del tuplist[:]
@@ -102,21 +101,6 @@ def loadkeywords(keywords_location):
       keywords_sents = [l[3] for l in k_json['keywords']]
       update_product_keywords(asin, keywords, keywords_scores, keywords_scores_dist, keywords_sents)
 
-dispatcher = {
-  'loadproducts': loadproducts,
-  'loadkeywords': loadkeywords,
-  'loadinvertedindicesproduct': loadinvertedindicesproduct,
-  'loadinvertedindicesreview': loadinvertedindicesreview
-}
-
-@manager.command
-def loaddatalist(func, json_folder_location):
-  files = [f for f in os.listdir(json_folder_location) if os.path.isfile(
-      os.path.join(json_folder_location, f))]
-  for fname in files:
-<<<<<<< HEAD
-    loadcooccurenceterm(json_folder_location + '/' + fname)
-
 @manager.command
 def loadreview(json_location):
   assert(os.path.isfile(json_location))
@@ -131,21 +115,26 @@ def loadreview(json_location):
     new_review(tuplist)
 
 @manager.command
-def loadreviewlist(json_folder_location):
-  files = [f for f in os.listdir(json_folder_location) if os.path.isfile(
-      os.path.join(json_folder_location, f))]
-  print(len(files))
-  for fname in files:
-    loadreview(json_folder_location + '/' + fname)
-
-@manager.command
 def deletejoohotables():
-  delete_cooccurenceterm()
   delete_invertedindicesreview()
   delete_invertedindicesproduct()
-=======
+  delete_cooccurenceterm()
+
+dispatcher = {
+  'loadproducts': loadproducts,
+  'loadkeywords': loadkeywords,
+  'loadinvertedindicesproduct': loadinvertedindicesproduct,
+  'loadinvertedindicesreview': loadinvertedindicesreview,
+  'loadreview': loadreview
+}
+
+@manager.command
+def loaddatalist(func, json_folder_location):
+  files = [f for f in os.listdir(json_folder_location) if os.path.isfile(
+      os.path.join(json_folder_location, f))]
+  for fname in files:
     dispatcher[func](json_folder_location + '/' + fname)
->>>>>>> 14a4c6ce7c74fa53d7aa6cc7db7075350819b5c7
+
 
 if __name__ == "__main__":
   manager.run()
