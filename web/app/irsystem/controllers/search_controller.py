@@ -46,16 +46,9 @@ def pack_pid_json(pids_and_info, q_d_string):
 
 	stemmer = SnowballStemmer("english")
 	reverse_stem_dict = dict()
-	for before_stem_word in q_d_string.split(" "):
+	for before_stem_word in to_tokens_set_no_stem(q_d_string):
 		after_stem_word = stemmer.stem(before_stem_word)
 		reverse_stem_dict[after_stem_word] = before_stem_word
-
-	# # yes additional info (numofreviews, reviewindex)
-	# if len(sorted_pids) > 0 and len(sorted_pids[0])>1:
-	# 	sorted_pids = [info_tup[0] for info_tup in sorted_pids_and_info]
-	# # just pids
-	# else:
-	# 	sorted_pids = sorted_pids_and_info
 
 	products = products_with_pids(pids)
 
