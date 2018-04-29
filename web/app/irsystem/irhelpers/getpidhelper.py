@@ -46,15 +46,26 @@ def valid_pid_set(inverted_index_product):
 
 hash_key = "_jooho_"
 
-def top_k_pids_step3(valid_pids, inverted_index_review):
+def top_k_pids_step3(valid_pids, inverted_index_review_pos, inverted_index_review_neg):
     product_simscores = defaultdict(float)
     asin_term_info_dict = defaultdict(lambda: defaultdict(int))
     
-    for term, scorelist in inverted_index_review.items():
+    for term, scorelist in inverted_index_review_pos.items():
         for (asin, score, numofreviews) in scorelist:
             if asin in valid_pids:
                 product_simscores[asin] += score
                 asin_term_info_dict[asin][term] = numofreviews
+
+    for term, scorelist in inverted_index_review_neg.items():
+        for (asin, score, _) in scorelist:
+            if asin in product_simscores:
+                product_simscores[asin] -= score
+
+    product_simscores_updated = dict()
+    for asin in product_simscores:
+        if product_simscores[asin] > 0:
+            product_simscores_updated[asin] = product_simscores[asin]
+    product_simscores = product_simscores_updated
     
     product_simscores_keys = list(product_simscores.keys())
     product_simscores_np = np.array([product_simscores[i] for i in product_simscores_keys])
@@ -66,13 +77,13 @@ def top_k_pids_step3(valid_pids, inverted_index_review):
     return top_k_pid_list_with_info
 
 # q is a search name, descs are list of input descriptors, cats are relevant categories
-def get_top_k_pids(inverted_index_product, inverted_index_review):
+def get_top_k_pids(inverted_index_product, inverted_index_review_pos, inverted_index_review_neg):
 
     top_pids_step2 = valid_pid_set(inverted_index_product)
 
-    if len(inverted_index_review) == 0:
+    if len(inverted_index_review_pos) == 0 and len(inverted_index_review_neg) == 0:
         return list(top_pids_step2)
 
-    pids_and_info_to_return = top_k_pids_step3(top_pids_step2, inverted_index_review)
+    pids_and_info_to_return = top_k_pids_step3(top_pids_step2, inverted_index_review_pos, inverted_index_review_neg)
 
     return pids_and_info_to_return
