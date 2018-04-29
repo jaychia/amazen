@@ -2,9 +2,10 @@ FROM ubuntu:latest
 MAINTAINER Jay Chia "jc2375@cornell.edu"
 
 # Base Installations
-RUN apt-get update -y
+RUN apt-get update -y --fix-missing
 RUN apt-get install -y python-pip python2.7 build-essential libffi-dev
 RUN apt-get install -y git
+RUN apt-get install python-dev
 
 # Install pip
 RUN pip install pip --upgrade
