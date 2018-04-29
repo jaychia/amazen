@@ -130,7 +130,7 @@ def loaddatalist(func, json_folder_location):
   files = [f for f in os.listdir(json_folder_location) if os.path.isfile(
       os.path.join(json_folder_location, f))]
   for fname in files:
-    loadinvertedindicesreview(json_folder_location + '/' + fname)
+    func(json_folder_location + '/' + fname)
   
 @manager.command
 def loadcooccurenceterm(json_location):
