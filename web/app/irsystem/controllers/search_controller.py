@@ -186,7 +186,7 @@ def product_search():
 def suggested_words():
 	query = request.args.get('query').split() if request.args.get('query') != "" else []
 	positive = request.args.get('positive').split(
-		',')if request.args.get('positive') != "" else []
+		',') if request.args.get('positive') != "" else []
 	negative = request.args.get('negative').split(
 		',') if request.args.get('negative') != "" else []
 	neutral = request.args.get('neutral').split(
