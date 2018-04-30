@@ -88,7 +88,7 @@ def update_product_keywords(asin, keywords, keywords_scores, keywords_scores_dis
       s = s + "]"
       keyworddistlist.append(s)
     p.keywordscoredist = ",".join(keyworddistlist)
-    p.keywordssents = ",".join(keywords_sents)
+    p.keywordssents = "||".join(keywords_sents)
     db.session.commit()
     
 

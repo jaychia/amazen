@@ -6,7 +6,6 @@ import axios from 'axios';
 export default class ResultPage extends React.Component {
     constructor() {
         super(...arguments);
-        console.log(this.props);
         this.state = { positive: (this.props.positive.length != 0) ? this.props.positive.split(',') : [], 
             negative: (this.props.negative.length != 0) ? this.props.negative.split(',') : [],
                         products: [] };
@@ -34,9 +33,12 @@ export default class ResultPage extends React.Component {
                         price={p.price}
                         seller={p.seller}
                         desc={p.desc}
+                        descriptors={p.descriptors}
+                        descriptors_review_num={p.descriptors_review_num}
                         keywords={p.keywords}
                         keywordscores={p.keywordscores}
                         keywordScoreList={p.keywordscorelist}
+                        keywordsSents={p.keywordssents}
                         rating={p.rating}
                         imgUrl={p.imgUrl}
                         numRatings={p.numRatings}

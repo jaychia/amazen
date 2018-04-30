@@ -8,9 +8,10 @@ export default class ProductListing extends React.Component {
   constructor() {
     super(...arguments);
     this.keywordOnClick = this.keywordOnClick.bind(this);
+    console.log(this.props.keywordsSents);
   }
 
-  addTermPlot(rating_freq) {
+  addTermPlot(rating_freq, sentence) {
     // SVG params
     var h = 150;
     var w = 600;
@@ -97,11 +98,16 @@ export default class ProductListing extends React.Component {
     var blob = new Blob([doctype + source], { type: 'image/svg+xml;charset=utf-8' });
     var url = window.URL.createObjectURL(blob);
     var img = <img src={url} />;
-    return img;
+    var div = 
+      <div>
+        {img}
+        <span>{sentence}</span>
+      </div>;
+    return div;
   } 
 
-  keywordOnClick(word, score_list) {
-    var img = this.addTermPlot(score_list);
+  keywordOnClick(word, score_list, sentence) {
+    let img = this.addTermPlot(score_list, sentence);
     Popup.create({
       title: word,
       content: img,
@@ -127,15 +133,16 @@ export default class ProductListing extends React.Component {
     if (rounded % 1 != 0) { stars.push(<img src="/static/img/halfstar.png" className="half-star" />);}
     stars.push(<span key={this.props.numRatings} className="num-ratings">{this.props.numRatings}</span>)
 
-    let keywords = this.props.keywords.map((e, i) => [e, this.props.keywordscores[i], this.props.keywordScoreList[i]]);
+    let keywords = this.props.keywords.map((e, i) => [e, this.props.keywordscores[i], this.props.keywordScoreList[i], this.props.keywordsSents[i]]);
     let div = 5.0 / 8;
     let k2_to_div = (k2) => {
       let rgb = keyword_colors[Math.floor(k2[1] / div)];
       let rgb_str = 'rgb(' + rgb[0].toString() + "," + rgb[1].toString() + "," + rgb[2].toString() + ", 1" + ')';
       let colorStyle = {'backgroundColor': rgb_str};
-      return <button className="keyword" style={colorStyle} type="button" onClick={() => this.keywordOnClick(k2[0], k2[2])}>{k2[0]}</button>
+      return <button className="keyword" style={colorStyle} type="button" onClick={() => this.keywordOnClick(k2[0], k2[2], k2[3])}>{k2[0]}</button>
     }
     let keyword_divs = keywords.map(k2_to_div);
+    let descriptors_review_num = this.props.descriptors_review_num;
 
     return (
       <div className="product-listing-container">
@@ -161,6 +168,18 @@ export default class ProductListing extends React.Component {
                   <span className="product-price-big">{"$"+Math.floor(this.props.price).toString()}</span>
                   <span className="product-price-superscript">{superscript_number}</span>
                 </div>
+                <div className="product-descriptors">
+                  <span>Descriptor Counts:</span>
+                  <br />
+                  {this.props.descriptors.map(function (w, i) {
+                    return (
+                      <div>
+                        <span>{w}: {descriptors_review_num[i]}</span>
+                        <br />
+                      </div>
+                    )
+                  })}
+                </div>
                 <div className="product-desc">
                   {desc_split}
                 </div>
@@ -184,6 +203,8 @@ ProductListing.propTypes = {
   price: PropTypes.number.isRequired,
   seller: PropTypes.string.isRequired,
   desc: PropTypes.string,
+  descriptors: PropTypes.arrayOf(PropTypes.string).isRequired,
+  descriptors_review_num: PropTypes.arrayOf(PropTypes.string).isRequired,
   keywords: PropTypes.arrayOf(PropTypes.string).isRequired,
   keywordscores: PropTypes.arrayOf(PropTypes.number).isRequired,
   rating: PropTypes.number,

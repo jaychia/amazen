@@ -272,6 +272,12 @@ a * {
     font-weight: 900;
 }
 
+.product-descriptors {
+    margin-top: 12px;
+    font-size: 12px;
+    height: 100%;
+}
+
 .product-desc {
     font-size: 12px;
     height: 100%;

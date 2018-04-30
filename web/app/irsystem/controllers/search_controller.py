@@ -68,7 +68,6 @@ def pack_pid_json(pids_and_info, q_d_string):
 		for stemmed_term in term_reviewnum_dict:
 			if stemmed_term in reverse_stem_dict:
 				before_stemmed_descs_list.append(reverse_stem_dict[stemmed_term])
-
 		return before_stemmed_descs_list
 
 	def get_descriptors_review_num(term_reviewnum_dict):
@@ -76,7 +75,6 @@ def pack_pid_json(pids_and_info, q_d_string):
 		for stemmed_term in term_reviewnum_dict:
 			if stemmed_term in reverse_stem_dict:
 				descriptors_review_num_list.append(term_reviewnum_dict[stemmed_term])
-
 		return descriptors_review_num_list
 
 	return [{
@@ -87,6 +85,7 @@ def pack_pid_json(pids_and_info, q_d_string):
 	'keywords': [] if p.keywords is None else p.keywords.split(","),
 	'keywordscores': [] if p.keywordscores is None else [convertkeyword(x) for x in p.keywordscores.split(",")],
 	'keywordscorelist': [] if p.keywordscoredist is None else convert_keywordscorelist(p),
+    'keywordssents':[] if p.keywordssents is None else p.keywordssents.split("||"),
 	'descriptors': [] if p.azn_product_id not in pid_term_reviewnum_dict else get_descriptors(pid_term_reviewnum_dict[p.azn_product_id]),
 	'descriptors_review_num': [] if p.azn_product_id not in pid_term_reviewnum_dict else get_descriptors_review_num(pid_term_reviewnum_dict[p.azn_product_id]),
 	'rating': p.average_stars,
@@ -101,14 +100,7 @@ def pack_pid_json(pids_and_info, q_d_string):
 
 @irsystem.route('/', methods=['GET'])
 def search():
-	query = request.args.get('search')
-	if not query:
-		data = []
-		output_message = ''
-	else:
-		output_message = "Your search: " + query
-		data = range(5)
-	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data)
+	return render_template('search.html')
 
 @irsystem.route('search_page', methods=['GET'])
 def search_page():
@@ -130,7 +122,7 @@ def product_search():
 			'status': 400,
 			'error_message': 'empty query provided'
 		}
-		return jsonify(d)
+		return jsonify(data=d)
 
 	category = classify_query(query.strip().lower())
 	pids = filter_category_by_query(query, category)
@@ -142,7 +134,7 @@ def product_search():
 	decs_neg = [x.lower().strip() for x in decs_neg]
 
 	# ir ranking
-	sorted_pids_and_info = get_top_products(query,decs_pos, decs_neg)
+	sorted_pids_and_info = get_top_products(query, decs_pos, decs_neg)
 
 	# only wanna show positive descriptors in results
 	d = pack_pid_json(sorted_pids_and_info, to_q_desc(query, decs_pos))
