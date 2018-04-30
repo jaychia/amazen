@@ -37,7 +37,7 @@ var Search = function (_React$Component) {
     /* sugg = {text: string, status: "HIDDEN", "NEUTRAL", "UP", "DOWN"} */
     var _this = _possibleConstructorReturn(this, (Search.__proto__ || Object.getPrototypeOf(Search)).apply(this, arguments));
 
-    _this.state = { suggs: [], querysuggs: [] };
+    _this.state = { suggs: [], querysuggs: [], readytosearch: false };
     _this.likeButtonOnClick = _this.likeButtonOnClick.bind(_this);
     _this.dislikeButtonOnClick = _this.dislikeButtonOnClick.bind(_this);
     _this.setNeutralButtonOnClick = _this.setNeutralButtonOnClick.bind(_this);
@@ -56,7 +56,8 @@ var Search = function (_React$Component) {
         return {
           querysuggs: [].concat(_toConsumableArray(prevState.querysuggs.filter(function (t) {
             return t != s;
-          })))
+          }))),
+          readytosearch: false
         };
       });
     }
@@ -75,6 +76,14 @@ var Search = function (_React$Component) {
           }
         });
       }
+      this.setState(function (prevState, props) {
+        return {
+          suggs: prevState.suggs.filter(function (s) {
+            return s.status != "HIDDEN" && s.status != "NEUTRAL";
+          }),
+          readytosearch: false
+        };
+      });
     }
   }, {
     key: 'getNewSuggestions',
@@ -107,6 +116,7 @@ var Search = function (_React$Component) {
           return { suggs: [].concat(_toConsumableArray(hiddenstate), _toConsumableArray(string_to_suggs(res.data.data))) };
         });
       });
+      this.setState({ readytosearch: true });
     }
   }, {
     key: 'likeButtonOnClick',
@@ -159,7 +169,7 @@ var Search = function (_React$Component) {
     value: function render() {
       var _this4 = this;
 
-      var searchButton = this.state.suggs.length != 0 ? _react2.default.createElement(
+      var searchButton = this.state.readytosearch ? _react2.default.createElement(
         'button',
         { className: 'btn btn-lg search-bar-button', type: 'button', onClick: function onClick() {
             return _this4.searchButtonOnClick();
@@ -222,11 +232,6 @@ var Search = function (_React$Component) {
             'div',
             { className: 'desc-search-container' },
             _react2.default.createElement(
-              'button',
-              { type: 'button', className: 'card card-1 refresh-button', onClick: this.getNewSuggestions },
-              _react2.default.createElement('span', { className: 'glyphicon glyphicon-repeat' })
-            ),
-            _react2.default.createElement(
               'div',
               { className: 'desc-container' },
               this.state.suggs.filter(function (s) {
@@ -239,7 +244,16 @@ var Search = function (_React$Component) {
                   onLikeClick: _this4.likeButtonOnClick,
                   onDislikeClick: _this4.dislikeButtonOnClick,
                   onCancelClick: _this4.setNeutralButtonOnClick });
-              })
+              }),
+              _react2.default.createElement(
+                'button',
+                { type: 'button', className: 'card card-1 refresh-button', onClick: this.getNewSuggestions },
+                _react2.default.createElement(
+                  'span',
+                  null,
+                  'Refresh Descriptors...'
+                )
+              )
             )
           )
         )
