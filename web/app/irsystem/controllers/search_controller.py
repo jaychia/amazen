@@ -9,6 +9,7 @@ from app.irsystem.models.cooccurenceterm import scorelists_with_terms_for_cooccu
 
 from flask import jsonify
 from flask import current_app
+from app.irsystem.irhelpers.autocorrecthelper import autocorrect_query
 from app.irsystem.irhelpers.getpidhelper import *
 from app.irsystem.models.cooc import get_cooc
 import random
@@ -42,6 +43,16 @@ def get_top_products(q,descs_pos, descs_neg):
 
 def filter_category_by_query(q, cat):
 	return ["1234", "123", "12"]
+
+# should be called when no products are returned
+def autocorrect_product_query(q):
+	suggested_query =  " ".join(autocorrect_query(q))
+	current_app.logger.info(suggested_query)
+	d = {
+		'status': 404,	
+		'error_message': suggested_query
+	}
+	return d
 
 def pack_pid_json(pids_and_info, q_d_string):
 	pid_term_reviewnum_dict = dict()
@@ -159,10 +170,13 @@ def product_search():
 
 	# only wanna show positive descriptors in results
 	current_app.logger.info(len(sorted_pids_and_info))
-	
-	# not counting query for now. else should be to_q_desc(q,descs_pos)
+
+	if len(sorted_pids_and_info) == 0:
+		return jsonify(autocorrect_product_query(query))
+	# not counting query for now. else should be to_q_desc(query,descs_pos)
 	d = pack_pid_json(sorted_pids_and_info, to_q_desc("", decs_pos))
-	# current_app.logger.info(sorted_pids_and_info)
+	if len(d) == 0:
+		return jsonify(autocorrect_product_query(query))
 
 	return jsonify(data=d)
 
