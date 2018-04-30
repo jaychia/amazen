@@ -601,3 +601,7 @@ a * {
 .card-right {
     border-radius: 2px 4px 4px 2px;
 }
+
+.popup-sent {
+    margin: 0 20px;
+}

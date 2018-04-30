@@ -98,8 +98,6 @@ var Search = function (_React$Component) {
         var hiddenstate = _this3.state.suggs.map(function (sugg) {
           return sugg.status == "NEUTRAL" ? { text: sugg.text, status: "HIDDEN" } : sugg;
         });
-        console.log(_this3.state.suggs);
-        console.log(hiddenstate);
         var string_to_suggs = function string_to_suggs(str_list) {
           return str_list.map(function (str) {
             return { text: str, status: "NEUTRAL" };

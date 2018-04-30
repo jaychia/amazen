@@ -39,7 +39,6 @@ var ProductListing = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (ProductListing.__proto__ || Object.getPrototypeOf(ProductListing)).apply(this, arguments));
 
     _this.keywordOnClick = _this.keywordOnClick.bind(_this);
-    console.log(_this.props.keywordsSents);
     return _this;
   }
 
@@ -113,8 +112,8 @@ var ProductListing = function (_React$Component) {
         null,
         img,
         _react2.default.createElement(
-          'span',
-          null,
+          'div',
+          { className: 'popup-sent' },
           sentence
         )
       );

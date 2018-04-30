@@ -47,8 +47,6 @@ export default class Search extends React.Component {
         let hiddenstate = this.state.suggs.map((sugg) => {
           return (sugg.status == "NEUTRAL") ? { text: sugg.text, status: "HIDDEN" } : sugg;
         });
-        console.log(this.state.suggs);
-        console.log(hiddenstate);
         let string_to_suggs = (str_list) => str_list.map((str) => ({ text: str, status: "NEUTRAL" }));
         this.setState((prevState, props) => ({ suggs: [...hiddenstate, ...string_to_suggs(res.data.data)] }));
       });

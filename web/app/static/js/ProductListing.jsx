@@ -8,7 +8,6 @@ export default class ProductListing extends React.Component {
   constructor() {
     super(...arguments);
     this.keywordOnClick = this.keywordOnClick.bind(this);
-    console.log(this.props.keywordsSents);
   }
 
   addTermPlot(rating_freq, sentence) {
@@ -101,7 +100,7 @@ export default class ProductListing extends React.Component {
     var div = 
       <div>
         {img}
-        <span>{sentence}</span>
+        <div className="popup-sent">{sentence}</div>
       </div>;
     return div;
   } 
