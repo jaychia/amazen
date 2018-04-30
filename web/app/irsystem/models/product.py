@@ -97,6 +97,10 @@ def update_product_desc(tuplist):
     p.desc = tup.desc
     db.session.commit()
 
+def delete_product():
+  db.session.query(Product).delete()
+  db.session.commit()
+
 class ProductSchema(ModelSchema):
   class Meta:
     model = Product

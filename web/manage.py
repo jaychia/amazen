@@ -3,7 +3,7 @@ from flask_script import Manager, Command
 from flask_migrate import Migrate, MigrateCommand
 from app import app, db
 
-from app.irsystem.models.product import new_products, update_product_keywords, update_product_desc
+from app.irsystem.models.product import new_products, update_product_keywords, update_product_desc, delete_product
 from app.irsystem.models.invertedindicesproduct import new_invertedindicesproduct, delete_invertedindicesproduct
 from app.irsystem.models.invertedindicesreview import new_invertedindicesreview, delete_invertedindicesreview
 from app.irsystem.models.cooccurenceterm import delete_cooccurenceterm
@@ -101,28 +101,14 @@ def loadkeywords(keywords_location):
       update_product_keywords(asin, keywords, keywords_scores, keywords_scores_dist, keywords_sents)
 
 @manager.command
-def loadreview(json_location):
-  assert(os.path.isfile(json_location))
-  with open(json_location, 'r') as f:
-    tuplist = []
-    for line in f:
-      tuplist.append((p_json['review_id'], str(p_json['review_text'])))
-      if len(tuplist) > 50000:
-        new_review(tuplist)
-        del tuplist[:]
-    new_review(tuplist)
-
-@manager.command
 def deleteinvertedindices():
   delete_invertedindicesreview()
-  delete_invertedindicesproduct()
 
 dispatcher = {
   'loadproducts': loadproducts,
   'loadkeywords': loadkeywords,
   'loadinvertedindicesproduct': loadinvertedindicesproduct,
-  'loadinvertedindicesreview': loadinvertedindicesreview,
-  'loadreview': loadreview
+  'loadinvertedindicesreview': loadinvertedindicesreview
 }
 
 @manager.command

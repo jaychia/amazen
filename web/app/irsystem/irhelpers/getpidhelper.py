@@ -51,15 +51,17 @@ def top_k_pids_step3(valid_pids, inverted_index_review_pos, inverted_index_revie
     asin_term_info_dict = defaultdict(lambda: defaultdict(int))
     
     for term, scorelist in inverted_index_review_pos.items():
+        max_score = float(np.max([score for (_, score, _) in scorelist]))
         for (asin, score, numofreviews) in scorelist:
             if asin in valid_pids:
-                product_simscores[asin] += score
+                product_simscores[asin] += score/max_score
                 asin_term_info_dict[asin][term] = numofreviews
 
     for term, scorelist in inverted_index_review_neg.items():
+        max_score = float(np.max([score for (asin, score, _) in scorelist]))
         for (asin, score, _) in scorelist:
             if asin in product_simscores:
-                product_simscores[asin] -= score
+                product_simscores[asin] -= score/max_score
 
     product_simscores_updated = dict()
     for asin in product_simscores:
@@ -81,7 +83,11 @@ def get_top_k_pids(inverted_index_product, inverted_index_review_pos, inverted_i
 
     top_pids_step2 = valid_pid_set(inverted_index_product)
 
+    current_app.logger.info(len(inverted_index_review_pos))
+    current_app.logger.info(len(inverted_index_review_neg))
+
     if len(inverted_index_review_pos) == 0 and len(inverted_index_review_neg) == 0:
+        current_app.logger.info(len(top_pids_step2))
         return list(top_pids_step2)
 
     pids_and_info_to_return = top_k_pids_step3(top_pids_step2, inverted_index_review_pos, inverted_index_review_neg)
