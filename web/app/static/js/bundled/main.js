@@ -21521,6 +21521,24 @@ var Search = function (_React$Component) {
   }
 
   _createClass(Search, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      document.addEventListener("keydown", this.handleEnterPressed.bind(this));
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      document.removeEventListener("keydown", this.handleEnterPressed.bind(this));
+    }
+  }, {
+    key: 'handleEnterPressed',
+    value: function handleEnterPressed(e) {
+      if (e.key == "Enter") {
+        e.preventDefault();
+        if (!this.state.readytosearch) this.getNewSuggestions();else this.searchButtonOnClick();
+      }
+    }
+  }, {
     key: 'querySuggestionTagClick',
     value: function querySuggestionTagClick(s) {
       this.refs.New_search.value = this.refs.New_search.value + " " + s;

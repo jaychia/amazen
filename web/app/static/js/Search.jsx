@@ -16,6 +16,24 @@ export default class Search extends React.Component {
     this.querySuggestionTagClick = this.querySuggestionTagClick.bind(this);
   }
 
+  componentDidMount() {
+    document.addEventListener("keydown", this.handleEnterPressed.bind(this));
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("keydown", this.handleEnterPressed.bind(this));
+  }
+
+  handleEnterPressed(e) {
+    if (e.key == "Enter") {
+      e.preventDefault();
+      if (!this.state.readytosearch)
+        this.getNewSuggestions();
+      else
+        this.searchButtonOnClick();
+    }
+  }
+
   querySuggestionTagClick(s) {
     this.refs.New_search.value = this.refs.New_search.value + " " + s;
     this.setState((prevState, props) => ({
