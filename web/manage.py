@@ -102,8 +102,8 @@ def loadkeywords(keywords_location):
 
 @manager.command
 def deleteinvertedindices():
-  delete_invertedindicesreview()
   delete_invertedindicesproduct()
+  delete_invertedindicesreview()
 
 dispatcher = {
   'loadproducts': loadproducts,

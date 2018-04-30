@@ -27,9 +27,10 @@ class Invertedindicesproduct(Base):
   def __repr__(self):
     return str(self.__dict__)
 
-def scorelists_with_terms_for_product(term_list):
+def scorelists_with_terms_for_product(term_list, negative_desc_list):
   invertedindicesproducts = Invertedindicesproduct.query.filter(Invertedindicesproduct.term.in_(term_list)).all()
-  return {p.term: literal_eval(p.scorelist) for p in invertedindicesproducts}
+  invertedindicesproductsneg = Invertedindicesproduct.query.filter(Invertedindicesproduct.term.in_(negative_desc_list)).all()
+  return {p.term: literal_eval(p.scorelist) for p in invertedindicesproducts}, {pn.term: literal_eval(pn.scorelist) for pn in invertedindicesproductsneg}
 
 def new_invertedindicesproduct(tuplist):
   """
