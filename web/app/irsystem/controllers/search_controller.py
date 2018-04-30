@@ -1,5 +1,6 @@
 from . import *
 from app.irsystem.models.helpers import *
+from app.irsystem.models.autocorrecthelper import autocorrect_query
 from app.irsystem.models.get_suggestions import get_suggestions
 from app.irsystem.models.helpers import NumpyEncoder as NumpyEncoder
 from app.irsystem.models.product import products_with_pids
@@ -9,7 +10,6 @@ from app.irsystem.models.cooccurenceterm import scorelists_with_terms_for_cooccu
 
 from flask import jsonify
 from flask import current_app
-from app.irsystem.irhelpers.autocorrecthelper import autocorrect_query
 from app.irsystem.irhelpers.getpidhelper import *
 from app.irsystem.models.cooc import get_cooc
 import random
@@ -172,15 +172,14 @@ def product_search():
 	sorted_pids_and_info = get_top_products(query, decs_pos, decs_neg)
 
 	if len(sorted_pids_and_info) == 0:
-		return jsonify(autocorrect_product_query(query))
+		return jsonify(data=autocorrect_product_query(query))
 
 	# only wanna show positive descriptors in results
 	d = pack_pid_json(sorted_pids_and_info, query, decs_pos)
 
 	if len(d) == 0:
-		return jsonify(autocorrect_product_query(query))
+		return jsonify(data=autocorrect_product_query(query))
 
-	current_app.logger.info(len(d))
 	return jsonify(data=d)
 
 @irsystem.route('suggestions', methods=['GET'])
