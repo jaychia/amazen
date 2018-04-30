@@ -9,12 +9,14 @@ from app.irsystem.models.cooccurenceterm import scorelists_with_terms_for_cooccu
 
 from flask import jsonify
 from flask import current_app
+from app.irsystem.irhelpers.autocorrecthelper import autocorrect_query
 from app.irsystem.irhelpers.getpidhelper import *
 from app.irsystem.models.cooc import get_cooc
 import random
 from datetime import datetime
 import nltk
 from nltk.stem.snowball import SnowballStemmer
+from autocorrect import spell
 
 project_name = "Amazen"
 net_id = "Joo Ho Yeo (jy396) | Amritansh Kwatra (ak2244) | Alex Yoo (ay244) | Jay Chia (jc2375) | Charles Bai (cb674)"
@@ -29,8 +31,13 @@ def classify_query(q):
 	return "electronics"
 
 def get_top_products(q,descs_pos, descs_neg):
+
 	inverted_index_product = scorelists_with_terms_for_product(to_tokens_set(q))
-	inverted_index_review_pos = scorelists_with_terms_for_review(to_tokens_set(to_q_desc(q,descs_pos)))
+	if len(descs_pos) > 0:
+		# not counting query for now. else should be to_q_desc(q, descs_pos)
+		inverted_index_review_pos = scorelists_with_terms_for_review(to_tokens_set(to_q_desc("",descs_pos)))
+	else:
+		inverted_index_review_pos = scorelists_with_terms_for_review(to_tokens_set(to_q_desc(q,descs_pos)))
 	# negative descriptors will be penalized
 	inverted_index_review_neg = scorelists_with_terms_for_review(to_tokens_set(" ".join(descs_neg)))
 	return get_top_k_pids(inverted_index_product, inverted_index_review_pos, inverted_index_review_neg)
@@ -38,16 +45,36 @@ def get_top_products(q,descs_pos, descs_neg):
 def filter_category_by_query(q, cat):
 	return ["1234", "123", "12"]
 
-def pack_pid_json(pids_and_info, q_d_string):
-	pids = [info_tup[0] for info_tup in pids_and_info]
+# should be called when no products are returned
+def autocorrect_product_query(q):
+	suggested_query =  " ".join(autocorrect_query(q))
+	current_app.logger.info(suggested_query)
+	d = {
+		'status': 404,	
+		'error_message': suggested_query
+	}
+	return d
 
+def pack_pid_json(pids_and_info, query, descs_pos):
 	pid_term_reviewnum_dict = dict()
-	if len(pids) > 0 and len(pids[0]) > 1:
+
+	if len(pids_and_info) >0 and isinstance(pids_and_info[0], tuple):
+		pids = [info_tup[0] for info_tup in pids_and_info]
 		for pid_info in pids_and_info:
 			pid_term_reviewnum_dict[pid_info[0]] = pid_info[1]
+	else:
+		pids = pids_and_info
 
 	stemmer = SnowballStemmer("english")
 	reverse_stem_dict = dict()
+
+	# depending on whether there are positive queries or not
+	if len(descs_pos) > 0:
+		q_d_string = to_q_desc("",descs_pos)
+	else:
+		q_d_string = to_q_desc(query, descs_pos)
+
+	current_app.logger.info(q_d_string)
 	for before_stem_word in to_tokens_set_no_stem(q_d_string):
 		after_stem_word = stemmer.stem(before_stem_word)
 		reverse_stem_dict[after_stem_word] = before_stem_word
@@ -61,7 +88,7 @@ def pack_pid_json(pids_and_info, q_d_string):
 		kwscorelist = []
 		for i in range(len(kwscorelisttmp) / 5):
 			kwscorelist.append(kwscorelisttmp[i*5 : (i+1)*5])
-		return kwscorelist
+		return kwscorelist		
 
 	def get_descriptors(term_reviewnum_dict):
 		before_stemmed_descs_list = list()
@@ -76,6 +103,8 @@ def pack_pid_json(pids_and_info, q_d_string):
 			if stemmed_term in reverse_stem_dict:
 				descriptors_review_num_list.append(term_reviewnum_dict[stemmed_term])
 		return descriptors_review_num_list
+
+	# current_app.logger.info([p.desc for p in products][0])
 
 	return [{
 	'productTitle': p.name,
@@ -113,19 +142,21 @@ def search_page():
 
 @irsystem.route('search', methods=['GET'])
 def product_search():
+	current_app.logger.info("----product search -----")
 	query = request.args.get('query')
 	descriptors_pos = request.args.get('positive', "")
 	descriptors_neg = request.args.get('negative', "")
 
+	current_app.logger.info(query)
+	current_app.logger.info(descriptors_pos)
+  	current_app.logger.info(descriptors_neg)
+
 	if not query:
 		d = {
-			'status': 400,
+			'status': 400,	
 			'error_message': 'empty query provided'
 		}
 		return jsonify(data=d)
-
-	category = classify_query(query.strip().lower())
-	pids = filter_category_by_query(query, category)
 
 	decs_pos = descriptors_pos.split(",") if descriptors_pos != "" else []
 	decs_pos = [x.lower().strip() for x in decs_pos]
@@ -136,9 +167,16 @@ def product_search():
 	# ir ranking
 	sorted_pids_and_info = get_top_products(query, decs_pos, decs_neg)
 
+	if len(sorted_pids_and_info) == 0:
+		return jsonify(autocorrect_product_query(query))
+
 	# only wanna show positive descriptors in results
-	d = pack_pid_json(sorted_pids_and_info, to_q_desc(query, decs_pos))
-	current_app.logger.info(sorted_pids_and_info)
+	d = pack_pid_json(sorted_pids_and_info, query, decs_pos)
+
+	if len(d) == 0:
+		return jsonify(autocorrect_product_query(query))
+
+	current_app.logger.info(len(d))
 	return jsonify(data=d)
 
 @irsystem.route('suggestions', methods=['GET'])
