@@ -31,8 +31,6 @@ def classify_query(q):
 	return "electronics"
 
 def get_top_products(q,descs_pos, descs_neg):
-  	current_app.logger.info(descs_pos)
-  	current_app.logger.info(descs_neg)
 
 	inverted_index_product = scorelists_with_terms_for_product(to_tokens_set(q))
 	if len(descs_pos) > 0:
@@ -177,12 +175,10 @@ def product_search():
 	# ir ranking
 	sorted_pids_and_info = get_top_products(query,decs_pos, decs_neg)
 
-	# only wanna show positive descriptors in results
-	current_app.logger.info(len(sorted_pids_and_info))
-
 	if len(sorted_pids_and_info) == 0:
 		return jsonify(autocorrect_product_query(query))
-		
+
+	# only wanna show positive descriptors in results
 	d = pack_pid_json(sorted_pids_and_info, query, decs_pos)
 
 	if len(d) == 0:
