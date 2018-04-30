@@ -35,8 +35,11 @@ def get_top_products(q,descs_pos, descs_neg):
   	current_app.logger.info(descs_neg)
 
 	inverted_index_product = scorelists_with_terms_for_product(to_tokens_set(q))
-	# not counting query for now. else should be to_q_desc(q, descs_pos)
-	inverted_index_review_pos = scorelists_with_terms_for_review(to_tokens_set(to_q_desc("",descs_pos)))
+	if len(descs_pos) > 0:
+		# not counting query for now. else should be to_q_desc(q, descs_pos)
+		inverted_index_review_pos = scorelists_with_terms_for_review(to_tokens_set(to_q_desc("",descs_pos)))
+	else:
+		inverted_index_review_pos = scorelists_with_terms_for_review(to_tokens_set(to_q_desc(q,descs_pos)))
 	# negative descriptors will be penalized
 	inverted_index_review_neg = scorelists_with_terms_for_review(to_tokens_set(" ".join(descs_neg)))
 	return get_top_k_pids(inverted_index_product, inverted_index_review_pos, inverted_index_review_neg)
@@ -54,7 +57,7 @@ def autocorrect_product_query(q):
 	}
 	return d
 
-def pack_pid_json(pids_and_info, q_d_string):
+def pack_pid_json(pids_and_info, query, descs_pos):
 	pid_term_reviewnum_dict = dict()
 
 	if len(pids_and_info) >0 and isinstance(pids_and_info[0], tuple):
@@ -66,13 +69,19 @@ def pack_pid_json(pids_and_info, q_d_string):
 
 	stemmer = SnowballStemmer("english")
 	reverse_stem_dict = dict()
+
+	# depending on whether there are positive queries or not
+	if len(descs_pos) > 0:
+		q_d_string = to_q_desc("",descs_pos)
+	else:
+		q_d_string = to_q_desc(query, descs_pos)
+
+	current_app.logger.info(q_d_string)
 	for before_stem_word in to_tokens_set_no_stem(q_d_string):
 		after_stem_word = stemmer.stem(before_stem_word)
 		reverse_stem_dict[after_stem_word] = before_stem_word
 
-	current_app.logger.info(pids)
 	products = products_with_pids(pids)
-	current_app.logger.info(len(products))
 
 	convertkeyword = lambda x: 0. if x == "nan" else float(x)
 
@@ -173,11 +182,13 @@ def product_search():
 
 	if len(sorted_pids_and_info) == 0:
 		return jsonify(autocorrect_product_query(query))
-	# not counting query for now. else should be to_q_desc(query,descs_pos)
-	d = pack_pid_json(sorted_pids_and_info, to_q_desc("", decs_pos))
+		
+	d = pack_pid_json(sorted_pids_and_info, query, decs_pos)
+
 	if len(d) == 0:
 		return jsonify(autocorrect_product_query(query))
 
+	current_app.logger.info(len(d))
 	return jsonify(data=d)
 
 @irsystem.route('suggestions', methods=['GET'])
