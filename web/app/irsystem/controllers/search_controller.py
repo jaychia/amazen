@@ -1,5 +1,6 @@
 from . import *
 from app.irsystem.models.helpers import *
+from app.irsystem.models.autocorrecthelper import autocorrect_query
 from app.irsystem.models.get_suggestions import get_suggestions
 from app.irsystem.models.helpers import NumpyEncoder as NumpyEncoder
 from app.irsystem.models.product import products_with_pids
@@ -9,7 +10,6 @@ from app.irsystem.models.cooccurenceterm import scorelists_with_terms_for_cooccu
 
 from flask import jsonify
 from flask import current_app
-from app.irsystem.irhelpers.autocorrecthelper import autocorrect_query
 from app.irsystem.irhelpers.getpidhelper import *
 from app.irsystem.models.cooc import get_cooc
 import random
@@ -31,8 +31,7 @@ def classify_query(q):
 	return "electronics"
 
 def get_top_products(q,descs_pos, descs_neg):
-
-	inverted_index_product = scorelists_with_terms_for_product(to_tokens_set(q))
+	inverted_index_product, inverted_index_product_neg = scorelists_with_terms_for_product(to_tokens_set(q), to_tokens_set(" ".join(descs_neg)))
 	if len(descs_pos) > 0:
 		# not counting query for now. else should be to_q_desc(q, descs_pos)
 		inverted_index_review_pos = scorelists_with_terms_for_review(to_tokens_set(to_q_desc("",descs_pos)))
@@ -40,7 +39,7 @@ def get_top_products(q,descs_pos, descs_neg):
 		inverted_index_review_pos = scorelists_with_terms_for_review(to_tokens_set(to_q_desc(q,descs_pos)))
 	# negative descriptors will be penalized
 	inverted_index_review_neg = scorelists_with_terms_for_review(to_tokens_set(" ".join(descs_neg)))
-	return get_top_k_pids(inverted_index_product, inverted_index_review_pos, inverted_index_review_neg)
+	return get_top_k_pids(inverted_index_product, inverted_index_product_neg, inverted_index_review_pos, inverted_index_review_neg)
 
 def filter_category_by_query(q, cat):
 	return ["1234", "123", "12"]
@@ -106,7 +105,7 @@ def pack_pid_json(pids_and_info, query, descs_pos):
 
 	# current_app.logger.info([p.desc for p in products][0])
 
-	return [{
+	p_json_list = [{
 	'productTitle': p.name,
 	'price': p.price,
 	'seller': p.seller_name if p.seller_name is not None else "",
@@ -122,6 +121,11 @@ def pack_pid_json(pids_and_info, query, descs_pos):
 	'imgUrl': p.img_url,
 	'asin': p.azn_product_id
 	} for p in products]
+
+	for p_json in p_json_list:
+		current_app.logger.info(p_json['productTitle'] + ", " + str(zip(p_json['descriptors'], p_json['descriptors_review_num'])))
+
+	return p_json_list
 
 ##################################################################################################
 # Views
@@ -168,22 +172,21 @@ def product_search():
 	sorted_pids_and_info = get_top_products(query, decs_pos, decs_neg)
 
 	if len(sorted_pids_and_info) == 0:
-		return jsonify(autocorrect_product_query(query))
+		return jsonify(data=autocorrect_product_query(query))
 
 	# only wanna show positive descriptors in results
 	d = pack_pid_json(sorted_pids_and_info, query, decs_pos)
 
 	if len(d) == 0:
-		return jsonify(autocorrect_product_query(query))
+		return jsonify(data=autocorrect_product_query(query))
 
-	current_app.logger.info(len(d))
 	return jsonify(data=d)
 
 @irsystem.route('suggestions', methods=['GET'])
 def suggested_words():
 	query = request.args.get('query').split() if request.args.get('query') != "" else []
 	positive = request.args.get('positive').split(
-		',')if request.args.get('positive') != "" else []
+		',') if request.args.get('positive') != "" else []
 	negative = request.args.get('negative').split(
 		',') if request.args.get('negative') != "" else []
 	neutral = request.args.get('neutral').split(

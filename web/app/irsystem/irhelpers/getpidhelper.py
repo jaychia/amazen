@@ -32,7 +32,7 @@ def to_q_desc(q,descs):
         return " ".join(descs + [q])
 
 # can be used for step 2. need to have all terms from query appear.
-def valid_pid_set(inverted_index_product):
+def valid_pid_set(inverted_index_product, inverted_index_product_neg):
     product_simscores = defaultdict(float)
     
     all_terms_pid_set = set()
@@ -41,10 +41,13 @@ def valid_pid_set(inverted_index_product):
             all_terms_pid_set = set([asin for (asin, _) in scorelist])
         else:
             all_terms_pid_set = all_terms_pid_set.intersection(set([asin for (asin, _) in scorelist]))
-    
-    return all_terms_pid_set
 
-hash_key = "_jooho_"
+    # remove product if it has negative description
+    for scorelist in inverted_index_product_neg.values():
+        for (asin, _) in scorelist:
+            all_terms_pid_set.discard(asin)
+
+    return all_terms_pid_set
 
 def top_k_pids_step3(valid_pids, inverted_index_review_pos, inverted_index_review_neg):
     product_simscores = defaultdict(float)
@@ -79,9 +82,9 @@ def top_k_pids_step3(valid_pids, inverted_index_review_pos, inverted_index_revie
     return top_k_pid_list_with_info
 
 # q is a search name, descs are list of input descriptors, cats are relevant categories
-def get_top_k_pids(inverted_index_product, inverted_index_review_pos, inverted_index_review_neg):
+def get_top_k_pids(inverted_index_product, inverted_index_product_neg, inverted_index_review_pos, inverted_index_review_neg):
 
-    top_pids_step2 = valid_pid_set(inverted_index_product)
+    top_pids_step2 = valid_pid_set(inverted_index_product, inverted_index_product_neg)
 
     current_app.logger.info(len(inverted_index_review_pos))
     current_app.logger.info(len(inverted_index_review_neg))

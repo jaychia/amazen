@@ -1,6 +1,7 @@
 from app import rdb_01
 import ast 
 from collections import Counter
+from autocorrecthelper import autocorrect_query
 
 N = 10
 
@@ -13,4 +14,9 @@ def get_suggestions(query):
 		except:
 			break
 		all_suggestions+= Counter(dict(term_suggestions))
-	return map(lambda x: x[0], all_suggestions.most_common(N))
+	suggestion_word_list =  map(lambda x: x[0], all_suggestions.most_common(N))
+	if len(suggestion_word_list) > 0:
+		return suggestion_word_list
+
+	# if no recommended words then return recommendations
+	return autocorrect_query(query)
