@@ -88,16 +88,18 @@ def update_product_keywords(asin, keywords, keywords_scores, keywords_scores_dis
       s = s + "]"
       keyworddistlist.append(s)
     p.keywordscoredist = ",".join(keyworddistlist)
-    p.keywordssents = ",".join(keywords_sents)
+    p.keywordssents = "||".join(keywords_sents)
     db.session.commit()
-    
-
 
 def update_product_desc(tuplist):
   for tup in tuplist:
     p = Product.query.filter_by(azn_product_id=tup.azn_product_id).first()
     p.desc = tup.desc
     db.session.commit()
+
+def delete_product():
+  db.session.query(Product).delete()
+  db.session.commit()
 
 class ProductSchema(ModelSchema):
   class Meta:

@@ -21537,7 +21537,7 @@ var Search = function (_React$Component) {
     value: function queryChange() {
       var _this2 = this;
 
-      var curr_query = this.refs.New_search.value;
+      var curr_query = this.refs.New_search.value.toLowerCase();
       if (this.state.suggs.length == 0) {
         _axios2.default.get("/query_suggestions?query=" + curr_query).then(function (res) {
           if (res.data.querystring == curr_query) {
@@ -21553,7 +21553,7 @@ var Search = function (_React$Component) {
     value: function getNewSuggestions() {
       var _this3 = this;
 
-      _axios2.default.get("/suggestions?query=" + this.refs.New_search.value + "&positive=" + this.state.suggs.filter(function (sugg) {
+      _axios2.default.get("/suggestions?query=" + this.refs.New_search.value.toLowerCase() + "&positive=" + this.state.suggs.filter(function (sugg) {
         return sugg.status == "UP";
       }).map(function (sugg) {
         return sugg.text;
@@ -21570,8 +21570,6 @@ var Search = function (_React$Component) {
         var hiddenstate = _this3.state.suggs.map(function (sugg) {
           return sugg.status == "NEUTRAL" ? { text: sugg.text, status: "HIDDEN" } : sugg;
         });
-        console.log(_this3.state.suggs);
-        console.log(hiddenstate);
         var string_to_suggs = function string_to_suggs(str_list) {
           return str_list.map(function (str) {
             return { text: str, status: "NEUTRAL" };

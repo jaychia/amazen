@@ -24,7 +24,7 @@ export default class Search extends React.Component {
   }
 
   queryChange() {
-    let curr_query = this.refs.New_search.value;
+    let curr_query = this.refs.New_search.value.toLowerCase();
     if (this.state.suggs.length == 0) {
       axios.get(
         "/query_suggestions?query=" + curr_query
@@ -38,7 +38,7 @@ export default class Search extends React.Component {
 
   getNewSuggestions() {
     axios.get(
-      "/suggestions?query=" + this.refs.New_search.value + 
+      "/suggestions?query=" + this.refs.New_search.value.toLowerCase() + 
       "&positive=" + this.state.suggs.filter(sugg => sugg.status == "UP").map(sugg => sugg.text).join(",") +
       "&negative=" + this.state.suggs.filter(sugg => sugg.status == "DOWN").map(sugg => sugg.text).join(",") +
       "&neutral=" + this.state.suggs.filter(sugg => sugg.status == "HIDDEN" || sugg.status == "NEUTRAL").map(sugg => sugg.text).join(",")
@@ -47,8 +47,6 @@ export default class Search extends React.Component {
         let hiddenstate = this.state.suggs.map((sugg) => {
           return (sugg.status == "NEUTRAL") ? { text: sugg.text, status: "HIDDEN" } : sugg;
         });
-        console.log(this.state.suggs);
-        console.log(hiddenstate);
         let string_to_suggs = (str_list) => str_list.map((str) => ({ text: str, status: "NEUTRAL" }));
         this.setState((prevState, props) => ({ suggs: [...hiddenstate, ...string_to_suggs(res.data.data)] }));
       });

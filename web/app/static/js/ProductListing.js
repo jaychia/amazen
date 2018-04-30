@@ -44,7 +44,7 @@ var ProductListing = function (_React$Component) {
 
   _createClass(ProductListing, [{
     key: 'addTermPlot',
-    value: function addTermPlot(rating_freq) {
+    value: function addTermPlot(rating_freq, sentence) {
       // SVG params
       var h = 150;
       var w = 600;
@@ -107,12 +107,22 @@ var ProductListing = function (_React$Component) {
       var blob = new Blob([doctype + source], { type: 'image/svg+xml;charset=utf-8' });
       var url = window.URL.createObjectURL(blob);
       var img = _react2.default.createElement('img', { src: url });
-      return img;
+      var div = _react2.default.createElement(
+        'div',
+        null,
+        img,
+        _react2.default.createElement(
+          'div',
+          { className: 'popup-sent' },
+          sentence
+        )
+      );
+      return div;
     }
   }, {
     key: 'keywordOnClick',
-    value: function keywordOnClick(word, score_list) {
-      var img = this.addTermPlot(score_list);
+    value: function keywordOnClick(word, score_list, sentence) {
+      var img = this.addTermPlot(score_list, sentence);
       _reactPopup2.default.create({
         title: word,
         content: img,
@@ -154,7 +164,7 @@ var ProductListing = function (_React$Component) {
       ));
 
       var keywords = this.props.keywords.map(function (e, i) {
-        return [e, _this2.props.keywordscores[i], _this2.props.keywordScoreList[i]];
+        return [e, _this2.props.keywordscores[i], _this2.props.keywordScoreList[i], _this2.props.keywordsSents[i]];
       });
       var div = 5.0 / 8;
       var k2_to_div = function k2_to_div(k2) {
@@ -164,12 +174,13 @@ var ProductListing = function (_React$Component) {
         return _react2.default.createElement(
           'button',
           { className: 'keyword', style: colorStyle, type: 'button', onClick: function onClick() {
-              return _this2.keywordOnClick(k2[0], k2[2]);
+              return _this2.keywordOnClick(k2[0], k2[2], k2[3]);
             } },
           k2[0]
         );
       };
       var keyword_divs = keywords.map(k2_to_div);
+      var descriptors_review_num = this.props.descriptors_review_num;
 
       return _react2.default.createElement(
         'div',
@@ -226,6 +237,30 @@ var ProductListing = function (_React$Component) {
                 ),
                 _react2.default.createElement(
                   'div',
+                  { className: 'product-descriptors' },
+                  _react2.default.createElement(
+                    'span',
+                    null,
+                    'Descriptor Counts:'
+                  ),
+                  _react2.default.createElement('br', null),
+                  this.props.descriptors.map(function (w, i) {
+                    return _react2.default.createElement(
+                      'div',
+                      null,
+                      _react2.default.createElement(
+                        'span',
+                        null,
+                        w,
+                        ': ',
+                        descriptors_review_num[i]
+                      ),
+                      _react2.default.createElement('br', null)
+                    );
+                  })
+                ),
+                _react2.default.createElement(
+                  'div',
                   { className: 'product-desc' },
                   desc_split
                 )
@@ -268,6 +303,8 @@ ProductListing.propTypes = {
   price: _propTypes2.default.number.isRequired,
   seller: _propTypes2.default.string.isRequired,
   desc: _propTypes2.default.string,
+  descriptors: _propTypes2.default.arrayOf(_propTypes2.default.string).isRequired,
+  descriptors_review_num: _propTypes2.default.arrayOf(_propTypes2.default.string).isRequired,
   keywords: _propTypes2.default.arrayOf(_propTypes2.default.string).isRequired,
   keywordscores: _propTypes2.default.arrayOf(_propTypes2.default.number).isRequired,
   rating: _propTypes2.default.number,
