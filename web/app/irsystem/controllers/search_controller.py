@@ -172,15 +172,14 @@ def product_search():
 	sorted_pids_and_info = get_top_products(query, decs_pos, decs_neg)
 
 	if len(sorted_pids_and_info) == 0:
-		return jsonify(autocorrect_product_query(query))
+		return jsonify(data=autocorrect_product_query(query))
 
 	# only wanna show positive descriptors in results
 	d = pack_pid_json(sorted_pids_and_info, query, decs_pos)
 
 	if len(d) == 0:
-		return jsonify(autocorrect_product_query(query))
+		return jsonify(data=autocorrect_product_query(query))
 
-	current_app.logger.info(len(d))
 	return jsonify(data=d)
 
 @irsystem.route('suggestions', methods=['GET'])
