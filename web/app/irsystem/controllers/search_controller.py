@@ -146,7 +146,6 @@ def product_search():
 
 	# only wanna show positive descriptors in results
 	d = pack_pid_json(sorted_pids_and_info, to_q_desc(query, decs_pos))
-	current_app.logger.info(sorted_pids_and_info)
 	return jsonify(data=d)
 
 @irsystem.route('suggestions', methods=['GET'])
