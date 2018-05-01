@@ -53,6 +53,7 @@ def autocorrect_word(word):
 		return get_highest_ranking_term(valid_words)
 
 	spellchecked_word = spell(word)
+	# return word only if it is in the product dictionary
 	if r.exists(spellchecked_word):
 		return spellchecked_word
 	else:
