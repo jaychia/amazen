@@ -51,7 +51,7 @@ export default class ResultPage extends React.Component {
                     asin={p.asin} />
             }) : (<div className="error-container"> 
                     <img src="static/img/404.png" className="four-oh-four-img" />
-                    <span>{this.state.suggestions}</span>
+                    <span>:( {this.state.suggestions}</span>
                 </div>));
         return (
             <div>

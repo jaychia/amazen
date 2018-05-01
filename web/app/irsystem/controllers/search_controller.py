@@ -48,7 +48,7 @@ def filter_category_by_query(q, cat):
 def autocorrect_product_query(q):
 	autocorrect_query_list = autocorrect_query(q)
 	if len(autocorrect_query_list) == 0:
-		suggested_query = "No suggested queries :( Please try again"
+		suggested_query = "No suggested queries. Please try again"
 	else:
 		suggested_query =  "Did you mean to type: " + " ".join(autocorrect_query_list)
 	return d
