@@ -7,7 +7,7 @@ export default class SearchBar extends React.Component {
         super(...arguments);
         /* sugg = {text: string, status: "HIDDEN", "NEUTRAL", "UP", "DOWN"} */
         let list_to_suggs = (str_list, stat) => str_list.map((str) => ({ text: str, status: stat }));
-        this.state = { suggs: list_to_suggs(this.props.positives, "UP").concat(list_to_suggs(this.props.negatives, "DOWN")), querysuggs: [], readytosearch: false };
+        this.state = { suggs: list_to_suggs(this.props.positives, "UP").concat(list_to_suggs(this.props.negatives, "DOWN")), querysuggs: [], readytosearch: false, noSuggs : false };
         this.likeButtonOnClick = this.likeButtonOnClick.bind(this);
         this.dislikeButtonOnClick = this.dislikeButtonOnClick.bind(this);
         this.setNeutralButtonOnClick = this.setNeutralButtonOnClick.bind(this);
@@ -44,6 +44,7 @@ export default class SearchBar extends React.Component {
     }
 
     queryChange() {
+        this.setState({noSuggs: false});
         let curr_query = this.refs.New_search.value.toLowerCase();
         if (this.state.suggs.length == 0) {
             axios.get(
@@ -73,8 +74,14 @@ export default class SearchBar extends React.Component {
             });
             let string_to_suggs = (str_list) => str_list.map((str) => ({ text: str, status: "NEUTRAL" }));
             this.setState((prevState, props) => ({ suggs: [...hiddenstate, ...string_to_suggs(res.data.data)] }));
+            if(this.state.suggs.length == 0){
+                this.setState({noSuggs: true, readytosearch:false});
+            }
+            else{
+                this.setState({noSuggs: false});
+                this.setState({ readytosearch: true });
+            }
         });
-        this.setState({ readytosearch: true });
     }
 
     likeButtonOnClick(suggtext) {
@@ -119,6 +126,9 @@ export default class SearchBar extends React.Component {
                         {searchButton}
                     </div>
                 </div>
+                {this.state.noSuggs &&
+                    <label htmlFor="search-bar card card-1" className="search-error tri-right left-top">No results for this search</label>
+                }
                 {this.state.querysuggs.length > 0 &&
                     <div className="query-suggestions-container">
                         <span className="suggestionTag">Suggestions:&nbsp;</span>
