@@ -22,6 +22,10 @@ var _axios = require('axios');
 
 var _axios2 = _interopRequireDefault(_axios);
 
+var _SearchBar = require('./SearchBar.jsx');
+
+var _SearchBar2 = _interopRequireDefault(_SearchBar);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -66,6 +70,11 @@ var ResultPage = function (_React$Component) {
                         'a',
                         { href: '/' },
                         _react2.default.createElement('img', { className: 'logo-small', src: '/static/img/logo_s.png', width: '200' })
+                    ),
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'result-page-bar' },
+                        _react2.default.createElement(_SearchBar2.default, { query: this.props.query, positives: this.state.positive, negatives: this.state.negative })
                     )
                 ),
                 this.state.products.map(function (p, i) {
