@@ -7,7 +7,7 @@ export default class SearchBar extends React.Component {
         super(...arguments);
         /* sugg = {text: string, status: "HIDDEN", "NEUTRAL", "UP", "DOWN"} */
         let list_to_suggs = (str_list, stat) => str_list.map((str) => ({ text: str, status: stat }));
-        this.state = { suggs: list_to_suggs(this.props.positives, "UP").concat(list_to_suggs(this.props.negatives, "DOWN")), querysuggs: [], readytosearch: false, noSuggs : false };
+        this.state = { suggs: list_to_suggs(this.props.positives, "UP").concat(list_to_suggs(this.props.negatives, "DOWN")), querysuggs: [], readytosearch: false, noSuggs : false , replace_query: false};
         this.likeButtonOnClick = this.likeButtonOnClick.bind(this);
         this.dislikeButtonOnClick = this.dislikeButtonOnClick.bind(this);
         this.setNeutralButtonOnClick = this.setNeutralButtonOnClick.bind(this);
@@ -36,7 +36,13 @@ export default class SearchBar extends React.Component {
     }
 
     querySuggestionTagClick(s) {
-        this.refs.New_search.value = this.refs.New_search.value + " " + s;
+        if(this.state.replace_query){
+            this.refs.New_search.value = s;
+        }
+        else{
+            this.refs.New_search.value = this.refs.New_search.value + " " + s;
+        }
+
         this.setState((prevState, props) => ({
             querysuggs: [...prevState.querysuggs.filter(t => t != s)],
             readytosearch: false
@@ -46,12 +52,19 @@ export default class SearchBar extends React.Component {
     queryChange() {
         this.setState({noSuggs: false});
         let curr_query = this.refs.New_search.value.toLowerCase();
-        if (this.state.suggs.length == 0) {
+        if (!this.state.readytosearch) {
             axios.get(
                 "/query_suggestions?query=" + curr_query
             ).then(res => {
+                console.log(res.data.data);
                 if (res.data.querystring == curr_query) {
                     this.setState((prevState, props) => ({ querysuggs: res.data.data }));
+                }
+                if (res.data.replace == 1){
+                    this.setState({replace_query: true});
+                }
+                else{
+                    this.setState({replace_query: false});   
                 }
             });
         }
@@ -131,13 +144,15 @@ export default class SearchBar extends React.Component {
                 }
                 {this.state.querysuggs.length > 0 &&
                     <div className="query-suggestions-container">
+                        {this.state.replace_query?<span className="suggestionTag">Did You Mean:&nbsp;</span>:
                         <span className="suggestionTag">Suggestions:&nbsp;</span>
+                    }
                         {this.state.querysuggs.map((s, i) =>
                             <span key={s + Date.now().toString() + i.toString()} className="suggestionTag">
-                                <span className="suggestionTag tag"
-                                    onClick={() => this.querySuggestionTagClick(s)}>{s}
-                                </span>,&nbsp;
-                        </span>)
+                                <span className="suggestionTag tag" onClick={() => this.querySuggestionTagClick(s)}>
+                                    {s}
+                                </span>&nbsp;
+                            </span>)
                     }
                     </div>
                 }
