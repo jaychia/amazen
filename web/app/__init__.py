@@ -19,11 +19,11 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 # DB
 db = SQLAlchemy(app)
 rdb_00 = redis.StrictRedis(host="redis", port=6379,
-                           db=0)
+                           db=0, password=os.environ["REDIS_PW"])
 rdb_01 = redis.StrictRedis(host="redis", port=6379,
-                           db=1)
+                           db=1, password=os.environ["REDIS_PW"])
 rdb_15 = redis.StrictRedis(host="redis", port=6379,
-                           db=15)
+                           db=15, password=os.environ["REDIS_PW"])
 
 # Import + Register Blueprints
 from app.accounts import accounts as accounts

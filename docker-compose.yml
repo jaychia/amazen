@@ -38,7 +38,7 @@ services:
     image: redis:latest
     volumes:
       - ./redis-data:/mounting-data
-    command: redis-server --dbfilename dump.rdb --dir /mounting-data --save "" --appendonly no
+    command: redis-server --dbfilename dump.rdb --dir /mounting-data --save "" --appendonly no --requirepass stoptakingdownourr3d1s
     ports:
       - "6379:6379"
 
