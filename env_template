@@ -1,8 +1,0 @@
-# Set the environment type of the app (see config.py)
-APP_SETTINGS=config.DevelopmentConfig
-SECRET_KEY=<random_secret_key>
-DB_NAME=<DB_NAME> to be consistent with .db_env
-DB_USER=<USERNAME> to be consistent with .db_env
-DB_PASS=<PASSWORD> to be consistent with .db_env
-DB_SERVICE=postgres
-DB_PORT=5432
