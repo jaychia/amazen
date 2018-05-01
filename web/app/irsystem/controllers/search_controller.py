@@ -46,7 +46,22 @@ def filter_category_by_query(q, cat):
 
 # should be called when no products are returned
 def autocorrect_product_query(q):
-	return " ".join(autocorrect_query(q))
+	autocorrect_query_list = autocorrect_query(q)
+	if len(autocorrect_query_list) == 0:
+		suggested_query = "No suggested queries. Please try again."
+	else:
+		suggested_query =  "Did you mean to type: " + " ".join(autocorrect_query_list)
+	return suggested_query
+
+def find_overlap_between_pos_and_neg(desc_pos,desc_neg,decs_pos_neg_set):
+	stemmer = SnowballStemmer("english")
+	overlapping_term_list = list()
+	for prestemtoken in to_tokens_set_no_stem(to_q_desc("",desc_pos)):
+		if stemmer.stem(prestemtoken) in decs_pos_neg_set:
+			overlapping_term_list.append(prestemtoken)
+
+	error_message = ", ".join(overlapping_term_list) + " was in both positive and negative descriptors. Please try again."
+	return error_message
 
 def pack_pid_json(pids_and_info, query, descs_pos):
 	pid_term_reviewnum_dict = dict()
@@ -139,26 +154,29 @@ def product_search():
 	descriptors_neg = request.args.get('negative', "")
 
 	if not query:
-		d = {
-			'status': 400,
-			'error_message': 'empty query provided'
-		}
-		return jsonify(data=d)
+		return jsonify(data=[], suggestions="Please enter a product query.")
 
-	decs_pos = descriptors_pos.split(",") if descriptors_pos != "" else []
-	decs_pos = [x.lower().strip() for x in decs_pos]
+	desc_pos = descriptors_pos.split(",") if descriptors_pos != "" else []
+	desc_pos = [x.lower().strip() for x in desc_pos]
 
-	decs_neg = descriptors_neg.split(",") if descriptors_neg != "" else []
-	decs_neg = [x.lower().strip() for x in decs_neg]
+	desc_neg = descriptors_neg.split(",") if descriptors_neg != "" else []
+	desc_neg = [x.lower().strip() for x in desc_neg]
+
+	decs_pos_neg_set = to_tokens_set(to_q_desc("",desc_pos)).intersection(to_tokens_set(to_q_desc("",desc_neg)))
+	# if there is a word in both positive and negative descriptor
+	if len(decs_pos_neg_set) > 0:
+		current_app.logger.info(find_overlap_between_pos_and_neg(desc_pos,desc_neg,decs_pos_neg_set))
+		return jsonify(data=[], suggestions=find_overlap_between_pos_and_neg(desc_pos,desc_neg,decs_pos_neg_set))
 
 	# ir ranking
-	sorted_pids_and_info = get_top_products(query, decs_pos, decs_neg)
+	sorted_pids_and_info = get_top_products(query, desc_pos, desc_neg)
 
 	if len(sorted_pids_and_info) == 0:
+		current_app.logger.info(find_overlap_between_pos_and_neg(desc_pos,desc_neg,decs_pos_neg_set))
 		return jsonify(data=[], suggestions=autocorrect_product_query(query))
 
 	# only wanna show positive descriptors in results
-	d = pack_pid_json(sorted_pids_and_info, query, decs_pos)
+	d = pack_pid_json(sorted_pids_and_info, query, desc_pos)
 
 	if len(d) == 0:
 		return jsonify(data=[], suggestions=autocorrect_product_query(query))

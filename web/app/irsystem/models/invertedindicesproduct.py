@@ -1,5 +1,4 @@
 from . import *
-from flask import current_app
 from ast import literal_eval
 
 class Invertedindicesproduct(Base):

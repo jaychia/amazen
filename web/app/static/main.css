@@ -654,3 +654,7 @@ a * {
 .popup-sent {
     margin: 0 20px;
 }
+
+.loading-icon-wrapper {
+    text-align: center;
+}
