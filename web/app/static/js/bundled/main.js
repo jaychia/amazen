@@ -21815,7 +21815,7 @@ var SearchBar = function (_React$Component) {
                             return s.status != "HIDDEN";
                         }).map(function (s, i) {
                             return _react2.default.createElement(_Descriptor2.default, {
-                                key: s.text + "-descriptor-key",
+                                key: s.text + "-descriptor-key" + s.status,
                                 text: s.text,
                                 status: s.status,
                                 onLikeClick: _this4.likeButtonOnClick,

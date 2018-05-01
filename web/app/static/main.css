@@ -658,3 +658,8 @@ a * {
 .loading-icon-wrapper {
     text-align: center;
 }
+
+.page-bar-wrapper {
+    text-align: center;
+    padding: 12px;
+}
