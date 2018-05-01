@@ -86,9 +86,6 @@ def get_top_k_pids(inverted_index_product, inverted_index_product_neg, inverted_
 
     top_pids_step2 = valid_pid_set(inverted_index_product, inverted_index_product_neg)
 
-    current_app.logger.info(len(inverted_index_review_pos))
-    current_app.logger.info(len(inverted_index_review_neg))
-
     if len(inverted_index_review_pos) == 0 and len(inverted_index_review_neg) == 0:
         current_app.logger.info(len(top_pids_step2))
         return list(top_pids_step2)
