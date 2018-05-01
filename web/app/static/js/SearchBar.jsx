@@ -7,7 +7,8 @@ export default class SearchBar extends React.Component {
         super(...arguments);
         /* sugg = {text: string, status: "HIDDEN", "NEUTRAL", "UP", "DOWN"} */
         let list_to_suggs = (str_list, stat) => str_list.map((str) => ({ text: str, status: stat }));
-        this.state = { suggs: list_to_suggs(this.props.positives, "UP").concat(list_to_suggs(this.props.negatives, "DOWN")), querysuggs: [], readytosearch: false, noSuggs : false , replace_query: false};
+        this.state = { suggs: list_to_suggs(this.props.positives, "UP").concat(list_to_suggs(this.props.negatives, "DOWN")), 
+            querysuggs: [], readytosearch: false, noSuggs : false, replace_query: false, loading: false};
         this.likeButtonOnClick = this.likeButtonOnClick.bind(this);
         this.dislikeButtonOnClick = this.dislikeButtonOnClick.bind(this);
         this.setNeutralButtonOnClick = this.setNeutralButtonOnClick.bind(this);
@@ -75,12 +76,14 @@ export default class SearchBar extends React.Component {
     }
 
     getNewSuggestions() {
+        this.setState({ loading: true });
         axios.get(
             "/suggestions?query=" + this.refs.New_search.value.toLowerCase() +
             "&positive=" + this.state.suggs.filter(sugg => sugg.status == "UP").map(sugg => sugg.text).join(",") +
             "&negative=" + this.state.suggs.filter(sugg => sugg.status == "DOWN").map(sugg => sugg.text).join(",") +
             "&neutral=" + this.state.suggs.filter(sugg => sugg.status == "HIDDEN" || sugg.status == "NEUTRAL").map(sugg => sugg.text).join(",")
         ).then(res => {
+            this.setState({ loading: false });
             // Hide previous neutrals and add new suggestions as neutrals
             let hiddenstate = this.state.suggs.map((sugg) => {
                 return (sugg.status == "NEUTRAL") ? { text: sugg.text, status: "HIDDEN" } : sugg;
@@ -88,11 +91,10 @@ export default class SearchBar extends React.Component {
             let string_to_suggs = (str_list) => str_list.map((str) => ({ text: str, status: "NEUTRAL" }));
             this.setState((prevState, props) => ({ suggs: [...hiddenstate, ...string_to_suggs(res.data.data)] }));
             if(this.state.suggs.length == 0){
-                this.setState({noSuggs: true, readytosearch:false});
+                this.setState({ noSuggs: true, readytosearch: false });
             }
             else{
-                this.setState({noSuggs: false});
-                this.setState({ readytosearch: true });
+                this.setState({ readytosearch: true, noSuggs: false });
             }
         });
     }
@@ -122,14 +124,17 @@ export default class SearchBar extends React.Component {
     }
 
     render() {
-        let searchButton = (this.state.readytosearch) ? (
-            <button className="btn btn-lg search-bar-button" type="button" onClick={() => this.searchButtonOnClick()}>
-                <span className="glyphicon glyphicon-search"></span>
+        let searchButton = (this.state.loading) ? (
+            <button className="btn btn-lg search-bar-button" type="button">
+                <img src="/static/img/loading.svg" alt="loading" style={{width: '26px'}} />
             </button>
-        ) : (
-                <button className="btn btn-lg search-bar-button" type="button" onClick={() => this.getNewSuggestions()}>
+        ) : (this.state.readytosearch ?
+                (<button className="btn btn-lg search-bar-button" type="button" onClick={() => this.searchButtonOnClick()}>
+                    <span className="glyphicon glyphicon-search"></span>
+                </button>) :
+                (<button className="btn btn-lg search-bar-button" type="button" onClick={() => this.getNewSuggestions()}>
                     <span className="glyphicon glyphicon-chevron-down"></span>
-                </button>
+                </button>)
             )
         return (
             <form className="form-inline global-search search-wrapper">
