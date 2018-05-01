@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ProductListing from './ProductListing.jsx';
 import axios from 'axios';
+import SearchBar from './SearchBar.jsx';
 
 export default class ResultPage extends React.Component {
     constructor() {
@@ -25,6 +26,9 @@ export default class ResultPage extends React.Component {
                     <a href="/">
                         <img className="logo-small" src="/static/img/logo_s.png" width="200" />
                     </a>
+                    <div className="result-page-bar">
+                        <SearchBar query={this.props.query} positives={this.state.positive} negatives={this.state.negative} />
+                    </div>
                 </div>
                 {this.state.products.map(function (p, i) {
                     return <ProductListing

@@ -16,7 +16,9 @@ def get_suggestions(query):
 		all_suggestions+= Counter(dict(term_suggestions))
 	suggestion_word_list =  map(lambda x: x[0], all_suggestions.most_common(N))
 	if len(suggestion_word_list) > 0:
-		return suggestion_word_list
+		# should not replace = 0
+		return suggestion_word_list, 0
 
 	# if no recommended words then return recommendations
-	return autocorrect_query(query)
+	# should replace = 1
+	return [" ".join(autocorrect_query(query))], 1

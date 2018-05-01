@@ -103,8 +103,6 @@ def pack_pid_json(pids_and_info, query, descs_pos):
 				descriptors_review_num_list.append(term_reviewnum_dict[stemmed_term])
 		return descriptors_review_num_list
 
-	# current_app.logger.info([p.desc for p in products][0])
-
 	p_json_list = [{
 	'productTitle': p.name,
 	'price': p.price,
@@ -122,8 +120,8 @@ def pack_pid_json(pids_and_info, query, descs_pos):
 	'asin': p.azn_product_id
 	} for p in products]
 
-	for p_json in p_json_list:
-		current_app.logger.info(p_json['productTitle'] + ", " + str(zip(p_json['descriptors'], p_json['descriptors_review_num'])))
+	# for p_json in p_json_list:
+	# 	current_app.logger.info(p_json['productTitle'] + ", " + str(zip(p_json['descriptors'], p_json['descriptors_review_num'])))
 
 	return p_json_list
 
@@ -146,7 +144,6 @@ def search_page():
 
 @irsystem.route('search', methods=['GET'])
 def product_search():
-	current_app.logger.info("----product search -----")
 	query = request.args.get('query')
 	descriptors_pos = request.args.get('positive', "")
 	descriptors_neg = request.args.get('negative', "")
@@ -199,5 +196,5 @@ def suggested_query():
 	query = request.args.get('query')
 	if query is None:
 		return None
-	d = amrit_suggestions(query)
-	return jsonify(data=d, querystring=query)
+	d, isReplaceInt = amrit_suggestions(query)
+	return jsonify(data=d, replace = isReplaceInt, querystring=query)
