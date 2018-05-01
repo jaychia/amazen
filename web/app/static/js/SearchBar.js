@@ -42,7 +42,7 @@ var SearchBar = function (_React$Component) {
                 return { text: str, status: stat };
             });
         };
-        _this.state = { suggs: list_to_suggs(_this.props.positives, "UP").concat(list_to_suggs(_this.props.negatives, "DOWN")), querysuggs: [], readytosearch: false };
+        _this.state = { suggs: list_to_suggs(_this.props.positives, "UP").concat(list_to_suggs(_this.props.negatives, "DOWN")), querysuggs: [], readytosearch: false, noSuggs: false };
         _this.likeButtonOnClick = _this.likeButtonOnClick.bind(_this);
         _this.dislikeButtonOnClick = _this.dislikeButtonOnClick.bind(_this);
         _this.setNeutralButtonOnClick = _this.setNeutralButtonOnClick.bind(_this);
@@ -89,6 +89,7 @@ var SearchBar = function (_React$Component) {
         value: function queryChange() {
             var _this2 = this;
 
+            this.setState({ noSuggs: false });
             var curr_query = this.refs.New_search.value.toLowerCase();
             if (this.state.suggs.length == 0) {
                 _axios2.default.get("/query_suggestions?query=" + curr_query).then(function (res) {
@@ -138,8 +139,13 @@ var SearchBar = function (_React$Component) {
                 _this3.setState(function (prevState, props) {
                     return { suggs: [].concat(_toConsumableArray(hiddenstate), _toConsumableArray(string_to_suggs(res.data.data))) };
                 });
+                if (_this3.state.suggs.length == 0) {
+                    _this3.setState({ noSuggs: true, readytosearch: false });
+                } else {
+                    _this3.setState({ noSuggs: false });
+                    _this3.setState({ readytosearch: true });
+                }
             });
-            this.setState({ readytosearch: true });
         }
     }, {
         key: 'likeButtonOnClick',
@@ -217,6 +223,11 @@ var SearchBar = function (_React$Component) {
                         { className: 'input-group-btn' },
                         searchButton
                     )
+                ),
+                this.state.noSuggs && _react2.default.createElement(
+                    'label',
+                    { htmlFor: 'search-bar card card-1', className: 'search-error tri-right left-top' },
+                    'No results for this search'
                 ),
                 this.state.querysuggs.length > 0 && _react2.default.createElement(
                     'div',
