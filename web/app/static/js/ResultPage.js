@@ -54,7 +54,9 @@ var ResultPage = function (_React$Component) {
         value: function componentDidMount() {
             var _this2 = this;
 
+            this.setState({ loading: true });
             _axios2.default.get("/search?query=" + this.props.query + "&positive=" + this.props.positive + "&negative=" + this.props.negative).then(function (res) {
+                _this2.setState({ loading: false });
                 if (res.data.data.length > 0) {
                     _this2.setState({ products: res.data.data, suggestions: "" });
                 } else {
@@ -65,7 +67,11 @@ var ResultPage = function (_React$Component) {
     }, {
         key: 'render',
         value: function render() {
-            var body = this.state.suggestions.length == 0 ? this.state.products.map(function (p, i) {
+            var body = this.state.loading ? _react2.default.createElement(
+                'div',
+                { className: 'loading-icon-wrapper' },
+                _react2.default.createElement('img', { src: '/static/img/loading.svg', alt: 'loading', style: { width: '100px', marginTop: '10%' } })
+            ) : this.state.suggestions.length == 0 ? this.state.products.map(function (p, i) {
                 return _react2.default.createElement(_ProductListing2.default, {
                     key: i,
                     productTitle: p.productTitle,
@@ -85,7 +91,6 @@ var ResultPage = function (_React$Component) {
             }) : _react2.default.createElement(
                 'div',
                 { className: 'error-container' },
-                ' ',
                 _react2.default.createElement('img', { src: 'static/img/404.png', className: 'four-oh-four-img' }),
                 _react2.default.createElement(
                     'span',
