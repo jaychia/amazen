@@ -4,6 +4,7 @@ web/migrations/*
 .db_env
 .DS_Store
 web/app/static/js/bundled/*
+web/app/static/js/*.js
 web/app/irsystem/irhelpers/data/*
 redis-data/*
 redis-backup/*
