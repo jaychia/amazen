@@ -47,10 +47,14 @@ def filter_category_by_query(q, cat):
 # should be called when no products are returned
 def autocorrect_product_query(q):
 	autocorrect_query_list = autocorrect_query(q)
+	suggested_query= "No results for \"" + q + "\" "
 	if len(autocorrect_query_list) == 0:
-		suggested_query = "No suggested queries. Please try again."
+		suggested_query += "No suggested queries. Please try again."
+	elif " ".join(autocorrect_query_list) != q:
+		suggested_query +=  "Did you mean to type \"" + " ".join(autocorrect_query_list) + "\"?"
 	else:
-		suggested_query =  "Did you mean to type: " + " ".join(autocorrect_query_list)
+		suggested_query += "Your query may be too specific. Try removing some words or moving them to descriptors!"
+
 	return suggested_query
 
 def find_overlap_between_pos_and_neg(desc_pos,desc_neg,decs_pos_neg_set):
@@ -60,7 +64,7 @@ def find_overlap_between_pos_and_neg(desc_pos,desc_neg,decs_pos_neg_set):
 		if stemmer.stem(prestemtoken) in decs_pos_neg_set:
 			overlapping_term_list.append(prestemtoken)
 
-	error_message = ", ".join(overlapping_term_list) + " was in both positive and negative descriptors. Please try again."
+	error_message = "\"" + "\", \"".join(overlapping_term_list) + "\" was in both positive and negative descriptors. Please try again."
 	return error_message
 
 def pack_pid_json(pids_and_info, query, descs_pos):
