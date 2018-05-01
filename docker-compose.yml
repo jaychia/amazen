@@ -38,7 +38,7 @@ services:
     image: redis:latest
     volumes:
       - ./redis-data:/data
-    command: redis-server --dbfilename dump.rdb --dir /data
+    command: redis-server --dbfilename dump.rdb --dir /data --save "" --appendonly no
     ports:
       - "6379:6379"
 
