@@ -103,14 +103,21 @@ export default class SearchBar extends React.Component {
     }
 
     likeButtonOnClick(suggtext) {
+        console.log((this.state.suggs.reduce(((acc, v) => acc || (v.text == suggtext)), false)));
+        let newstates = (this.state.suggs.reduce(((acc, v) => acc || (v.text == suggtext)), false)) ? 
+            this.state.suggs.map(sugg => (sugg.text !== suggtext) ? sugg : { text: suggtext, status: "UP" }) :
+            this.state.suggs.concat({text: suggtext, status: "UP"});
         this.setState((prevState, props) => ({
-            suggs: prevState.suggs.map(sugg => (sugg.text !== suggtext) ? sugg : { text: suggtext, status: "UP" })
+            suggs: newstates
         }));
     }
 
     dislikeButtonOnClick(suggtext) {
+        let newstates = (this.state.suggs.reduce(((acc, v) => acc || (v.text == suggtext)), false)) ?
+            this.state.suggs.map(sugg => (sugg.text !== suggtext) ? sugg : { text: suggtext, status: "DOWN" }) :
+            this.state.suggs.concat({ text: suggtext, status: "DOWN" });
         this.setState((prevState, props) => ({
-            suggs: prevState.suggs.map(sugg => (sugg.text !== suggtext) ? sugg : { text: suggtext, status: "DOWN" })
+            suggs: newstates
         }));
     }
 
@@ -175,8 +182,16 @@ export default class SearchBar extends React.Component {
                                     status={s.status}
                                     onLikeClick={this.likeButtonOnClick}
                                     onDislikeClick={this.dislikeButtonOnClick}
-                                    onCancelClick={this.setNeutralButtonOnClick} />
+                                    onCancelClick={this.setNeutralButtonOnClick}
+                                    mutable={false} />
                             )}
+                            <Descriptor
+                                text={"Add new Descriptor"}
+                                status={"NEUTRAL"}
+                                onLikeClick={this.likeButtonOnClick}
+                                onDislikeClick={this.dislikeButtonOnClick}
+                                onCancelClick={this.setNeutralButtonOnClick}
+                                mutable={true} />
                             <button type="button" className="card card-1 refresh-button" onClick={this.getNewSuggestions}>
                                 <span>Refresh Descriptors...</span>
                             </button>

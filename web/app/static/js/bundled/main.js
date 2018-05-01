@@ -21412,29 +21412,51 @@ var Descriptor = function (_React$Component) {
       var _this2 = this;
 
       if (this.props.status == "NEUTRAL") {
-        return _react2.default.createElement(
-          'div',
-          { className: 'desc-tag' },
-          _react2.default.createElement(
-            'button',
-            { className: 'card card-1 card-left', type: 'button', onClick: function onClick() {
-                return _this2.props.onDislikeClick(_this2.props.text);
-              } },
-            _react2.default.createElement('img', { className: 'thumbs', src: 'static/img/thumb-down.png' })
-          ),
-          _react2.default.createElement(
-            'span',
-            { className: 'desc-tag-text card card-2' },
-            this.props.text
-          ),
-          _react2.default.createElement(
-            'button',
-            { className: 'card card-1 card-right', type: 'button', onClick: function onClick() {
-                return _this2.props.onLikeClick(_this2.props.text);
-              } },
-            _react2.default.createElement('img', { className: 'thumbs', src: 'static/img/thumb-up.png' })
-          )
-        );
+        if (this.props.mutable) {
+          return _react2.default.createElement(
+            'div',
+            { className: 'desc-tag' },
+            _react2.default.createElement(
+              'button',
+              { className: 'card card-1 card-left', type: 'button', onClick: function onClick() {
+                  _this2.props.onDislikeClick(_this2.refs.text.value);_this2.refs.text.value = "";
+                } },
+              _react2.default.createElement('img', { className: 'thumbs', src: 'static/img/thumb-down.png' })
+            ),
+            _react2.default.createElement('input', { className: 'desc-tag-text card card-2', ref: 'text', placeholder: this.props.text }),
+            _react2.default.createElement(
+              'button',
+              { className: 'card card-1 card-right', type: 'button', onClick: function onClick() {
+                  _this2.props.onLikeClick(_this2.refs.text.value);_this2.refs.text.value = "";
+                } },
+              _react2.default.createElement('img', { className: 'thumbs', src: 'static/img/thumb-up.png' })
+            )
+          );
+        } else {
+          return _react2.default.createElement(
+            'div',
+            { className: 'desc-tag' },
+            _react2.default.createElement(
+              'button',
+              { className: 'card card-1 card-left', type: 'button', onClick: function onClick() {
+                  return _this2.props.onDislikeClick(_this2.props.text);
+                } },
+              _react2.default.createElement('img', { className: 'thumbs', src: 'static/img/thumb-down.png' })
+            ),
+            _react2.default.createElement(
+              'span',
+              { className: 'desc-tag-text card card-2' },
+              this.props.text
+            ),
+            _react2.default.createElement(
+              'button',
+              { className: 'card card-1 card-right', type: 'button', onClick: function onClick() {
+                  return _this2.props.onLikeClick(_this2.props.text);
+                } },
+              _react2.default.createElement('img', { className: 'thumbs', src: 'static/img/thumb-up.png' })
+            )
+          );
+        }
       } else if (this.props.status == "UP") {
         return _react2.default.createElement(
           'span',
@@ -21698,22 +21720,31 @@ var SearchBar = function (_React$Component) {
     }, {
         key: 'likeButtonOnClick',
         value: function likeButtonOnClick(suggtext) {
+            console.log(this.state.suggs.reduce(function (acc, v) {
+                return acc || v.text == suggtext;
+            }, false));
+            var newstates = this.state.suggs.reduce(function (acc, v) {
+                return acc || v.text == suggtext;
+            }, false) ? this.state.suggs.map(function (sugg) {
+                return sugg.text !== suggtext ? sugg : { text: suggtext, status: "UP" };
+            }) : this.state.suggs.concat({ text: suggtext, status: "UP" });
             this.setState(function (prevState, props) {
                 return {
-                    suggs: prevState.suggs.map(function (sugg) {
-                        return sugg.text !== suggtext ? sugg : { text: suggtext, status: "UP" };
-                    })
+                    suggs: newstates
                 };
             });
         }
     }, {
         key: 'dislikeButtonOnClick',
         value: function dislikeButtonOnClick(suggtext) {
+            var newstates = this.state.suggs.reduce(function (acc, v) {
+                return acc || v.text == suggtext;
+            }, false) ? this.state.suggs.map(function (sugg) {
+                return sugg.text !== suggtext ? sugg : { text: suggtext, status: "DOWN" };
+            }) : this.state.suggs.concat({ text: suggtext, status: "DOWN" });
             this.setState(function (prevState, props) {
                 return {
-                    suggs: prevState.suggs.map(function (sugg) {
-                        return sugg.text !== suggtext ? sugg : { text: suggtext, status: "DOWN" };
-                    })
+                    suggs: newstates
                 };
             });
         }
@@ -21824,8 +21855,16 @@ var SearchBar = function (_React$Component) {
                                 status: s.status,
                                 onLikeClick: _this4.likeButtonOnClick,
                                 onDislikeClick: _this4.dislikeButtonOnClick,
-                                onCancelClick: _this4.setNeutralButtonOnClick });
+                                onCancelClick: _this4.setNeutralButtonOnClick,
+                                mutable: false });
                         }),
+                        _react2.default.createElement(_Descriptor2.default, {
+                            text: "Add new Descriptor",
+                            status: "NEUTRAL",
+                            onLikeClick: this.likeButtonOnClick,
+                            onDislikeClick: this.dislikeButtonOnClick,
+                            onCancelClick: this.setNeutralButtonOnClick,
+                            mutable: true }),
                         _react2.default.createElement(
                             'button',
                             { type: 'button', className: 'card card-1 refresh-button', onClick: this.getNewSuggestions },
