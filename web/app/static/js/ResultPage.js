@@ -95,7 +95,6 @@ var ResultPage = function (_React$Component) {
                 _react2.default.createElement(
                     'span',
                     null,
-                    'Did you mean to type: ',
                     this.state.suggestions
                 )
             );
