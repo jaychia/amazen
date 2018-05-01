@@ -41,7 +41,7 @@ export default class ResultPage extends React.Component {
                     desc={p.desc}
                     descriptors={p.descriptors}
                     descriptors_review_num={p.descriptors_review_num}
-                    keywords={p.keywords}:()
+                    keywords={p.keywords}
                     keywordscores={p.keywordscores}
                     keywordScoreList={p.keywordscorelist}
                     keywordsSents={p.keywordssents}
