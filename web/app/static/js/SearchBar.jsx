@@ -177,7 +177,7 @@ export default class SearchBar extends React.Component {
                         <div className="desc-container">
                             {this.state.suggs.filter(s => s.status != "HIDDEN").map((s, i) =>
                                 <Descriptor
-                                    key={s.text + "-descriptor-key"}
+                                    key={s.text + "-descriptor-key" + s.status}
                                     text={s.text}
                                     status={s.status}
                                     onLikeClick={this.likeButtonOnClick}
