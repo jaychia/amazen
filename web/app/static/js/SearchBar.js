@@ -58,6 +58,7 @@ var SearchBar = function (_React$Component) {
         key: 'componentDidMount',
         value: function componentDidMount() {
             document.addEventListener("keydown", this.handleEnterPressed.bind(this));
+            window.typertimer = null;
         }
     }, {
         key: 'componentWillUnmount',
@@ -98,19 +99,22 @@ var SearchBar = function (_React$Component) {
             this.setState({ noSuggs: false });
             var curr_query = this.refs.New_search.value.toLowerCase();
             if (!this.state.readytosearch) {
-                _axios2.default.get("/query_suggestions?query=" + curr_query).then(function (res) {
-                    console.log(res.data.data);
-                    if (res.data.querystring == curr_query) {
-                        _this2.setState(function (prevState, props) {
-                            return { querysuggs: res.data.data };
-                        });
-                    }
-                    if (res.data.replace == 1) {
-                        _this2.setState({ replace_query: true });
-                    } else {
-                        _this2.setState({ replace_query: false });
-                    }
-                });
+                clearTimeout(window.typertimer);
+                window.typertimer = setTimeout(function () {
+                    _axios2.default.get("/query_suggestions?query=" + curr_query).then(function (res) {
+                        console.log(res.data.data);
+                        if (res.data.querystring == curr_query) {
+                            _this2.setState(function (prevState, props) {
+                                return { querysuggs: res.data.data };
+                            });
+                        }
+                        if (res.data.replace == 1) {
+                            _this2.setState({ replace_query: true });
+                        } else {
+                            _this2.setState({ replace_query: false });
+                        }
+                    });
+                }, 500);
             }
             this.setState(function (prevState, props) {
                 return {

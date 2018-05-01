@@ -67,7 +67,6 @@ def pack_pid_json(pids_and_info, query, descs_pos):
 	else:
 		q_d_string = to_q_desc(query, descs_pos)
 
-	current_app.logger.info(q_d_string)
 	for before_stem_word in to_tokens_set_no_stem(q_d_string):
 		after_stem_word = stemmer.stem(before_stem_word)
 		reverse_stem_dict[after_stem_word] = before_stem_word
@@ -114,9 +113,6 @@ def pack_pid_json(pids_and_info, query, descs_pos):
 	'asin': p.azn_product_id
 	} for p in products]
 
-	# for p_json in p_json_list:
-	# 	current_app.logger.info(p_json['productTitle'] + ", " + str(zip(p_json['descriptors'], p_json['descriptors_review_num'])))
-
 	return p_json_list
 
 ##################################################################################################
@@ -141,10 +137,6 @@ def product_search():
 	query = request.args.get('query')
 	descriptors_pos = request.args.get('positive', "")
 	descriptors_neg = request.args.get('negative', "")
-
-	current_app.logger.info(query)
-	current_app.logger.info(descriptors_pos)
-  	current_app.logger.info(descriptors_neg)
 
 	if not query:
 		d = {
@@ -191,5 +183,4 @@ def suggested_query():
 	if query is None:
 		return None
 	d, isReplaceInt = amrit_suggestions(query)
-	current_app.logger.info(isReplaceInt)
 	return jsonify(data=d, replace = isReplaceInt, querystring=query)
