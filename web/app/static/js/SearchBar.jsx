@@ -52,10 +52,11 @@ export default class SearchBar extends React.Component {
     queryChange() {
         this.setState({noSuggs: false});
         let curr_query = this.refs.New_search.value.toLowerCase();
-        if (this.state.suggs.length == 0) {
+        if (!this.state.readytosearch) {
             axios.get(
                 "/query_suggestions?query=" + curr_query
             ).then(res => {
+                console.log(res.data.data);
                 if (res.data.querystring == curr_query) {
                     this.setState((prevState, props) => ({ querysuggs: res.data.data }));
                 }
@@ -148,10 +149,10 @@ export default class SearchBar extends React.Component {
                     }
                         {this.state.querysuggs.map((s, i) =>
                             <span key={s + Date.now().toString() + i.toString()} className="suggestionTag">
-                                <span className="suggestionTag tag"
-                                    onClick={() => this.querySuggestionTagClick(s)}>{s}
+                                <span className="suggestionTag tag" onClick={() => this.querySuggestionTagClick(s)}>
+                                    {s}
                                 </span>,&nbsp;
-                        </span>)
+                            </span>)
                     }
                     </div>
                 }

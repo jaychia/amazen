@@ -42,7 +42,7 @@ var SearchBar = function (_React$Component) {
                 return { text: str, status: stat };
             });
         };
-        _this.state = { suggs: list_to_suggs(_this.props.positives, "UP").concat(list_to_suggs(_this.props.negatives, "DOWN")), querysuggs: [], readytosearch: false, noSuggs: false };
+        _this.state = { suggs: list_to_suggs(_this.props.positives, "UP").concat(list_to_suggs(_this.props.negatives, "DOWN")), querysuggs: [], readytosearch: false, noSuggs: false, replace_query: false };
         _this.likeButtonOnClick = _this.likeButtonOnClick.bind(_this);
         _this.dislikeButtonOnClick = _this.dislikeButtonOnClick.bind(_this);
         _this.setNeutralButtonOnClick = _this.setNeutralButtonOnClick.bind(_this);
@@ -74,7 +74,12 @@ var SearchBar = function (_React$Component) {
     }, {
         key: 'querySuggestionTagClick',
         value: function querySuggestionTagClick(s) {
-            this.refs.New_search.value = this.refs.New_search.value + " " + s;
+            if (this.state.replace_query) {
+                this.refs.New_search.value = s;
+            } else {
+                this.refs.New_search.value = this.refs.New_search.value + " " + s;
+            }
+
             this.setState(function (prevState, props) {
                 return {
                     querysuggs: [].concat(_toConsumableArray(prevState.querysuggs.filter(function (t) {
@@ -91,12 +96,18 @@ var SearchBar = function (_React$Component) {
 
             this.setState({ noSuggs: false });
             var curr_query = this.refs.New_search.value.toLowerCase();
-            if (this.state.suggs.length == 0) {
+            if (!this.state.readytosearch) {
                 _axios2.default.get("/query_suggestions?query=" + curr_query).then(function (res) {
+                    console.log(res.data.data);
                     if (res.data.querystring == curr_query) {
                         _this2.setState(function (prevState, props) {
                             return { querysuggs: res.data.data };
                         });
+                    }
+                    if (res.data.replace == 1) {
+                        _this2.setState({ replace_query: true });
+                    } else {
+                        _this2.setState({ replace_query: false });
                     }
                 });
             }
@@ -232,7 +243,11 @@ var SearchBar = function (_React$Component) {
                 this.state.querysuggs.length > 0 && _react2.default.createElement(
                     'div',
                     { className: 'query-suggestions-container' },
-                    _react2.default.createElement(
+                    this.state.replace_query ? _react2.default.createElement(
+                        'span',
+                        { className: 'suggestionTag' },
+                        'Did You Mean:\xA0'
+                    ) : _react2.default.createElement(
                         'span',
                         { className: 'suggestionTag' },
                         'Suggestions:\xA0'
@@ -243,8 +258,7 @@ var SearchBar = function (_React$Component) {
                             { key: s + Date.now().toString() + i.toString(), className: 'suggestionTag' },
                             _react2.default.createElement(
                                 'span',
-                                { className: 'suggestionTag tag',
-                                    onClick: function onClick() {
+                                { className: 'suggestionTag tag', onClick: function onClick() {
                                         return _this4.querySuggestionTagClick(s);
                                     } },
                                 s
