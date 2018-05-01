@@ -41,7 +41,7 @@ export default class ResultPage extends React.Component {
                     desc={p.desc}
                     descriptors={p.descriptors}
                     descriptors_review_num={p.descriptors_review_num}
-                    keywords={p.keywords}
+                    keywords={p.keywords}:()
                     keywordscores={p.keywordscores}
                     keywordScoreList={p.keywordscorelist}
                     keywordsSents={p.keywordssents}
@@ -51,7 +51,7 @@ export default class ResultPage extends React.Component {
                     asin={p.asin} />
             }) : (<div className="error-container"> 
                     <img src="static/img/404.png" className="four-oh-four-img" />
-                    <span>:( {this.state.suggestions}</span>
+                    <span>{this.state.suggestions}</span>
                 </div>));
         return (
             <div>
