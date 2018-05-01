@@ -91,15 +91,18 @@ def loadkeywords(keywords_location):
   assert(os.path.isfile(keywords_location))
   with open(keywords_location, 'r') as f:
     for line in f:
-      k_json = json.loads(line)
-      asin = k_json['asin']
-      keywords = [l[0] for l in k_json['keywords']]
-      dlist = lambda d: [d[str(i)] for i in range(1,6)]
-      keywords_scores_dist = [dlist(d) for d in [l[1] for l in k_json['keywords']]]
-      keywords_scores = [l[2] for l in k_json['keywords']]
-      keywords_sents = [l[3] for l in k_json['keywords']]
-      update_product_keywords(asin, keywords, keywords_scores, keywords_scores_dist, keywords_sents)
-
+      try:
+        k_json = json.loads(line)
+        asin = k_json['asin']
+        keywords = [l[0] for l in k_json['keywords']]
+        dlist = lambda d: [d[str(i)] for i in range(1,6)]
+        keywords_scores_dist = [dlist(d) for d in [l[1] for l in k_json['keywords']]]
+        keywords_scores = [l[2] for l in k_json['keywords']]
+        keywords_sents = [l[3] for l in k_json['keywords']]
+        update_product_keywords(asin, keywords, keywords_scores, keywords_scores_dist, keywords_sents)
+      except: 
+        pass
+        
 @manager.command
 def deleteinvertedindices():
   delete_invertedindicesproduct()
