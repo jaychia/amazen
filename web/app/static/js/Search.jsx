@@ -6,7 +6,7 @@ export default class Search extends React.Component {
   constructor() {
     super(...arguments);
   }
-  
+
   render() {
     return (
       <div>
