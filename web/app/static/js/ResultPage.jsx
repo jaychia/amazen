@@ -70,11 +70,10 @@ export default class ResultPage extends React.Component {
             } else {
                 body = (<div className="error-container">
                     <img src="static/img/404.png" className="four-oh-four-img" />
-                    <span>:( {this.state.suggestions}</span>
+                    <span>{this.state.suggestions}</span>
                 </div>);
             }
         }
-        
         return (
             <div>
                 <div className="result-page-bar-background">

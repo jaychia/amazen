@@ -20,6 +20,7 @@ export default class SearchBar extends React.Component {
 
     componentDidMount() {
         document.addEventListener("keydown", this.handleEnterPressed.bind(this));
+        window.typertimer = null;
     }
 
     componentWillUnmount() {
@@ -54,20 +55,22 @@ export default class SearchBar extends React.Component {
         this.setState({noSuggs: false});
         let curr_query = this.refs.New_search.value.toLowerCase();
         if (!this.state.readytosearch) {
-            axios.get(
-                "/query_suggestions?query=" + curr_query
-            ).then(res => {
-                console.log(res.data.data);
-                if (res.data.querystring == curr_query) {
-                    this.setState((prevState, props) => ({ querysuggs: res.data.data }));
-                }
-                if (res.data.replace == 1){
-                    this.setState({replace_query: true});
-                }
-                else{
-                    this.setState({replace_query: false});   
-                }
-            });
+            clearTimeout(window.typertimer);
+            window.typertimer = setTimeout(() => {
+                axios.get(
+                    "/query_suggestions?query=" + curr_query
+                ).then(res => {
+                    console.log(res.data.data);
+                    if (res.data.querystring == curr_query) {
+                        this.setState((prevState, props) => ({ querysuggs: res.data.data }));
+                    }
+                    if (res.data.replace == 1) {
+                        this.setState({ replace_query: true });
+                    }
+                    else {
+                        this.setState({ replace_query: false });
+                    }
+                });}, 500);
         }
         this.setState((prevState, props) => ({
             suggs: prevState.suggs.filter(s => s.status != "HIDDEN" && s.status != "NEUTRAL"),
