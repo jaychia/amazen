@@ -42,7 +42,8 @@ var SearchBar = function (_React$Component) {
                 return { text: str, status: stat };
             });
         };
-        _this.state = { suggs: list_to_suggs(_this.props.positives, "UP").concat(list_to_suggs(_this.props.negatives, "DOWN")), querysuggs: [], readytosearch: false, noSuggs: false, replace_query: false };
+        _this.state = { suggs: list_to_suggs(_this.props.positives, "UP").concat(list_to_suggs(_this.props.negatives, "DOWN")),
+            querysuggs: [], readytosearch: false, noSuggs: false, replace_query: false, loading: false };
         _this.likeButtonOnClick = _this.likeButtonOnClick.bind(_this);
         _this.dislikeButtonOnClick = _this.dislikeButtonOnClick.bind(_this);
         _this.setNeutralButtonOnClick = _this.setNeutralButtonOnClick.bind(_this);
@@ -125,6 +126,7 @@ var SearchBar = function (_React$Component) {
         value: function getNewSuggestions() {
             var _this3 = this;
 
+            this.setState({ loading: true });
             _axios2.default.get("/suggestions?query=" + this.refs.New_search.value.toLowerCase() + "&positive=" + this.state.suggs.filter(function (sugg) {
                 return sugg.status == "UP";
             }).map(function (sugg) {
@@ -138,6 +140,7 @@ var SearchBar = function (_React$Component) {
             }).map(function (sugg) {
                 return sugg.text;
             }).join(",")).then(function (res) {
+                _this3.setState({ loading: false });
                 // Hide previous neutrals and add new suggestions as neutrals
                 var hiddenstate = _this3.state.suggs.map(function (sugg) {
                     return sugg.status == "NEUTRAL" ? { text: sugg.text, status: "HIDDEN" } : sugg;
@@ -153,8 +156,7 @@ var SearchBar = function (_React$Component) {
                 if (_this3.state.suggs.length == 0) {
                     _this3.setState({ noSuggs: true, readytosearch: false });
                 } else {
-                    _this3.setState({ noSuggs: false });
-                    _this3.setState({ readytosearch: true });
+                    _this3.setState({ readytosearch: true, noSuggs: false });
                 }
             });
         }
@@ -209,7 +211,11 @@ var SearchBar = function (_React$Component) {
         value: function render() {
             var _this4 = this;
 
-            var searchButton = this.state.readytosearch ? _react2.default.createElement(
+            var searchButton = this.state.loading ? _react2.default.createElement(
+                'button',
+                { className: 'btn btn-lg search-bar-button', type: 'button' },
+                _react2.default.createElement('img', { src: '/static/img/loading.svg', alt: 'loading', style: { width: '26px' } })
+            ) : this.state.readytosearch ? _react2.default.createElement(
                 'button',
                 { className: 'btn btn-lg search-bar-button', type: 'button', onClick: function onClick() {
                         return _this4.searchButtonOnClick();
