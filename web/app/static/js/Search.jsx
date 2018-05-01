@@ -6,7 +6,11 @@ export default class Search extends React.Component {
   constructor() {
     super(...arguments);
     /* sugg = {text: string, status: "HIDDEN", "NEUTRAL", "UP", "DOWN"} */
+<<<<<<< HEAD
     this.state = {suggs: [], querysuggs:[], noSuggs: false};
+=======
+    this.state = { suggs: [], querysuggs: [], readytosearch: false};
+>>>>>>> f66187145703d060aa518c8afbf6eaba9e7813e2
     this.likeButtonOnClick = this.likeButtonOnClick.bind(this);
     this.dislikeButtonOnClick = this.dislikeButtonOnClick.bind(this);
     this.setNeutralButtonOnClick = this.setNeutralButtonOnClick.bind(this);
@@ -16,10 +20,29 @@ export default class Search extends React.Component {
     this.querySuggestionTagClick = this.querySuggestionTagClick.bind(this);
   }
 
+  componentDidMount() {
+    document.addEventListener("keydown", this.handleEnterPressed.bind(this));
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("keydown", this.handleEnterPressed.bind(this));
+  }
+
+  handleEnterPressed(e) {
+    if (e.key == "Enter") {
+      e.preventDefault();
+      if (!this.state.readytosearch)
+        this.getNewSuggestions();
+      else
+        this.searchButtonOnClick();
+    }
+  }
+
   querySuggestionTagClick(s) {
     this.refs.New_search.value = this.refs.New_search.value + " " + s;
     this.setState((prevState, props) => ({
-      querysuggs: [...prevState.querysuggs.filter(t => t != s)]
+      querysuggs: [...prevState.querysuggs.filter(t => t != s)],
+      readytosearch: false
     }));
   }
 
@@ -35,6 +58,10 @@ export default class Search extends React.Component {
         }
       });
     }
+    this.setState((prevState, props) => ({
+      suggs: prevState.suggs.filter(s => s.status != "HIDDEN" && s.status != "NEUTRAL" ),
+      readytosearch: false
+    }));
   }
 
   getNewSuggestions() {
@@ -58,6 +85,7 @@ export default class Search extends React.Component {
           this.setState({noSuggs : false});
         }
       });
+    this.setState({ readytosearch: true });
   }
 
   likeButtonOnClick(suggtext) {
@@ -85,7 +113,7 @@ export default class Search extends React.Component {
   }
 
   render() {
-    let searchButton = (this.state.suggs.length != 0) ? (
+    let searchButton = (this.state.readytosearch) ? (
       <button className="btn btn-lg search-bar-button" type="button" onClick={() => this.searchButtonOnClick()}>
         <span className="glyphicon glyphicon-search"></span>
       </button>
@@ -122,9 +150,6 @@ export default class Search extends React.Component {
           <br />
           {this.state.suggs.length > 0 &&
             <div className="desc-search-container">
-            <button type="button" className="card card-1 refresh-button" onClick={this.getNewSuggestions}>
-                <span className="glyphicon glyphicon-repeat"></span>
-              </button>
               <div className="desc-container">
                 {this.state.suggs.filter(s => s.status != "HIDDEN").map((s, i) =>
                 <Descriptor
@@ -135,6 +160,9 @@ export default class Search extends React.Component {
                 onDislikeClick={this.dislikeButtonOnClick}
                 onCancelClick={this.setNeutralButtonOnClick} />
                 )}
+                <button type="button" className="card card-1 refresh-button" onClick={this.getNewSuggestions}>
+                  <span>Refresh Descriptors...</span>
+                </button>
               </div>
             </div>
           }
