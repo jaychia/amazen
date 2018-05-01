@@ -65,12 +65,6 @@ def top_k_pids_step3(valid_pids, inverted_index_review_pos, inverted_index_revie
         for (asin, score, _) in scorelist:
             if asin in product_simscores:
                 product_simscores[asin] -= score/max_score
-
-    product_simscores_updated = dict()
-    for asin in product_simscores:
-        if product_simscores[asin] > 0:
-            product_simscores_updated[asin] = product_simscores[asin]
-    product_simscores = product_simscores_updated
     
     product_simscores_keys = list(product_simscores.keys())
     product_simscores_np = np.array([product_simscores[i] for i in product_simscores_keys])
