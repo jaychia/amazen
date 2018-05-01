@@ -6,7 +6,7 @@ export default class Search extends React.Component {
   constructor() {
     super(...arguments);
     /* sugg = {text: string, status: "HIDDEN", "NEUTRAL", "UP", "DOWN"} */
-    this.state = {suggs: [], querysuggs:[]};
+    this.state = {suggs: [], querysuggs:[], noSuggs: false};
     this.likeButtonOnClick = this.likeButtonOnClick.bind(this);
     this.dislikeButtonOnClick = this.dislikeButtonOnClick.bind(this);
     this.setNeutralButtonOnClick = this.setNeutralButtonOnClick.bind(this);
@@ -24,6 +24,7 @@ export default class Search extends React.Component {
   }
 
   queryChange() {
+    this.setState({noSuggs : false});
     let curr_query = this.refs.New_search.value.toLowerCase();
     if (this.state.suggs.length == 0) {
       axios.get(
@@ -49,6 +50,13 @@ export default class Search extends React.Component {
         });
         let string_to_suggs = (str_list) => str_list.map((str) => ({ text: str, status: "NEUTRAL" }));
         this.setState((prevState, props) => ({ suggs: [...hiddenstate, ...string_to_suggs(res.data.data)] }));
+
+        if(this.state.suggs.length == 0){
+          this.setState({noSuggs : true});
+        }
+        else{
+          this.setState({noSuggs : false});
+        }
       });
   }
 
@@ -98,6 +106,9 @@ export default class Search extends React.Component {
               {searchButton}
             </div>
           </div>
+          {this.state.noSuggs &&
+            <label htmlFor="search-bar card card-1" className="search-error tri-right left-top">No results for this search</label>
+          }
           {this.state.querysuggs.length > 0 &&
           <div className="query-suggestions-container">
             <span className="suggestionTag">Suggestions:&nbsp;</span>

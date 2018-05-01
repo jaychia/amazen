@@ -356,6 +356,42 @@ a * {
     margin: -6% -6% 0;
 }
 
+.search-error{
+    color: white;
+    width:33%;
+    float:right;
+    margin-top: 2%;
+    display: inline-block;
+    position: relative;
+    height: auto;
+    background-color: lightcoral;
+}
+
+.tri-right.border.left-top:before {
+    content: ' ';
+    position: absolute;
+    width: 0;
+    height: 0;
+  left: -20px;
+    right: auto;
+  top: -4px;
+    bottom: auto;
+    border: 32px solid;
+    border-color: #666 transparent transparent transparent;
+}
+.tri-right.left-top:after{
+    content: ' ';
+    position: absolute;
+    width: 0;
+    height: 0;
+  left: auto;
+    right:0px;
+  top: auto;
+    bottom: 3px;
+    border: 16px solid;
+    border-color: transparent lightcoral transparent transparent;
+}
+
 /* react popup (lib) */
 
 .mm-popup {
