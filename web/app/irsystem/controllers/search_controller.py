@@ -197,4 +197,5 @@ def suggested_query():
 	if query is None:
 		return None
 	d, isReplaceInt = amrit_suggestions(query)
+	current_app.logger.info(isReplaceInt)
 	return jsonify(data=d, replace = isReplaceInt, querystring=query)
