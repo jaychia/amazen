@@ -269,7 +269,7 @@ var SearchBar = function (_React$Component) {
                                     } },
                                 s
                             ),
-                            ',\xA0'
+                            '\xA0'
                         );
                     })
                 ),

@@ -44,7 +44,8 @@ var ResultPage = function (_React$Component) {
 
         _this.state = { positive: _this.props.positive.length != 0 ? _this.props.positive.split(',') : [],
             negative: _this.props.negative.length != 0 ? _this.props.negative.split(',') : [],
-            products: [] };
+            products: [],
+            suggestions: "" };
         return _this;
     }
 
@@ -54,12 +55,45 @@ var ResultPage = function (_React$Component) {
             var _this2 = this;
 
             _axios2.default.get("/search?query=" + this.props.query + "&positive=" + this.props.positive + "&negative=" + this.props.negative).then(function (res) {
-                _this2.setState({ products: res.data.data });
+                if (res.data.data.length > 0) {
+                    _this2.setState({ products: res.data.data, suggestions: "" });
+                } else {
+                    _this2.setState({ suggestions: res.data.suggestions, products: [] });
+                }
             });
         }
     }, {
         key: 'render',
         value: function render() {
+            var body = this.state.suggestions.length == 0 ? this.state.products.map(function (p, i) {
+                return _react2.default.createElement(_ProductListing2.default, {
+                    key: i,
+                    productTitle: p.productTitle,
+                    price: p.price,
+                    seller: p.seller,
+                    desc: p.desc,
+                    descriptors: p.descriptors,
+                    descriptors_review_num: p.descriptors_review_num,
+                    keywords: p.keywords,
+                    keywordscores: p.keywordscores,
+                    keywordScoreList: p.keywordscorelist,
+                    keywordsSents: p.keywordssents,
+                    rating: p.rating,
+                    imgUrl: p.imgUrl,
+                    numRatings: p.numRatings,
+                    asin: p.asin });
+            }) : _react2.default.createElement(
+                'div',
+                { className: 'error-container' },
+                ' ',
+                _react2.default.createElement('img', { src: 'static/img/404.png', className: 'four-oh-four-img' }),
+                _react2.default.createElement(
+                    'span',
+                    null,
+                    'Did you mean to type: ',
+                    this.state.suggestions
+                )
+            );
             return _react2.default.createElement(
                 'div',
                 null,
@@ -77,24 +111,7 @@ var ResultPage = function (_React$Component) {
                         _react2.default.createElement(_SearchBar2.default, { query: this.props.query, positives: this.state.positive, negatives: this.state.negative })
                     )
                 ),
-                this.state.products.map(function (p, i) {
-                    return _react2.default.createElement(_ProductListing2.default, {
-                        key: i,
-                        productTitle: p.productTitle,
-                        price: p.price,
-                        seller: p.seller,
-                        desc: p.desc,
-                        descriptors: p.descriptors,
-                        descriptors_review_num: p.descriptors_review_num,
-                        keywords: p.keywords,
-                        keywordscores: p.keywordscores,
-                        keywordScoreList: p.keywordscorelist,
-                        keywordsSents: p.keywordssents,
-                        rating: p.rating,
-                        imgUrl: p.imgUrl,
-                        numRatings: p.numRatings,
-                        asin: p.asin });
-                })
+                body
             );
         }
     }]);

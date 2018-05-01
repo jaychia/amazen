@@ -46,13 +46,7 @@ def filter_category_by_query(q, cat):
 
 # should be called when no products are returned
 def autocorrect_product_query(q):
-	suggested_query =  " ".join(autocorrect_query(q))
-	current_app.logger.info(suggested_query)
-	d = {
-		'status': 404,	
-		'error_message': suggested_query
-	}
-	return d
+	return " ".join(autocorrect_query(q))
 
 def pack_pid_json(pids_and_info, query, descs_pos):
 	pid_term_reviewnum_dict = dict()
@@ -87,7 +81,7 @@ def pack_pid_json(pids_and_info, query, descs_pos):
 		kwscorelist = []
 		for i in range(len(kwscorelisttmp) / 5):
 			kwscorelist.append(kwscorelisttmp[i*5 : (i+1)*5])
-		return kwscorelist		
+		return kwscorelist
 
 	def get_descriptors(term_reviewnum_dict):
 		before_stemmed_descs_list = list()
@@ -154,7 +148,7 @@ def product_search():
 
 	if not query:
 		d = {
-			'status': 400,	
+			'status': 400,
 			'error_message': 'empty query provided'
 		}
 		return jsonify(data=d)
@@ -169,15 +163,15 @@ def product_search():
 	sorted_pids_and_info = get_top_products(query, decs_pos, decs_neg)
 
 	if len(sorted_pids_and_info) == 0:
-		return jsonify(data=autocorrect_product_query(query))
+		return jsonify(data=[], suggestions=autocorrect_product_query(query))
 
 	# only wanna show positive descriptors in results
 	d = pack_pid_json(sorted_pids_and_info, query, decs_pos)
 
 	if len(d) == 0:
-		return jsonify(data=autocorrect_product_query(query))
+		return jsonify(data=[], suggestions=autocorrect_product_query(query))
 
-	return jsonify(data=d)
+	return jsonify(data=d, suggestions="")
 
 @irsystem.route('suggestions', methods=['GET'])
 def suggested_words():
@@ -197,4 +191,5 @@ def suggested_query():
 	if query is None:
 		return None
 	d, isReplaceInt = amrit_suggestions(query)
+	current_app.logger.info(isReplaceInt)
 	return jsonify(data=d, replace = isReplaceInt, querystring=query)
