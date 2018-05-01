@@ -151,7 +151,7 @@ export default class SearchBar extends React.Component {
                             <span key={s + Date.now().toString() + i.toString()} className="suggestionTag">
                                 <span className="suggestionTag tag" onClick={() => this.querySuggestionTagClick(s)}>
                                     {s}
-                                </span>,&nbsp;
+                                </span>&nbsp;
                             </span>)
                     }
                     </div>
